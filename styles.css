@@ -14,13 +14,27 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at center, rgba(0, 255, 204, 0.1) 0%, #000000 70%);
-    animation: gradientPulse 10s ease-in-out infinite;
+    background: linear-gradient(45deg, rgba(0, 255, 204, 0.1), rgba(128, 0, 255, 0.1), #000000);
+    background-size: 200% 200%;
+    animation: holographic 8s ease-in-out infinite;
     z-index: 0;
 }
-@keyframes gradientPulse {
-    0%, 100% { background: radial-gradient(circle at center, rgba(0, 255, 204, 0.1) 0%, #000000 70%); }
-    50% { background: radial-gradient(circle at center, rgba(0, 255, 204, 0.2) 0%, #000000 80%); }
+#background::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 204, 0.05) 2px, rgba(0, 255, 204, 0.05) 4px);
+    animation: scanLines 4s linear infinite;
+}
+@keyframes holographic {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+}
+@keyframes scanLines {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-4px); }
 }
 canvas {
     position: absolute;
@@ -48,59 +62,58 @@ canvas {
 }
 .text span {
     display: inline-block;
-    animation: scanIn 2s ease-out forwards;
-    text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+    animation: digitalConstruct 2s ease-out forwards;
+    text-shadow: 0 0 10px rgba(0, 255, 204, 0.5), 0 0 20px rgba(128, 0, 255, 0.3);
 }
 .text:hover span {
-    animation: glitch 0.5s infinite alternate;
+    animation: glitch 0.3s infinite alternate;
     text-shadow: 0 0 20px rgba(0, 255, 204, 1), 2px 0 5px rgba(255, 0, 0, 0.5), -2px 0 5px rgba(0, 0, 255, 0.5);
 }
-.subtitle {
-    font-size: 1.5em;
-    color: #00ffcc;
-    margin-top: 10px;
-    opacity: 0;
-    animation: fadeIn 2s ease-out 1.2s forwards;
-}
-@keyframes scanIn {
+@keyframes digitalConstruct {
     0% {
         opacity: 0;
-        transform: translateY(50px);
+        transform: scale(0.5) translateY(50px);
         filter: blur(5px);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2) translateY(-10px);
+        filter: blur(2px);
+        clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
     }
     100% {
         opacity: 1;
-        transform: translateY(0);
+        transform: scale(1) translateY(0);
         filter: blur(0);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
     }
 }
 @keyframes glitch {
     0% {
         transform: translate(0);
-        text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+        text-shadow: 0 0 10px rgba(0, 255, 204, 0.5), 0 0 20px rgba(128, 0, 255, 0.3);
     }
     50% {
-        transform: translate(2px, -2px);
-        text-shadow: 2px 0 5px rgba(255, 0, 0, 0.5), -2px 0 5px rgba(0, 0, 255, 0.5);
+        transform: translate(3px, -3px);
+        text-shadow: 3px 0 5px rgba(255, 0, 0, 0.7), -3px 0 5px rgba(0, 0, 255, 0.7);
     }
     100% {
-        transform: translate(-2px, 2px);
-        text-shadow: -2px 0 5px rgba(0, 0, 255, 0.5), 2px 0 5px rgba(255, 0, 0, 0.5);
+        transform: translate(-3px, 3px);
+        text-shadow: -3px 0 5px rgba(0, 0, 255, 0.7), 3px 0 5px rgba(255, 0, 0, 0.7);
     }
-}
-@keyframes fadeIn {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
 }
 .particle {
     position: absolute;
-    width: 4px;
-    height: 4px;
-    background: rgba(0, 255, 204, 0.8);
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     pointer-events: none;
-    animation: particleBurst 1s ease-out forwards;
+    animation: particleBurst 1.5s ease-out forwards;
 }
+.particle--cyan { background: rgba(0, 255, 204, 0.8); }
+.particle--purple { background: rgba(128, 0, 255, 0.8); }
+.particle--white { background: rgba(255, 255, 255, 0.8); }
 @keyframes particleBurst {
     0% {
         opacity: 1;
@@ -108,7 +121,7 @@ canvas {
     }
     100% {
         opacity: 0;
-        transform: translate(var(--tx), var(--ty)) scale(0);
+        transform: translate(var(--tx), var(--ty)) scale(0.2);
     }
 }
 footer {
@@ -125,47 +138,30 @@ footer a {
     opacity: 0;
     animation: fadeIn 1s ease-out forwards;
     text-decoration: none;
-    transition: all 0.3s ease;
+    position: relative;
+}
+footer a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    width: 20px;
+    height: 2px;
+    background: #00ffcc;
+    transition: transform 0.3s ease;
+}
+footer a:hover::after {
+    transform: translateX(-50%) scale(1);
 }
 footer a:hover {
     color: #00ffcc;
     transform: scale(1.2);
     text-shadow: 0 0 10px rgba(0, 255, 204, 0.8);
 }
-.loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #0f0f0f;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 4;
-    animation: fadeOut 1s ease-out 2s forwards;
-}
-.loader-node {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: rgba(0, 255, 204, 0.5);
-    animation: nodePulse 1.5s ease-in-out infinite;
-}
-@keyframes nodePulse {
-    0%, 100% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(1.5); opacity: 1; }
-}
-@keyframes fadeOut {
-    0% { opacity: 1; }
-    100% { opacity: 0; pointer-events: none; }
-}
 @media (max-width: 600px) {
     .text {
         font-size: 2em;
-    }
-    .subtitle {
-        font-size: 1em;
     }
     footer a {
         font-size: 1.2em;
