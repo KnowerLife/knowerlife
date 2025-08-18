@@ -1,10 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Hide loader after animation
-    setTimeout(() => {
-        document.getElementById('loader').style.display = 'none';
-    }, 3000);
-
-    // 2D Canvas Neural Network with Interactive Particles
+    // Main Canvas
     const canvas = document.getElementById('ai-network');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -17,8 +12,23 @@ document.addEventListener('DOMContentLoaded', () => {
             this.radius = Math.random() * 2 + 1;
             this.speedX = (Math.random() - 0.5) * 0.5;
             this.speedY = (Math.random() - 0.5) * 0.5;
+            this.baseSpeedX = this.speedX;
+            this.baseSpeedY = this.speedY;
         }
-        update() {
+        update(mouseX, mouseY) {
+            if (mouseX !== null && mouseY !== null) {
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const dist = Math.hypot(dx, dy);
+                if (dist < 150) {
+                    const force = (150 - dist) / 150 * 0.1;
+                    this.speedX += dx * force;
+                    this.speedY += dy * force;
+                } else {
+                    this.speedX += (this.baseSpeedX - this.speedX) * 0.05;
+                    this.speedY += (this.baseSpeedY - this.speedY) * 0.05;
+                }
+            }
             this.x += this.speedX;
             this.y += this.speedY;
             if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
@@ -33,14 +43,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     class Particle {
-        constructor(x, y) {
+        constructor(x, y, color) {
             this.x = x;
             this.y = y;
             this.radius = Math.random() * 2 + 1;
-            this.speedX = (Math.random() - 0.5) * 2;
-            this.speedY = (Math.random() - 0.5) * 2;
+            this.speedX = (Math.random() - 0.5) * 3;
+            this.speedY = (Math.random() - 0.5) * 3;
             this.alpha = 1;
-            this.life = 60; // Frames to live
+            this.life = 60;
+            this.color = color;
         }
         update() {
             this.x += this.speedX;
@@ -52,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.globalAlpha = this.alpha;
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(0, 255, 204, 0.8)';
+            ctx.fillStyle = this.color;
             ctx.fill();
             ctx.globalAlpha = 1;
         }
@@ -85,14 +96,14 @@ document.addEventListener('DOMContentLoaded', () => {
         mouseX = e.clientX;
         mouseY = e.clientY;
         for (let i = 0; i < 2; i++) {
-            particles.push(new Particle(mouseX, mouseY));
+            particles.push(new Particle(mouseX, mouseY, `rgba(${Math.random() * 255}, 0, ${Math.random() * 255}, 0.8)`));
         }
     });
 
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         nodes.forEach(node => {
-            node.update();
+            node.update(mouseX, mouseY);
             node.draw();
         });
         particles.forEach((particle, index) => {
@@ -114,12 +125,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const warpSound = document.getElementById('warp-sound');
     const backgroundMusic = document.getElementById('background-music');
     const hoverSound = document.getElementById('hover-sound');
+    const clickSound = document.getElementById('click-sound');
     document.addEventListener('click', () => {
         warpSound.play();
         backgroundMusic.play();
     }, { once: true });
 
-    // Text particles and hover sound
+    // Text particles and sounds
     const textElement = document.getElementById('knower-life');
     textElement.addEventListener('mouseenter', () => {
         createTextParticles(10);
@@ -127,15 +139,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     textElement.addEventListener('click', () => {
         createTextParticles(20);
+        createCanvasParticles(10);
+        clickSound.play();
     });
 
     function createTextParticles(count) {
         const rect = textElement.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
+        const colors = ['cyan', 'purple', 'white'];
         for (let i = 0; i < count; i++) {
             const particle = document.createElement('span');
-            particle.className = 'particle';
+            particle.className = `particle particle--${colors[Math.floor(Math.random() * 3)]}`;
             const angle = Math.random() * Math.PI * 2;
             const distance = Math.random() * 100 + 50;
             const tx = Math.cos(angle) * distance;
@@ -145,7 +160,16 @@ document.addEventListener('DOMContentLoaded', () => {
             particle.style.setProperty('--tx', `${tx}px`);
             particle.style.setProperty('--ty', `${ty}px`);
             document.body.appendChild(particle);
-            setTimeout(() => particle.remove(), 1000);
+            setTimeout(() => particle.remove(), 1500);
+        }
+    }
+
+    function createCanvasParticles(count) {
+        const rect = textElement.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        for (let i = 0; i < count; i++) {
+            particles.push(new Particle(centerX, centerY, `rgba(${Math.random() * 255}, 0, ${Math.random() * 255}, 0.8)`));
         }
     }
 
