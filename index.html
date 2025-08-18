@@ -45,153 +45,37 @@
     <title>KNOWER LIFE</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #0f0f0f;
-            font-family: 'Roboto', sans-serif;
-            overflow: hidden;
-            position: relative;
-        }
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-        h1 {
-            font-size: 4em;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            text-align: center;
-            color: #ffffff;
-            z-index: 2;
-            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
-            animation: aiGenerate 2s ease-out forwards, pulse 3s ease-in-out infinite 2s;
-            opacity: 0;
-        }
-        @keyframes aiGenerate {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes pulse {
-            0%, 100% { text-shadow: 0 0 10px rgba(0, 255, 204, 0.5); }
-            50% { text-shadow: 0 0 20px rgba(0, 255, 204, 0.8); }
-        }
-        h1:hover {
-            text-shadow: 0 0 25px rgba(0, 255, 204, 1);
-        }
-        footer {
-            position: fixed;
-            bottom: 20px;
-            width: 100%;
-            text-align: center;
-            z-index: 2;
-        }
-        footer a {
-            color: #ffffff;
-            font-size: 1.5em;
-            margin: 0 15px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-        footer a:hover {
-            color: #00ffcc;
-            transform: scale(1.2);
-            text-shadow: 0 0 10px rgba(0, 255, 204, 0.8);
-        }
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2em;
-            }
-            footer a {
-                font-size: 1.2em;
-                margin: 0 10px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <canvas id="ai-network"></canvas>
-    <h1>KNOWER LIFE</h1>
+    <div class="text-container">
+        <div class="text" id="knower-life">
+            <span style="animation-delay: 0s">K</span>
+            <span style="animation-delay: 0.1s">N</span>
+            <span style="animation-delay: 0.2s">O</span>
+            <span style="animation-delay: 0.3s">W</span>
+            <span style="animation-delay: 0.4s">E</span>
+            <span style="animation-delay: 0.5s">R</span>
+            <span style="animation-delay: 0.6s">&nbsp;</span>
+            <span style="animation-delay: 0.7s">L</span>
+            <span style="animation-delay: 0.8s">I</span>
+            <span style="animation-delay: 0.9s">F</span>
+            <span style="animation-delay: 1s">E</span>
+        </div>
+    </div>
     <footer>
         <a href="https://github.com/KnowerLife" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
         <a href="https://t.me/knowerlife" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
         <a href="https://vk.com/knowerlife" target="_blank" title="VK"><i class="fab fa-vk"></i></a>
         <a href="https://instagram.com/knowerlife" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
     </footer>
-    <script>
-        const canvas = document.getElementById('ai-network');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        class Node {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.radius = Math.random() * 2 + 1;
-                this.speedX = (Math.random() - 0.5) * 0.5;
-                this.speedY = (Math.random() - 0.5) * 0.5;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(0, 255, 204, 0.5)';
-                ctx.fill();
-            }
-        }
-
-        const nodes = [];
-        for (let i = 0; i < 50; i++) {
-            nodes.push(new Node(Math.random() * canvas.width, Math.random() * canvas.height));
-        }
-
-        function connectNodes() {
-            for (let i = 0; i < nodes.length; i++) {
-                for (let j = i + 1; j < nodes.length; j++) {
-                    const dist = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
-                    if (dist < 100) {
-                        ctx.beginPath();
-                        ctx.moveTo(nodes[i].x, nodes[i].y);
-                        ctx.lineTo(nodes[j].x, nodes[j].y);
-                        ctx.strokeStyle = `rgba(0, 255, 204, ${1 - dist / 100})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            nodes.forEach(node => {
-                node.update();
-                node.draw();
-            });
-            connectNodes();
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-    </script>
+    <audio id="background-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9a4b4a5e2e.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="warp-sound">
+        <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3c2f7e2b6a.mp3" type="audio/mpeg">
+    </audio>
+    <script src="script.js"></script>
 </body>
 </html>
