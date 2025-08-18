@@ -1,0 +1,116 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Roboto', sans-serif;
+    background: radial-gradient(circle, #0f0f0f, #000000);
+    color: #ffffff;
+    position: relative;
+}
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+.text-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    text-align: center;
+}
+.text {
+    font-size: 4em;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #ffffff;
+    display: inline-block;
+    position: relative;
+}
+.text span {
+    display: inline-block;
+    animation: scanIn 2s ease-out forwards;
+    text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+}
+.text:hover span {
+    animation: glitch 0.5s infinite alternate;
+    text-shadow: 0 0 20px rgba(0, 255, 204, 1), 2px 0 5px rgba(255, 0, 0, 0.5), -2px 0 5px rgba(0, 0, 255, 0.5);
+}
+@keyframes scanIn {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+        filter: blur(5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+@keyframes glitch {
+    0% {
+        transform: translate(0);
+        text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+    }
+    50% {
+        transform: translate(2px, -2px);
+        text-shadow: 2px 0 5px rgba(255, 0, 0, 0.5), -2px 0 5px rgba(0, 0, 255, 0.5);
+    }
+    100% {
+        transform: translate(-2px, 2px);
+        text-shadow: -2px 0 5px rgba(0, 0, 255, 0.5), 2px 0 5px rgba(255, 0, 0, 0.5);
+    }
+}
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(0, 255, 204, 0.8);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particleBurst 1s ease-out forwards;
+}
+@keyframes particleBurst {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(0);
+    }
+}
+footer {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    z-index: 3;
+}
+footer a {
+    color: #ffffff;
+    font-size: 1.5em;
+    margin: 0 15px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+footer a:hover {
+    color: #00ffcc;
+    transform: scale(1.2);
+    text-shadow: 0 0 10px rgba(0, 255, 204, 0.8);
+}
+@media (max-width: 600px) {
+    .text {
+        font-size: 2em;
+    }
+    footer a {
+        font-size: 1.2em;
+        margin: 0 10px;
+    }
+}
