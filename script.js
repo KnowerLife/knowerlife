@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Настройка эффекта матричного дождя
-    const chars = '010010110100111001001111010101110100010101010010001000000100110010010010100011001000101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+    const chars = '0100101101001110010011110101011101000101010100100010000001001100010010010100011001000101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
     const fontSize = 14;
     const columns = Math.floor(matrixCanvas.width / fontSize);
     const dropsDown = Array(columns).fill(0); // Падающие сверху
@@ -202,29 +202,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Воспроизведение аудио
-    const warpSound = document.getElementById('warp-sound');
     const backgroundMusic = document.getElementById('background-music');
-    const hoverSound = document.getElementById('hover-sound');
     const clickSound = document.getElementById('click-sound');
 
     // Проверка загрузки аудиофайлов
-    [warpSound, backgroundMusic, hoverSound, clickSound].forEach(audio => {
+    [backgroundMusic, clickSound].forEach(audio => {
         audio.addEventListener('loadeddata', () => {
             console.log(`Аудио ${audio.id} загружено`);
         });
-        audio.addEventListener('error', () => {
-            console.error(`Ошибка загрузки аудио ${audio.id}`);
+        audio.addEventListener('error', (e) => {
+            console.error(`Ошибка загрузки аудио ${audio.id}:`, e);
         });
     });
 
-    // Функция для безопасного воспроизведения аудио
+    // Функция для воспроизведения аудио
     function playSound(audio) {
-        if (audio.readyState >= 2) { // HAVE_ENOUGH_DATA
-            audio.currentTime = 0; // Сбрасываем для повторного воспроизведения
-            audio.play().catch(e => console.error(`Ошибка воспроизведения ${audio.id}:`, e));
-        } else {
-            console.warn(`Аудио ${audio.id} ещё не готово`);
-        }
+        audio.currentTime = 0; // Сбрасываем для повторного воспроизведения
+        audio.play().catch(e => console.error(`Ошибка воспроизведения ${audio.id}:`, e));
     }
 
     // Инициализация аудио после первого взаимодействия
@@ -234,6 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Инициализация аудио при первом клике');
             [backgroundMusic, clickSound].forEach(audio => {
                 audio.load(); // Принудительная загрузка
+                console.log(`Принудительная загрузка ${audio.id}`);
             });
             isAudioInitialized = true;
         }
@@ -260,6 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playSound(clickSound);
     });
 
+    // Частицы и звуки для текста
     textElement.addEventListener('click', () => {
         createTextParticles(20);
         createCanvasParticles(10);
