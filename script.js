@@ -166,20 +166,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const hoverSound = document.getElementById('hover-sound');
     const clickSound = document.getElementById('click-sound');
 
+    // Проверка загрузки аудиофайлов
+    [warpSound, backgroundMusic, hoverSound, clickSound].forEach(audio => {
+        audio.addEventListener('loadeddata', () => {
+            console.log(`Аудио ${audio.id} загружено`);
+        });
+        audio.addEventListener('error', () => {
+            console.error(`Ошибка загрузки аудио ${audio.id}`);
+        });
+    });
+
     // Функция для безопасного воспроизведения аудио
     function playSound(audio) {
         if (audio.readyState >= 2) { // HAVE_ENOUGH_DATA
+            audio.currentTime = 0; // Сбрасываем для повторного воспроизведения
             audio.play().catch(e => console.error(`Ошибка воспроизведения ${audio.id}:`, e));
         } else {
             console.warn(`Аудио ${audio.id} ещё не готово`);
         }
     }
 
+    // Инициализация аудио после первого взаимодействия
+    let isAudioInitialized = false;
+    document.addEventListener('click', () => {
+        if (!isAudioInitialized) {
+            console.log('Инициализация аудио при первом клике');
+            [warpSound, backgroundMusic, hoverSound, clickSound].forEach(audio => {
+                audio.load(); // Принудительная загрузка
+            });
+            isAudioInitialized = true;
+        }
+    }, { once: true });
+
     // Переключение звука
     const audioToggle = document.getElementById('audio-toggle');
     let isAudioPlaying = false;
     audioToggle.addEventListener('click', () => {
         console.log('Кнопка звука нажата'); // Для диагностики
+        const rect = audioToggle.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        createTextParticles(5, centerX, centerY); // Частицы при клике
         if (!isAudioPlaying) {
             playSound(warpSound);
             playSound(backgroundMusic);
@@ -197,22 +224,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const textElement = document.getElementById('knower-life');
     textElement.addEventListener('mouseenter', () => {
         createTextParticles(10);
-        if (isAudioPlaying) {
-            playSound(hoverSound); // Воспроизводим только если звук включен
+        if (isAudioPlaying && isAudioInitialized) {
+            playSound(hoverSound); // Воспроизводим только если звук включен и инициализирован
         }
     });
     textElement.addEventListener('click', () => {
         createTextParticles(20);
         createCanvasParticles(10);
-        if (isAudioPlaying) {
-            playSound(clickSound); // Воспроизводим только если звук включен
+        if (isAudioPlaying && isAudioInitialized) {
+            playSound(clickSound); // Воспроизводим только если звук включен и инициализирован
         }
     });
 
-    function createTextParticles(count) {
-        const rect = textElement.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
+    function createTextParticles(count, centerX, centerY) {
+        const rect = centerX ? { left: centerX - 50, top: centerY - 50, width: 100, height: 100 } : textElement.getBoundingClientRect();
+        centerX = centerX || rect.left + rect.width / 2;
+        centerY = centerY || rect.top + rect.height / 2;
         const colors = ['cyan', 'purple', 'white'];
         for (let i = 0; i < count; i++) {
             const particle = document.createElement('span');
@@ -242,8 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Звук при наведении на ссылки футера
     document.querySelectorAll('footer a').forEach(link => {
         link.addEventListener('mouseenter', () => {
-            if (isAudioPlaying) {
-                playSound(hoverSound); // Воспроизводим только если звук включен
+            if (isAudioPlaying && isAudioInitialized) {
+                playSound(hoverSound); // Воспроизводим только если звук включен и инициализирован
             }
         });
     });
