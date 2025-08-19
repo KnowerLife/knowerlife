@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mouseX = e.clientX;
         mouseY = e.clientY;
         for (let i = 0; i < 2; i++) {
-            particles.push(new Particle(mouseX, mouseY, `rgba(${Math.random() * 255}, 0, ${Math.random() * 255}, 0.8)`));
+            particles.push(new Particle(mouseX, mouseY, `rgba(0, 255, 204, ${Math.random() * 0.4 + 0.4})`));
         }
     });
 
