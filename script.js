@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', () => {
         if (!isAudioInitialized) {
             console.log('Инициализация аудио при первом клике');
-            [warpSound, backgroundMusic, hoverSound, clickSound].forEach(audio => {
+            [backgroundMusic, clickSound].forEach(audio => {
                 audio.load(); // Принудительная загрузка
             });
             isAudioInitialized = true;
@@ -249,7 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const centerY = rect.top + rect.height / 2;
         createTextParticles(5, centerX, centerY); // Частицы при клике
         if (!isAudioPlaying) {
-            playSound(warpSound);
             playSound(backgroundMusic);
             audioToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
             isAudioPlaying = true;
@@ -261,13 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
         playSound(clickSound);
     });
 
-    // Частицы и звуки для текста
-    textElement.addEventListener('mouseenter', () => {
-        createTextParticles(10);
-        if (isAudioPlaying && isAudioInitialized) {
-            playSound(hoverSound); // Воспроизводим только если звук включен и инициализирован
-        }
-    });
     textElement.addEventListener('click', () => {
         createTextParticles(20);
         createCanvasParticles(10);
@@ -305,13 +297,4 @@ document.addEventListener('DOMContentLoaded', () => {
             particles.push(new Particle(centerX, centerY, `rgba(${Math.random() * 255}, 0, ${Math.random() * 255}, 0.8)`));
         }
     }
-
-    // Звук при наведении на ссылки футера
-    document.querySelectorAll('footer a').forEach(link => {
-        link.addEventListener('mouseenter', () => {
-            if (isAudioPlaying && isAudioInitialized) {
-                playSound(hoverSound); // Воспроизводим только если звук включен и инициализирован
-            }
-        });
-    });
 });
