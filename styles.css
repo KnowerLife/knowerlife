@@ -140,8 +140,11 @@ footer {
     text-align: center;
     z-index: 3;
     padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-footer a {
+footer a, footer button {
     color: #ffffff;
     font-size: 1.8em;
     margin: 0 20px;
@@ -151,10 +154,16 @@ footer a {
     position: relative;
     transition: all 0.3s ease;
 }
-footer a i {
+footer button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+footer a i, footer button i {
     transition: transform 0.3s ease, color 0.3s ease;
 }
-footer a::after {
+footer a::after, footer button::after {
     content: '';
     position: absolute;
     bottom: -5px;
@@ -165,15 +174,15 @@ footer a::after {
     background: #00ffcc;
     transition: transform 0.3s ease;
 }
-footer a:hover::after {
+footer a:hover::after, footer button:hover::after {
     transform: translateX(-50%) scale(1);
 }
-footer a:hover {
+footer a:hover, footer button:hover {
     color: #00ffcc;
     transform: scale(1.2);
     text-shadow: 0 0 10px rgba(0, 255, 204, 0.8);
 }
-footer a:hover i {
+footer a:hover i, footer button:hover i {
     transform: scale(1.3);
     color: #00ffcc;
 }
@@ -185,7 +194,7 @@ footer a:hover i {
     .text {
         font-size: 2em;
     }
-    footer a {
+    footer a, footer button {
         font-size: 1.4em;
         margin: 0 10px;
     }
