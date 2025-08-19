@@ -193,19 +193,20 @@ document.addEventListener('DOMContentLoaded', () => {
         playSound(clickSound);
     });
 
-    // Удаляем автоматическое воспроизведение по клику на документ
-    // document.addEventListener('click', () => { ... }); // Закомментировано
-
     // Частицы и звуки для текста
     const textElement = document.getElementById('knower-life');
     textElement.addEventListener('mouseenter', () => {
         createTextParticles(10);
-        playSound(hoverSound);
+        if (isAudioPlaying) {
+            playSound(hoverSound); // Воспроизводим только если звук включен
+        }
     });
     textElement.addEventListener('click', () => {
         createTextParticles(20);
         createCanvasParticles(10);
-        playSound(clickSound);
+        if (isAudioPlaying) {
+            playSound(clickSound); // Воспроизводим только если звук включен
+        }
     });
 
     function createTextParticles(count) {
@@ -241,7 +242,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Звук при наведении на ссылки футера
     document.querySelectorAll('footer a').forEach(link => {
         link.addEventListener('mouseenter', () => {
-            playSound(hoverSound);
+            if (isAudioPlaying) {
+                playSound(hoverSound); // Воспроизводим только если звук включен
+            }
         });
     });
 });
