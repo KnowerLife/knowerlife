@@ -1,9 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Main Canvas
+    // Основной canvas для анимации AI-сети
     const canvas = document.getElementById('ai-network');
     const ctx = canvas.getContext('2d');
+    if (!ctx) console.error('Ошибка: не удалось получить контекст для ai-network canvas');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
+    // Canvas для эффекта матричного дождя
+    const matrixCanvas = document.getElementById('matrix-rain');
+    const matrixCtx = matrixCanvas.getContext('2d');
+    if (!matrixCtx) console.error('Ошибка: не удалось получить контекст для matrix-rain canvas');
+    matrixCanvas.width = window.innerWidth;
+    matrixCanvas.height = window.innerHeight;
 
     class Node {
         constructor(x, y) {
@@ -69,6 +77,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Настройка эффекта матричного дождя
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+    const fontSize = 14;
+    const columns = matrixCanvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(0);
+
+    // Функция отрисовки матричного дождя
+    function drawMatrixRain() {
+        matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+        matrixCtx.fillStyle = '#00ffcc';
+        matrixCtx.font = `${fontSize}px monospace`;
+
+        for (let i = 0; i < drops.length; i++) {
+            const char = chars.charAt(Math.floor(Math.random() * chars.length));
+            matrixCtx.fillText(char, i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+            drops[i]++;
+        }
+    }
+
     const nodes = [];
     const particles = [];
     for (let i = 0; i < 50; i++) {
@@ -93,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let mouseX = null, mouseY = null;
     canvas.addEventListener('mousemove', (e) => {
+        console.log('Mouse moved:', e.clientX, e.clientY); // Для диагностики
         mouseX = e.clientX;
         mouseY = e.clientY;
         for (let i = 0; i < 2; i++) {
@@ -100,8 +132,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Основной цикл анимации
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawMatrixRain();
         nodes.forEach(node => {
             node.update(mouseX, mouseY);
             node.draw();
@@ -116,31 +150,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     animate();
 
+    // Обработка изменения размера окна
     window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        matrixCanvas.width = window.innerWidth;
+        matrixCanvas.height = window.innerHeight;
+        drops.fill(0);
+        drops.length = Math.floor(matrixCanvas.width / fontSize);
     });
 
-    // Audio playback
+    // Воспроизведение аудио
     const warpSound = document.getElementById('warp-sound');
     const backgroundMusic = document.getElementById('background-music');
     const hoverSound = document.getElementById('hover-sound');
     const clickSound = document.getElementById('click-sound');
     document.addEventListener('click', () => {
-        warpSound.play();
-        backgroundMusic.play();
+        console.log('Audio triggered'); // Для диагностики
+        warpSound.play().catch(e => console.error('Ошибка воспроизведения warpSound:', e));
+        backgroundMusic.play().catch(e => console.error('Ошибка воспроизведения backgroundMusic:', e));
     }, { once: true });
 
-    // Text particles and sounds
+    // Частицы и звуки для текста
     const textElement = document.getElementById('knower-life');
     textElement.addEventListener('mouseenter', () => {
         createTextParticles(10);
-        hoverSound.play();
+        hoverSound.play().catch(e => console.error('Ошибка воспроизведения hoverSound:', e));
     });
     textElement.addEventListener('click', () => {
         createTextParticles(20);
         createCanvasParticles(10);
-        clickSound.play();
+        clickSound.play().catch(e => console.error('Ошибка воспроизведения clickSound:', e));
     });
 
     function createTextParticles(count) {
@@ -173,10 +213,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Footer hover sound
+    // Звук при наведении на ссылки футера
     document.querySelectorAll('footer a').forEach(link => {
         link.addEventListener('mouseenter', () => {
-            hoverSound.play();
+            hoverSound.play().catch(e => console.error('Ошибка воспроизведения hoverSound:', e));
         });
     });
 });
