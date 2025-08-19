@@ -136,9 +136,9 @@ canvas#matrix-rain {
     pointer-events: none;
     animation: particleBurst 1.5s ease-out forwards;
 }
-.particle--cyan { background: rgba(0, 255, 204, 0.8); }
-.particle--purple { background: rgba(128, 0, 255, 0.8); }
-.particle--white { background: rgba(255, 255, 255, 0.8); }
+.particle--green1 { background: rgba(0, 255, 0, 0.8); } /* Яркий зелёный */
+.particle--green2 { background: rgba(0, 200, 0, 0.8); } /* Средний зелёный */
+.particle--green3 { background: rgba(0, 150, 0, 0.8); } /* Тёмный зелёный */
 @keyframes particleBurst {
     0% {
         opacity: 1;
