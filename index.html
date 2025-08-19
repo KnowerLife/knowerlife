@@ -42,47 +42,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KNOWER LIFE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Knower Life</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
     <div id="background"></div>
+    <canvas id="matrix-rain"></canvas>
     <canvas id="ai-network"></canvas>
-    <div class="text-container">
-        <div class="text" id="knower-life">
-            <span style="animation-delay: 0s">K</span>
-            <span style="animation-delay: 0.1s">N</span>
-            <span style="animation-delay: 0.2s">O</span>
-            <span style="animation-delay: 0.3s">W</span>
-            <span style="animation-delay: 0.4s">E</span>
-            <span style="animation-delay: 0.5s">R</span>
-            <span style="animation-delay: 0.6s">&nbsp;</span>
-            <span style="animation-delay: 0.7s">L</span>
-            <span style="animation-delay: 0.8s">I</span>
-            <span style="animation-delay: 0.9s">F</span>
-            <span style="animation-delay: 1s">E</span>
+    <div class="text-container" id="knower-life">
+        <div class="text">
+            <span>K</span>
+            <span>N</span>
+            <span>O</span>
+            <span>W</span>
+            <span>E</span>
+            <span>R</span>
+            <span>&nbsp;</span>
+            <span>L</span>
+            <span>I</span>
+            <span>F</span>
+            <span>E</span>
         </div>
     </div>
     <footer>
-        <a href="https://github.com/KnowerLife" target="_blank" title="GitHub" style="animation-delay: 1.2s"><i class="fab fa-github"></i></a>
-        <a href="https://t.me/knowerlife" target="_blank" title="Telegram" style="animation-delay: 1.3s"><i class="fab fa-telegram"></i></a>
-        <a href="https://vk.com/knowerlife" target="_blank" title="VK" style="animation-delay: 1.4s"><i class="fab fa-vk"></i></a>
-        <a href="https://instagram.com/knowerlife" target="_blank" title="Instagram" style="animation-delay: 1.5s"><i class="fab fa-instagram"></i></a>
+        <a href="https://github.com/knowerlife" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://t.me/knowerlife" target="_blank" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+        <a href="https://vk.com/knowerlife" target="_blank" aria-label="VK"><i class="fab fa-vk"></i></a>
+        <a href="https://instagram.com/knowerlife" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
     </footer>
-    <audio id="background-music" loop>
-        <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9a4b4a5e2e.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="warp-sound">
-        <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3c2f7e2b6a.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="hover-sound">
-        <source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_1b0e5e7b7e.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="click-sound">
-        <source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_5b4b6c7a7e.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="warp-sound" src="https://assets.codepen.io/1468070/warp.mp3"></audio>
+    <audio id="background-music" src="https://assets.codepen.io/1468070/background.mp3" loop></audio>
+    <audio id="hover-sound" src="https://assets.codepen.io/1468070/hover.mp3"></audio>
+    <audio id="click-sound" src="https://assets.codepen.io/1468070/click.mp3"></audio>
     <script src="script.js"></script>
 </body>
 </html>
