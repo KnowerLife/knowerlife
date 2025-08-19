@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('ai-network');
     const ctx = canvas.getContext('2d');
     if (!ctx) console.error('Ошибка: не удалось получить контекст для ai-network canvas');
+    else console.log('Контекст ai-network успешно инициализирован');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
@@ -10,8 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const matrixCanvas = document.getElementById('matrix-rain');
     const matrixCtx = matrixCanvas.getContext('2d');
     if (!matrixCtx) console.error('Ошибка: не удалось получить контекст для matrix-rain canvas');
+    else console.log('Контекст matrix-rain успешно инициализирован');
     matrixCanvas.width = window.innerWidth;
     matrixCanvas.height = window.innerHeight;
+    console.log('Инициализация matrixCanvas:', matrixCanvas.width, matrixCanvas.height);
 
     class Node {
         constructor(x, y) {
@@ -78,25 +81,56 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Настройка эффекта матричного дождя
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+    const chars = '010010110100111001001111010101110100010101010010001000000100110010010010100011001000101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
     const fontSize = 14;
-    const columns = matrixCanvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(0);
+    const columns = Math.floor(matrixCanvas.width / fontSize);
+    const dropsDown = Array(columns).fill(0); // Падающие сверху
+    const speedsDown = Array(columns).fill(1); // Скорость сверху вниз
+    const textElement = document.getElementById('knower-life');
 
     // Функция отрисовки матричного дождя
     function drawMatrixRain() {
-        matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-        matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-        matrixCtx.fillStyle = '#00ffcc';
-        matrixCtx.font = `${fontSize}px monospace`;
-
-        for (let i = 0; i < drops.length; i++) {
-            const char = chars.charAt(Math.floor(Math.random() * chars.length));
-            matrixCtx.fillText(char, i * fontSize, drops[i] * fontSize);
-            if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
-                drops[i] = 0;
+        try {
+            if (!matrixCtx) {
+                console.error('matrixCtx не инициализирован');
+                return;
             }
-            drops[i]++;
+            matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+            matrixCtx.font = `${fontSize}px monospace`;
+
+            // Проверяем загрузку textElement
+            if (!textElement) {
+                console.error('textElement не найден');
+                return;
+            }
+            const rect = textElement.getBoundingClientRect();
+            console.log('Координаты текста:', rect.left, rect.right, rect.top, rect.bottom);
+
+            for (let i = 0; i < columns; i++) {
+                const x = i * fontSize;
+                const yDown = dropsDown[i] * fontSize;
+                const char = chars.charAt(Math.floor(Math.random() * chars.length));
+
+                // Проверяем, находится ли символ в области текста
+                const isInTextArea = x >= rect.left && x <= rect.right && yDown >= rect.top && yDown <= rect.bottom;
+
+                matrixCtx.fillStyle = isInTextArea
+                    ? `rgba(0, 255, 204, ${Math.random() * 0.3 + 0.2})` // Полупрозрачные "внутри"
+                    : `rgba(0, 255, 204, ${Math.random() * 0.7 + 0.3})`; // Яркие "сверху"
+                speedsDown[i] = isInTextArea ? 0.5 : 1;
+
+                matrixCtx.fillText(char, x, yDown);
+                dropsDown[i] += speedsDown[i];
+
+                if (dropsDown[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                    dropsDown[i] = 0;
+                    speedsDown[i] = 1;
+                }
+            }
+            console.log('drawMatrixRain выполнен, колонн:', columns);
+        } catch (e) {
+            console.error('Ошибка в drawMatrixRain:', e);
         }
     }
 
@@ -134,19 +168,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Основной цикл анимации
     function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawMatrixRain();
-        nodes.forEach(node => {
-            node.update(mouseX, mouseY);
-            node.draw();
-        });
-        particles.forEach((particle, index) => {
-            particle.update();
-            particle.draw();
-            if (particle.life <= 0) particles.splice(index, 1);
-        });
-        connectNodes();
-        requestAnimationFrame(animate);
+        try {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawMatrixRain();
+            nodes.forEach(node => {
+                node.update(mouseX, mouseY);
+                node.draw();
+            });
+            particles.forEach((particle, index) => {
+                particle.update();
+                particle.draw();
+                if (particle.life <= 0) particles.splice(index, 1);
+            });
+            connectNodes();
+            requestAnimationFrame(animate);
+        } catch (e) {
+            console.error('Ошибка в animate:', e);
+        }
     }
     animate();
 
@@ -156,8 +194,11 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.height = window.innerHeight;
         matrixCanvas.width = window.innerWidth;
         matrixCanvas.height = window.innerHeight;
-        drops.fill(0);
-        drops.length = Math.floor(matrixCanvas.width / fontSize);
+        dropsDown.fill(0);
+        speedsDown.fill(1);
+        dropsDown.length = Math.floor(matrixCanvas.width / fontSize);
+        speedsDown.length = Math.floor(matrixCanvas.width / fontSize);
+        console.log('Размеры canvas обновлены:', matrixCanvas.width, matrixCanvas.height);
     });
 
     // Воспроизведение аудио
@@ -221,7 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Частицы и звуки для текста
-    const textElement = document.getElementById('knower-life');
     textElement.addEventListener('mouseenter', () => {
         createTextParticles(10);
         if (isAudioPlaying && isAudioInitialized) {
