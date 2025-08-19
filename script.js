@@ -165,22 +165,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const backgroundMusic = document.getElementById('background-music');
     const hoverSound = document.getElementById('hover-sound');
     const clickSound = document.getElementById('click-sound');
-    document.addEventListener('click', () => {
-        console.log('Audio triggered'); // Для диагностики
-        warpSound.play().catch(e => console.error('Ошибка воспроизведения warpSound:', e));
-        backgroundMusic.play().catch(e => console.error('Ошибка воспроизведения backgroundMusic:', e));
-    }, { once: true });
+
+    // Функция для безопасного воспроизведения аудио
+    function playSound(audio) {
+        if (audio.readyState >= 2) { // HAVE_ENOUGH_DATA
+            audio.play().catch(e => console.error(`Ошибка воспроизведения ${audio.id}:`, e));
+        } else {
+            console.warn(`Аудио ${audio.id} ещё не готово`);
+        }
+    }
+
+    // Переключение звука
+    const audioToggle = document.getElementById('audio-toggle');
+    let isAudioPlaying = false;
+    audioToggle.addEventListener('click', () => {
+        console.log('Кнопка звука нажата'); // Для диагностики
+        if (!isAudioPlaying) {
+            playSound(warpSound);
+            playSound(backgroundMusic);
+            audioToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+            isAudioPlaying = true;
+        } else {
+            backgroundMusic.pause();
+            audioToggle.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            isAudioPlaying = false;
+        }
+        playSound(clickSound);
+    });
+
+    // Удаляем автоматическое воспроизведение по клику на документ
+    // document.addEventListener('click', () => { ... }); // Закомментировано
 
     // Частицы и звуки для текста
     const textElement = document.getElementById('knower-life');
     textElement.addEventListener('mouseenter', () => {
         createTextParticles(10);
-        hoverSound.play().catch(e => console.error('Ошибка воспроизведения hoverSound:', e));
+        playSound(hoverSound);
     });
     textElement.addEventListener('click', () => {
         createTextParticles(20);
         createCanvasParticles(10);
-        clickSound.play().catch(e => console.error('Ошибка воспроизведения clickSound:', e));
+        playSound(clickSound);
     });
 
     function createTextParticles(count) {
@@ -216,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Звук при наведении на ссылки футера
     document.querySelectorAll('footer a').forEach(link => {
         link.addEventListener('mouseenter', () => {
-            hoverSound.play().catch(e => console.error('Ошибка воспроизведения hoverSound:', e));
+            playSound(hoverSound);
         });
     });
 });
