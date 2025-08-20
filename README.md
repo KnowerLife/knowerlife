@@ -11,7 +11,7 @@
 ## Ключевые проекты
 
 - **[VPN](https://github.com/KnowerLife/VPN)**  
-  Генератор конфигураций для Cloudflare WARP, совместимый с AmneziaWG и WireGuard. Упрощает настройку безопасных VPN-соединений.  
+  Генератор конфига Cloudflare WARP для AmneziaWG, AmneziaVPN, DefaultVPN и WireGuard.  
   **Язык**: Shell
 
 - **[MMOGAME](https://github.com/KnowerLife/MMOGAME)**  
