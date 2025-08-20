@@ -14,6 +14,10 @@
   Генератор конфига Cloudflare WARP для AmneziaWG, AmneziaVPN, DefaultVPN и WireGuard.  
   **Язык**: Shell
 
+- **[Calculator](https://github.com/KnowerLife/calculator)**  
+  Этот бот помогает разделить расходы между участниками, учитывая общие и индивидуальные товары. Поддерживает ввод товаров вручную, через QR-код чека или CSV-файл, а также генерирует детализированный отчет в CSV с поддержкой UTF-8.
+  **Язык**: Python
+
 - **[MMOGAME](https://github.com/KnowerLife/MMOGAME)**  
   Telegram-бот для игры в жанре MMO. Погрузитесь в увлекательный мир приключений прямо в мессенджере!  
   **Язык**: Python
