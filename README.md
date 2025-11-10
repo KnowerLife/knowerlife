@@ -10,6 +10,10 @@
 
 ## Ключевые проекты
 
+- **[SecretSanta](https://github.com/KnowerLife/SecretSanta)**  
+  Полнофункциональный Telegram бот для организации игры "Тайный Санта" с системой напоминаний, анонимными сообщениями, подтверждением подарков и мультиязычной поддержкой.  
+  **Язык**: Python
+
 - **[VPN](https://github.com/KnowerLife/VPN)**  
   Генератор конфига Cloudflare WARP для AmneziaWG, AmneziaVPN, DefaultVPN и WireGuard.  
   **Язык**: Shell
