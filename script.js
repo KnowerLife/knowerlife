@@ -27,6 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalOverlay = document.getElementById('modal-overlay');
     const modalClose = document.getElementById('modal-close');
 
+    // Элементы чата Gitwhisper
+    const chatOpenBtn = document.getElementById('chat-open-btn');
+    const chatCloseBtn = document.getElementById('chat-close-btn');
+    const chatOverlay = document.getElementById('chat-modal-overlay');
+
     // ============================
     // 2. РАЗМЕРЫ CANVAS
     // ============================
@@ -163,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 6. СЕТЬ ИИ (УЗЛЫ И СВЯЗИ)
+    // 6. СЕТЬ ИИ
     // ============================
     class Node {
         constructor(x, y) {
@@ -223,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 7. ВИЗУАЛИЗАЦИЯ ЗВУКА (эквалайзер)
+    // 7. ВИЗУАЛИЗАЦИЯ ЗВУКА
     // ============================
     let audioContext = null;
     let analyser = null;
@@ -262,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 8. ЭФФЕКТ РЯБИ (RIPPLE)
+    // 8. ЭФФЕКТ РЯБИ
     // ============================
     let ripples = [];
     class Ripple {
@@ -285,7 +290,6 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.strokeStyle = `rgba(0, 255, 204, ${this.alpha * 0.6})`;
             ctx.lineWidth = 2;
             ctx.stroke();
-            // Внутренний круг
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius * 0.3, 0, Math.PI * 2);
             ctx.fillStyle = `rgba(0, 255, 204, ${this.alpha * 0.2})`;
@@ -303,13 +307,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Обработчик клика для ряби
     document.addEventListener('click', (e) => {
-        // Игнорируем клики по интерактивным элементам, чтобы не мешать
         const target = e.target;
-        if (target.closest('footer') || target.closest('.modal') || target.closest('#main-title')) return;
+        if (target.closest('footer') || target.closest('.modal') || target.closest('#main-title') || target.closest('.chat-modal-overlay') || target.closest('#chat-open-btn')) return;
         ripples.push(new Ripple(e.clientX, e.clientY));
-        // Ограничим количество ряби
         if (ripples.length > 20) ripples.shift();
     });
 
@@ -359,10 +360,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function handlePointerMove(x, y) {
         mouseX = x;
         mouseY = y;
-        // Параллакс для гексагонов
         hexOffsetX = (x / window.innerWidth - 0.5) * 40;
         hexOffsetY = (y / window.innerHeight - 0.5) * 40;
-        // Частицы от мыши
         for (let i = 0; i < 2; i++) {
             particles.push(new Particle(mouseX, mouseY, `rgba(0, 255, 204, ${Math.random() * 0.4 + 0.4})`));
         }
@@ -381,7 +380,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (touch) handlePointerMove(touch.clientX, touch.clientY);
     });
 
-    // Частицы (для canvas)
     class Particle {
         constructor(x, y, color) {
             this.x = x; this.y = y;
@@ -419,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateClock();
 
     // ============================
-    // 12. АУДИО (улучшенная инициализация)
+    // 12. АУДИО
     // ============================
     let isAudioInitialized = false;
     let isAudioPlaying = false;
@@ -506,7 +504,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 14. МОДАЛЬНОЕ ОКНО
+    // 14. МОДАЛЬНОЕ ОКНО (о проекте)
     // ============================
     function openModal() {
         modalOverlay.classList.add('active');
@@ -530,7 +528,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================
-    // 15. ОСНОВНОЙ ЦИКЛ АНИМАЦИИ
+    // 15. УПРАВЛЕНИЕ ЧАТОМ (Gitwhisper)
+    // ============================
+    function openChat() {
+        chatOverlay.classList.add('active');
+        // Добавляем рябь на кнопке
+        if (typeof ripples !== 'undefined') {
+            const rect = chatOpenBtn.getBoundingClientRect();
+            ripples.push(new Ripple(rect.left + rect.width/2, rect.top + rect.height/2));
+        }
+    }
+    function closeChat() {
+        chatOverlay.classList.remove('active');
+    }
+
+    chatOpenBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openChat();
+    });
+
+    chatCloseBtn.addEventListener('click', closeChat);
+
+    // Закрытие по клику на оверлей
+    chatOverlay.addEventListener('click', (e) => {
+        if (e.target === chatOverlay) closeChat();
+    });
+
+    // ============================
+    // 16. ОСНОВНОЙ ЦИКЛ
     // ============================
     function animate() {
         try {
@@ -542,13 +567,11 @@ document.addEventListener('DOMContentLoaded', () => {
             drawAudioVisualizer();
             drawRipples();
 
-            // Узлы
             nodes.forEach(node => {
                 node.update(mouseX, mouseY);
                 node.draw();
             });
 
-            // Частицы
             for (let i = particles.length - 1; i >= 0; i--) {
                 const p = particles[i];
                 p.update();
@@ -565,7 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 16. СТАРТ
+    // 17. СТАРТ
     // ============================
     resizeCanvases();
     animate();
