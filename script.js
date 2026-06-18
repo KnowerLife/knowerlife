@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatOpenBtn = document.getElementById('chat-open-btn');
     const chatCloseBtn = document.getElementById('chat-close-btn');
     const chatOverlay = document.getElementById('chat-modal-overlay');
-    const giscusContainer = document.getElementById('giscus-container');
 
     // ============================
     // 2. РАЗМЕРЫ CANVAS
@@ -169,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 6. СЕТЬ ИИ (УЗЛЫ И СВЯЗИ)
+    // 6. СЕТЬ ИИ
     // ============================
     class Node {
         constructor(x, y) {
@@ -229,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 7. ВИЗУАЛИЗАЦИЯ ЗВУКА (ЭКВАЛАЙЗЕР)
+    // 7. ВИЗУАЛИЗАЦИЯ ЗВУКА
     // ============================
     let audioContext = null;
     let analyser = null;
@@ -268,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 8. ЭФФЕКТ РЯБИ (RIPPLE)
+    // 8. ЭФФЕКТ РЯБИ
     // ============================
     let ripples = [];
     class Ripple {
@@ -529,71 +528,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================
-    // 15. УПРАВЛЕНИЕ ЧАТОМ (GISCUS – ИСПРАВЛЕННАЯ ВЕРСИЯ)
+    // 15. УПРАВЛЕНИЕ ЧАТОМ (GISCUS – ТОЛЬКО ВИДИМОСТЬ)
     // ============================
-    let giscusLoaded = false;
-
-    function loadGiscus() {
-        if (giscusLoaded) return;
-        giscusLoaded = true;
-
-        // Очищаем контейнер
-        giscusContainer.innerHTML = '';
-
-        // Создаём скрипт с вашими параметрами
-        const script = document.createElement('script');
-        script.src = 'https://giscus.app/client.js';
-        script.setAttribute('data-repo', 'KnowerLife/knowerlife');
-        script.setAttribute('data-repo-id', 'R_kgDOPf9skg');
-        script.setAttribute('data-category', 'General');
-        script.setAttribute('data-category-id', 'DIC_kwDOPf9sks4C_ZjZ');
-        script.setAttribute('data-mapping', 'pathname');
-        script.setAttribute('data-strict', '1');
-        script.setAttribute('data-reactions-enabled', '1');
-        script.setAttribute('data-emit-metadata', '0');
-        script.setAttribute('data-input-position', 'bottom');
-        script.setAttribute('data-theme', 'preferred_color_scheme');
-        script.setAttribute('data-lang', 'ru');
-        script.setAttribute('crossorigin', 'anonymous');
-        script.async = true;
-
-        giscusContainer.appendChild(script);
-
-        // Показываем лоадер
-        const loader = document.createElement('div');
-        loader.style.cssText = `
-            text-align: center;
-            padding: 40px 0;
-            color: rgba(0,255,204,0.5);
-            font-family: 'Roboto', sans-serif;
-        `;
-        loader.textContent = 'Загрузка обсуждения...';
-        giscusContainer.prepend(loader);
-
-        // Удаляем лоадер после загрузки Giscus
-        const observer = new MutationObserver(() => {
-            if (giscusContainer.querySelector('.giscus')) {
-                const l = giscusContainer.querySelector('div:first-child');
-                if (l && l.textContent.includes('Загрузка')) {
-                    l.remove();
-                }
-                observer.disconnect();
-            }
-        });
-        observer.observe(giscusContainer, { childList: true, subtree: true });
-
-        // Fallback: удалить через 8 секунд
-        setTimeout(() => {
-            const l = giscusContainer.querySelector('div:first-child');
-            if (l && l.textContent.includes('Загрузка')) {
-                l.remove();
-            }
-        }, 8000);
-    }
-
     function openChat() {
         chatOverlay.classList.add('active');
-        loadGiscus();
         // Добавляем рябь на кнопке
         if (typeof ripples !== 'undefined') {
             const rect = chatOpenBtn.getBoundingClientRect();
@@ -617,7 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================
-    // 16. ОСНОВНОЙ ЦИКЛ АНИМАЦИИ
+    // 16. ОСНОВНОЙ ЦИКЛ
     // ============================
     function animate() {
         try {
