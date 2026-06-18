@@ -55,14 +55,31 @@
         </div>
     </div>
 
-    <!-- Модалка чата (Giscus) -->
+    <!-- Модалка чата (Giscus – статическая вставка) -->
     <div id="chat-modal-overlay" class="chat-modal-overlay">
         <div class="chat-modal-container">
             <button id="chat-close-btn" class="chat-close-btn">&times;</button>
             <h3 style="color:#00ffcc; margin-top:0; text-shadow:0 0 20px rgba(0,255,204,0.3);">
                 <i class="fab fa-github"></i> Обсуждение
             </h3>
-            <div id="giscus-container"></div>
+            <div id="giscus-container">
+                <!-- Скрипт Giscus загружается сразу при открытии страницы -->
+                <script src="https://giscus.app/client.js"
+                    data-repo="KnowerLife/knowerlife"
+                    data-repo-id="R_kgDOPf9skg"
+                    data-category="General"
+                    data-category-id="DIC_kwDOPf9sks4C_ZjZ"
+                    data-mapping="pathname"
+                    data-strict="1"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="bottom"
+                    data-theme="preferred_color_scheme"
+                    data-lang="ru"
+                    crossorigin="anonymous"
+                    async>
+                </script>
+            </div>
             <p style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:10px;">
                 Войдите через GitHub, чтобы оставить комментарий
             </p>
