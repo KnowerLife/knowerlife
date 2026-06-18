@@ -1,84 +1,78 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Knower Life</title>
+    <!-- SEO -->
+    <meta name="description" content="Knower Life – киберпанк-портал с интерактивной анимацией, музыкой и эффектами">
+    <meta property="og:title" content="Knower Life">
+    <meta property="og:description" content="Погрузитесь в атмосферу будущего с Knower Life">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://knowerlife.ru">
+    <meta property="og:image" content="https://knowerlife.ru/og-image.jpg">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏣</text></svg>">
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
+    <!-- Слои canvas -->
+    <canvas id="stars-canvas"></canvas>
+    <canvas id="hex-grid"></canvas>
     <div id="background"></div>
     <canvas id="matrix-rain"></canvas>
     <canvas id="ai-network"></canvas>
+    <canvas id="audio-visualizer"></canvas>
+    <canvas id="ripple-canvas"></canvas>  <!-- новый слой для эффекта ряби -->
+
+    <!-- Часы -->
+    <div class="clock-container" id="clock">00:00:00</div>
+
+    <!-- Терминал -->
+    <div id="terminal"></div>
+
+    <!-- Основной текст -->
     <div class="text-container" id="knower-life">
-        <div class="text">
-            <span>K</span>
-            <span>N</span>
-            <span>O</span>
-            <span>W</span>
-            <span>E</span>
-            <span>R</span>
-            <span>&nbsp;</span>
-            <span>L</span>
-            <span>I</span>
-            <span>F</span>
-            <span>E</span>
+        <div class="text" id="main-title">
+            <span>K</span><span>N</span><span>O</span><span>W</span><span>E</span><span>R</span><span>&nbsp;</span><span>L</span><span>I</span><span>F</span><span>E</span>
+        </div>
+        <div class="sub-text">// ИСКУССТВЕННЫЙ ИНТЕЛЛЕКТ • БУДУЩЕЕ УЖЕ ЗДЕСЬ</div>
+    </div>
+
+    <!-- Модальное окно -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <h2>KNOWER LIFE</h2>
+            <p>Это интерактивный арт-проект, объединяющий эстетику киберпанка, искусственного интеллекта и цифровой культуры. Здесь каждый элемент — от мерцающей сетки до пульсирующего звука — создаёт погружение в мир будущего.</p>
+            <p>Проект открыт для коллабораций и вдохновения. Присоединяйтесь к нам в социальных сетях!</p>
+            <div class="modal-socials">
+                <a href="https://github.com/knowerlife" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
+                <a href="https://t.me/knowerlife" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram-plane"></i></a>
+                <a href="https://vk.com/knowerlife" target="_blank" rel="noopener noreferrer"><i class="fab fa-vk"></i></a>
+                <a href="https://instagram.com/knowerlife" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+            </div>
         </div>
     </div>
+
+    <!-- Футер -->
     <footer>
-        <a href="https://github.com/knowerlife" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
-        <a href="https://t.me/knowerlife" target="_blank" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
-        <a href="https://vk.com/knowerlife" target="_blank" aria-label="VK"><i class="fab fa-vk"></i></a>
-        <a href="https://instagram.com/knowerlife" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-        <button id="audio-toggle" aria-label="Toggle audio"><i class="fas fa-volume-up"></i></button>
+        <a href="https://github.com/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://t.me/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="Telegram" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+        <a href="https://vk.com/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="VK" title="ВКонтакте"><i class="fab fa-vk"></i></a>
+        <a href="https://instagram.com/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <button id="audio-toggle" aria-label="Toggle audio" aria-pressed="false"><i class="fas fa-volume-up"></i></button>
     </footer>
+
+    <!-- Аудио -->
     <audio id="background-music" preload="auto" loop>
         <source src="/knowerlife/background.mp3" type="audio/mpeg">
     </audio>
     <audio id="click-sound" preload="auto">
         <source src="/knowerlife/click.mp3" type="audio/mpeg">
     </audio>
+
     <script src="script.js"></script>
 </body>
 </html>
