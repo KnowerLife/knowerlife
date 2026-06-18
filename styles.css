@@ -280,7 +280,7 @@ body {
     color: #00ffcc;
 }
 
-/* ===== МОДАЛКА ЧАТА (Gitwhisper) ===== */
+/* ===== МОДАЛКА ЧАТА (Giscus) ===== */
 .chat-modal-overlay {
     display: none;
     position: fixed;
@@ -301,38 +301,53 @@ body {
     position: relative;
     width: 90%;
     max-width: 750px;
+    max-height: 85vh;
     background: #0f0f0f;
     border: 2px solid #00ffcc;
     border-radius: 12px;
-    padding: 15px;
+    padding: 20px 25px 25px;
     box-shadow: 0 0 60px rgba(0, 255, 204, 0.2);
+    overflow-y: auto;
+}
+.chat-modal-container::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-modal-container::-webkit-scrollbar-track {
+    background: #1a1a2e;
+    border-radius: 3px;
+}
+.chat-modal-container::-webkit-scrollbar-thumb {
+    background: #00ffcc;
+    border-radius: 3px;
 }
 .chat-close-btn {
     position: absolute;
-    top: -15px;
-    right: -15px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid #00ffcc;
-    background: #0f0f0f;
-    color: #00ffcc;
-    font-size: 24px;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 2rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    transition: color 0.3s, transform 0.3s;
     z-index: 10;
 }
 .chat-close-btn:hover {
-    background: #00ffcc;
-    color: #0f0f0f;
+    color: #00ffcc;
     transform: rotate(90deg);
 }
-.chat-modal-container iframe {
-    display: block;
-    border-radius: 8px;
+
+/* Стили для Giscus внутри модалки */
+#giscus-container {
+    min-height: 300px;
+    padding: 5px 0;
+}
+/* Тёмная тема Giscus будет применена через параметры */
+.giscus {
+    background: transparent !important;
+}
+.giscus-frame {
+    background: transparent !important;
 }
 
 /* ===== КНОПКА ОТКРЫТИЯ ЧАТА ===== */
@@ -432,7 +447,7 @@ footer a:hover, footer button:hover {
     .modal { padding: 25px 20px; }
     footer a, footer button { font-size: 1.4em; margin: 0 10px; }
     .chat-toggle-btn { width: 50px; height: 50px; font-size: 22px; bottom: 80px; right: 20px; }
-    .chat-modal-container { padding: 10px; width: 95%; }
-    .chat-modal-container iframe { height: 450px; }
-    .chat-close-btn { top: -10px; right: -10px; width: 34px; height: 34px; font-size: 18px; }
+    .chat-modal-container { padding: 15px; width: 95%; max-height: 80vh; }
+    .chat-close-btn { font-size: 1.8rem; top: 5px; right: 10px; }
+    #giscus-container { min-height: 250px; }
 }
