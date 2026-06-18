@@ -34,25 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const giscusContainer = document.getElementById('giscus-container');
 
     // ============================
-    // 2. КОНФИГУРАЦИЯ GISCUS (ЗАМЕНИТЕ НА СВОИ ЗНАЧЕНИЯ)
-    // ============================
-    const GISCUS_CONFIG = {
-        repo: 'KnowerLife/knowerlife',          // Ваш репозиторий
-        repoId: 'R_kgDOPf9skg',                    // ID репозитория (получить на giscus.app)
-        categoryId: 'DIC_kwDOPf9sks4C_ZjZ',               // ID категории
-        mapping: 'pathname',                     // Способ привязки к странице
-        data-category="General"
-        strict: '1',
-        reactionsEnabled: '1',
-        emitMetadata: '0',
-        inputPosition: 'bottom',
-        theme: 'dark',                           // dark, dark_dimmed, dark_high_contrast
-        lang: 'ru',
-        loading: 'lazy'
-    };
-
-    // ============================
-    // 3. РАЗМЕРЫ CANVAS
+    // 2. РАЗМЕРЫ CANVAS
     // ============================
     function resizeCanvases() {
         const w = window.innerWidth;
@@ -68,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', resizeCanvases);
 
     // ============================
-    // 4. ЗВЁЗДЫ
+    // 3. ЗВЁЗДЫ
     // ============================
     let stars = [];
     function initStars() {
@@ -97,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 5. ГЕКСАГОНАЛЬНАЯ СЕТКА
+    // 4. ГЕКСАГОНАЛЬНАЯ СЕТКА
     // ============================
     let hexagons = [];
     let hexOffsetX = 0, hexOffsetY = 0;
@@ -144,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 6. МАТРИЧНЫЙ ДОЖДЬ
+    // 5. МАТРИЧНЫЙ ДОЖДЬ
     // ============================
     const chars = '0100101101001110010011110101011101000101010100100010000001001100010010010100011001000101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
     let fontSize = 14;
@@ -187,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 7. СЕТЬ ИИ
+    // 6. СЕТЬ ИИ (УЗЛЫ И СВЯЗИ)
     // ============================
     class Node {
         constructor(x, y) {
@@ -247,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 8. ВИЗУАЛИЗАЦИЯ ЗВУКА
+    // 7. ВИЗУАЛИЗАЦИЯ ЗВУКА (ЭКВАЛАЙЗЕР)
     // ============================
     let audioContext = null;
     let analyser = null;
@@ -286,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 9. ЭФФЕКТ РЯБИ
+    // 8. ЭФФЕКТ РЯБИ (RIPPLE)
     // ============================
     let ripples = [];
     class Ripple {
@@ -334,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================
-    // 10. ТЕРМИНАЛ
+    // 9. ТЕРМИНАЛ
     // ============================
     const terminalMessages = [
         '> Инициализация нейросети...',
@@ -371,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 11. ВЗАИМОДЕЙСТВИЕ С МЫШЬЮ/ТАЧ
+    // 10. ВЗАИМОДЕЙСТВИЕ С МЫШЬЮ/ТАЧ
     // ============================
     let mouseX = null, mouseY = null;
     const particles = [];
@@ -426,7 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 12. ЧАСЫ
+    // 11. ЧАСЫ
     // ============================
     function updateClock() {
         const now = new Date();
@@ -436,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateClock();
 
     // ============================
-    // 13. АУДИО
+    // 12. АУДИО
     // ============================
     let isAudioInitialized = false;
     let isAudioPlaying = false;
@@ -489,7 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 14. ЧАСТИЦЫ ОТ ТЕКСТА
+    // 13. ЧАСТИЦЫ ОТ ТЕКСТА
     // ============================
     function createTextParticles(count, centerX, centerY) {
         const rect = centerX ? { left: centerX - 50, top: centerY - 50, width: 100, height: 100 } : textElement.getBoundingClientRect();
@@ -523,7 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 15. МОДАЛЬНОЕ ОКНО (о проекте)
+    // 14. МОДАЛЬНОЕ ОКНО "О ПРОЕКТЕ"
     // ============================
     function openModal() {
         modalOverlay.classList.add('active');
@@ -547,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================
-    // 16. УПРАВЛЕНИЕ ЧАТОМ (GISCUS)
+    // 15. УПРАВЛЕНИЕ ЧАТОМ (GISCUS – ИСПРАВЛЕННАЯ ВЕРСИЯ)
     // ============================
     let giscusLoaded = false;
 
@@ -555,31 +537,29 @@ document.addEventListener('DOMContentLoaded', () => {
         if (giscusLoaded) return;
         giscusLoaded = true;
 
-        // Очищаем контейнер на случай, если там что-то было
+        // Очищаем контейнер
         giscusContainer.innerHTML = '';
 
-        // Создаём скрипт Giscus
+        // Создаём скрипт с вашими параметрами
         const script = document.createElement('script');
         script.src = 'https://giscus.app/client.js';
-        script.setAttribute('data-repo', GISCUS_CONFIG.repo);
-        script.setAttribute('data-repo-id', GISCUS_CONFIG.repoId);
-        script.setAttribute('data-category', GISCUS_CONFIG.category);
-        script.setAttribute('data-category-id', GISCUS_CONFIG.categoryId);
-        script.setAttribute('data-mapping', GISCUS_CONFIG.mapping);
-        script.setAttribute('data-strict', GISCUS_CONFIG.strict);
-        script.setAttribute('data-reactions-enabled', GISCUS_CONFIG.reactionsEnabled);
-        script.setAttribute('data-emit-metadata', GISCUS_CONFIG.emitMetadata);
-        script.setAttribute('data-input-position', GISCUS_CONFIG.inputPosition);
-        script.setAttribute('data-theme', GISCUS_CONFIG.theme);
-        script.setAttribute('data-lang', GISCUS_CONFIG.lang);
-        script.setAttribute('data-loading', GISCUS_CONFIG.loading);
+        script.setAttribute('data-repo', 'KnowerLife/knowerlife');
+        script.setAttribute('data-repo-id', 'R_kgDOPf9skg');
+        script.setAttribute('data-category', 'General');
+        script.setAttribute('data-category-id', 'DIC_kwDOPf9sks4C_ZjZ');
+        script.setAttribute('data-mapping', 'pathname');
+        script.setAttribute('data-strict', '1');
+        script.setAttribute('data-reactions-enabled', '1');
+        script.setAttribute('data-emit-metadata', '0');
+        script.setAttribute('data-input-position', 'bottom');
+        script.setAttribute('data-theme', 'preferred_color_scheme');
+        script.setAttribute('data-lang', 'ru');
         script.setAttribute('crossorigin', 'anonymous');
         script.async = true;
 
-        // Добавляем скрипт в контейнер
         giscusContainer.appendChild(script);
 
-        // Добавляем небольшой лоадер
+        // Показываем лоадер
         const loader = document.createElement('div');
         loader.style.cssText = `
             text-align: center;
@@ -590,7 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loader.textContent = 'Загрузка обсуждения...';
         giscusContainer.prepend(loader);
 
-        // Удаляем лоадер после загрузки Giscus (через MutationObserver)
+        // Удаляем лоадер после загрузки Giscus
         const observer = new MutationObserver(() => {
             if (giscusContainer.querySelector('.giscus')) {
                 const l = giscusContainer.querySelector('div:first-child');
@@ -602,7 +582,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         observer.observe(giscusContainer, { childList: true, subtree: true });
 
-        // Fallback: удалить лоадер через 8 секунд
+        // Fallback: удалить через 8 секунд
         setTimeout(() => {
             const l = giscusContainer.querySelector('div:first-child');
             if (l && l.textContent.includes('Загрузка')) {
@@ -613,7 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openChat() {
         chatOverlay.classList.add('active');
-        loadGiscus(); // Загружаем Giscus при открытии
+        loadGiscus();
         // Добавляем рябь на кнопке
         if (typeof ripples !== 'undefined') {
             const rect = chatOpenBtn.getBoundingClientRect();
@@ -637,7 +617,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================
-    // 17. ОСНОВНОЙ ЦИКЛ
+    // 16. ОСНОВНОЙ ЦИКЛ АНИМАЦИИ
     // ============================
     function animate() {
         try {
@@ -670,7 +650,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 18. СТАРТ
+    // 17. СТАРТ
     // ============================
     resizeCanvases();
     animate();
