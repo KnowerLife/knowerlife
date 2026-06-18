@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         repoId: 'R_kgDOPf9skg',                    // ID репозитория (получить на giscus.app)
         categoryId: 'DIC_kwDOPf9sks4C_ZjY',               // ID категории
         mapping: 'pathname',                     // Способ привязки к странице
-        data-category="Announcements"
+        data-category="General"
         strict: '0',
         reactionsEnabled: '1',
         emitMetadata: '0',
