@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         categoryId: 'DIC_kwDOPf9sks4C_ZjZ',               // ID категории
         mapping: 'pathname',                     // Способ привязки к странице
         data-category="General"
-        strict: '0',
+        strict: '1',
         reactionsEnabled: '1',
         emitMetadata: '0',
         inputPosition: 'bottom',
