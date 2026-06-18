@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    <!-- Модалка чата (Giscus – статическая вставка) -->
+    <!-- Модалка чата -->
     <div id="chat-modal-overlay" class="chat-modal-overlay">
         <div class="chat-modal-container">
             <button id="chat-close-btn" class="chat-close-btn">&times;</button>
@@ -63,25 +63,8 @@
                 <i class="fab fa-github"></i> Обсуждение
             </h3>
             <div id="giscus-container">
-                <!-- Скрипт Giscus загружается сразу при открытии страницы -->
-                <script src="https://giscus.app/client.js"
-                    data-repo="KnowerLife/knowerlife"
-                    data-repo-id="R_kgDOPf9skg"
-                    data-mapping="number"
-                    data-term="6"
-                    data-reactions-enabled="1"
-                    data-emit-metadata="1"
-                    data-input-position="bottom"
-                    data-theme="dark"
-                    data-lang="ru"
-                    data-loading="lazy"
-                    crossorigin="anonymous"
-                    async>
-                </script>
+                <script src="https://api.ghostchat.dev/widget.js" data-site="cl1d0dd841b7c84d6eaa9580ac" async></script>
             </div>
-            <p style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:10px;">
-                Войдите через GitHub, чтобы оставить комментарий
-            </p>
         </div>
     </div>
 
