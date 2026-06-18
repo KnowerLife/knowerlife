@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatOpenBtn = document.getElementById('chat-open-btn');
     const chatCloseBtn = document.getElementById('chat-close-btn');
     const chatOverlay = document.getElementById('chat-modal-overlay');
+    const vkCommentsContainer = document.getElementById('vk_comments');
 
     // ============================
     // 2. РАЗМЕРЫ CANVAS
@@ -528,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================
-    // 15. УПРАВЛЕНИЕ ЧАТОМ (GISCUS – ТОЛЬКО ВИДИМОСТЬ)
+    // 15. УПРАВЛЕНИЕ МОДАЛЬНЫМ ОКНОМ КОММЕНТАРИЕВ
     // ============================
     function openChat() {
         chatOverlay.classList.add('active');
@@ -537,6 +538,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const rect = chatOpenBtn.getBoundingClientRect();
             ripples.push(new Ripple(rect.left + rect.width/2, rect.top + rect.height/2));
         }
+        
+        // Переинициализация виджета ВК при открытии модалки
+        setTimeout(() => {
+            if (typeof VK !== 'undefined' && VK.Widgets) {
+                // Проверяем, инициализирован ли уже виджет
+                const container = document.getElementById('vk_comments');
+                if (container && container.innerHTML.trim() === '') {
+                    VK.Widgets.Comments("vk_comments", {
+                        limit: 10,
+                        attach: "*",
+                        autoPublish: 0,
+                        pageUrl: window.location.href
+                    });
+                }
+            }
+        }, 100);
     }
 
     function closeChat() {
