@@ -2,21 +2,35 @@ document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
     // ============================
-    // 1. КАСТОМНЫЙ КУРСОР
-    // ============================
-    const cursor = document.createElement('div');
-    cursor.className = 'custom-cursor';
-    document.body.appendChild(cursor);
-    document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-    });
-    document.addEventListener('mouseleave', () => {
-        cursor.style.display = 'none';
-    });
-    document.addEventListener('mouseenter', () => {
-        cursor.style.display = 'block';
-    });
+// 1. КАСТОМНЫЙ КУРСОР (исправлен)
+// ============================
+const cursor = document.createElement('div');
+cursor.className = 'custom-cursor';
+document.body.appendChild(cursor);
+
+let cursorX = 0, cursorY = 0;
+let targetX = 0, targetY = 0;
+
+document.addEventListener('mousemove', (e) => {
+    targetX = e.clientX;
+    targetY = e.clientY;
+});
+
+function updateCursor() {
+    cursorX += (targetX - cursorX) * 0.2;
+    cursorY += (targetY - cursorY) * 0.2;
+    cursor.style.left = cursorX + 'px';
+    cursor.style.top = cursorY + 'px';
+    requestAnimationFrame(updateCursor);
+}
+updateCursor();
+
+document.addEventListener('mouseleave', () => {
+    cursor.style.display = 'none';
+});
+document.addEventListener('mouseenter', () => {
+    cursor.style.display = 'block';
+});
 
     // ============================
     // 2. ПРОГРЕСС-БАР ЗАГРУЗКИ
@@ -467,21 +481,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 13. ЧАСЫ И ЧАСОВЫЕ ПОЯСА
-    // ============================
-    function updateClocks() {
-        const now = new Date();
-        // Основные часы (Москва)
-        clockElement.textContent = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
-        // Нью-Йорк (UTC-4 летом, UTC-5 зимой)
-        const nyTime = new Date(now.toLocaleString('en-US', {timeZone: 'America/New_York'}));
-        document.getElementById('ny-time').textContent = `${String(nyTime.getHours()).padStart(2,'0')}:${String(nyTime.getMinutes()).padStart(2,'0')}`;
-        // Токио (UTC+9)
-        const tokyoTime = new Date(now.toLocaleString('en-US', {timeZone: 'Asia/Tokyo'}));
-        document.getElementById('tokyo-time').textContent = `${String(tokyoTime.getHours()).padStart(2,'0')}:${String(tokyoTime.getMinutes()).padStart(2,'0')}`;
-    }
-    setInterval(updateClocks, 1000);
-    updateClocks();
+// 13. ЧАСЫ И ЧАСОВЫЕ ПОЯСА
+// ============================
+function updateClocks() {
+    const now = new Date();
+    // Основные часы (Москва)
+    clockElement.textContent = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+    // МСК (то же самое, что и сейчас, но для отдельного элемента)
+    document.getElementById('msk-time').textContent = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    // Нью-Йорк (UTC-4 летом, UTC-5 зимой)
+    const nyTime = new Date(now.toLocaleString('en-US', {timeZone: 'America/New_York'}));
+    document.getElementById('ny-time').textContent = `${String(nyTime.getHours()).padStart(2,'0')}:${String(nyTime.getMinutes()).padStart(2,'0')}`;
+    // Токио (UTC+9)
+    const tokyoTime = new Date(now.toLocaleString('en-US', {timeZone: 'Asia/Tokyo'}));
+    document.getElementById('tokyo-time').textContent = `${String(tokyoTime.getHours()).padStart(2,'0')}:${String(tokyoTime.getMinutes()).padStart(2,'0')}`;
+}
+setInterval(updateClocks, 1000);
+updateClocks();
 
     // ============================
     // 14. АУДИО
