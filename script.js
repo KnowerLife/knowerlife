@@ -2,38 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
     // ============================
-// 1. КАСТОМНЫЙ КУРСОР (исправлен)
-// ============================
-const cursor = document.createElement('div');
-cursor.className = 'custom-cursor';
-document.body.appendChild(cursor);
-
-let cursorX = 0, cursorY = 0;
-let targetX = 0, targetY = 0;
-
-document.addEventListener('mousemove', (e) => {
-    targetX = e.clientX;
-    targetY = e.clientY;
-});
-
-function updateCursor() {
-    cursorX += (targetX - cursorX) * 0.2;
-    cursorY += (targetY - cursorY) * 0.2;
-    cursor.style.left = cursorX + 'px';
-    cursor.style.top = cursorY + 'px';
-    requestAnimationFrame(updateCursor);
-}
-updateCursor();
-
-document.addEventListener('mouseleave', () => {
-    cursor.style.display = 'none';
-});
-document.addEventListener('mouseenter', () => {
-    cursor.style.display = 'block';
-});
-
-    // ============================
-    // 2. ПРОГРЕСС-БАР ЗАГРУЗКИ
+    // 1. ПРОГРЕСС-БАР ЗАГРУЗКИ
     // ============================
     const loaderBar = document.getElementById('loader-bar');
     let loadProgress = 0;
@@ -53,7 +22,7 @@ document.addEventListener('mouseenter', () => {
     }, 200);
 
     // ============================
-    // 3. ПОЛУЧЕНИЕ ЭЛЕМЕНТОВ
+    // 2. ПОЛУЧЕНИЕ ЭЛЕМЕНТОВ
     // ============================
     const canvas = document.getElementById('ai-network');
     const ctx = canvas.getContext('2d');
@@ -103,11 +72,8 @@ document.addEventListener('mouseenter', () => {
     // Счётчик онлайн
     const onlineCount = document.getElementById('online-count');
 
-    // Обновления
-    const updatesPanel = document.getElementById('updates-panel');
-
     // ============================
-    // 4. РАЗМЕРЫ CANVAS
+    // 3. РАЗМЕРЫ CANVAS
     // ============================
     function resizeCanvases() {
         const w = window.innerWidth;
@@ -123,7 +89,7 @@ document.addEventListener('mouseenter', () => {
     window.addEventListener('resize', resizeCanvases);
 
     // ============================
-    // 5. ЗВЁЗДЫ
+    // 4. ЗВЁЗДЫ
     // ============================
     let stars = [];
     function initStars() {
@@ -152,7 +118,7 @@ document.addEventListener('mouseenter', () => {
     }
 
     // ============================
-    // 6. ГЕКСАГОНАЛЬНАЯ СЕТКА
+    // 5. ГЕКСАГОНАЛЬНАЯ СЕТКА
     // ============================
     let hexagons = [];
     let hexOffsetX = 0, hexOffsetY = 0;
@@ -199,7 +165,7 @@ document.addEventListener('mouseenter', () => {
     }
 
     // ============================
-    // 7. МАТРИЧНЫЙ ДОЖДЬ
+    // 6. МАТРИЧНЫЙ ДОЖДЬ
     // ============================
     const chars = '0100101101001110010011110101011101000101010100100010000001001100010010010100011001000101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
     let fontSize = 14;
@@ -242,7 +208,7 @@ document.addEventListener('mouseenter', () => {
     }
 
     // ============================
-    // 8. СЕТЬ ИИ
+    // 7. СЕТЬ ИИ
     // ============================
     class Node {
         constructor(x, y) {
@@ -302,7 +268,7 @@ document.addEventListener('mouseenter', () => {
     }
 
     // ============================
-    // 9. ВИЗУАЛИЗАЦИЯ ЗВУКА
+    // 8. ВИЗУАЛИЗАЦИЯ ЗВУКА
     // ============================
     let audioContext = null;
     let analyser = null;
@@ -341,7 +307,7 @@ document.addEventListener('mouseenter', () => {
     }
 
     // ============================
-    // 10. ЭФФЕКТ РЯБИ
+    // 9. ЭФФЕКТ РЯБИ
     // ============================
     let ripples = [];
     class Ripple {
@@ -389,7 +355,7 @@ document.addEventListener('mouseenter', () => {
     });
 
     // ============================
-    // 11. ТЕРМИНАЛ
+    // 10. ТЕРМИНАЛ
     // ============================
     const terminalMessages = [
         '> Инициализация нейросети...',
@@ -426,7 +392,7 @@ document.addEventListener('mouseenter', () => {
     }
 
     // ============================
-    // 12. ВЗАИМОДЕЙСТВИЕ С МЫШЬЮ/ТАЧ
+    // 11. ВЗАИМОДЕЙСТВИЕ С МЫШЬЮ/ТАЧ
     // ============================
     let mouseX = null, mouseY = null;
     const particles = [];
@@ -481,26 +447,26 @@ document.addEventListener('mouseenter', () => {
     }
 
     // ============================
-// 13. ЧАСЫ И ЧАСОВЫЕ ПОЯСА
-// ============================
-function updateClocks() {
-    const now = new Date();
-    // Основные часы (Москва)
-    clockElement.textContent = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
-    // МСК (то же самое, что и сейчас, но для отдельного элемента)
-    document.getElementById('msk-time').textContent = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-    // Нью-Йорк (UTC-4 летом, UTC-5 зимой)
-    const nyTime = new Date(now.toLocaleString('en-US', {timeZone: 'America/New_York'}));
-    document.getElementById('ny-time').textContent = `${String(nyTime.getHours()).padStart(2,'0')}:${String(nyTime.getMinutes()).padStart(2,'0')}`;
-    // Токио (UTC+9)
-    const tokyoTime = new Date(now.toLocaleString('en-US', {timeZone: 'Asia/Tokyo'}));
-    document.getElementById('tokyo-time').textContent = `${String(tokyoTime.getHours()).padStart(2,'0')}:${String(tokyoTime.getMinutes()).padStart(2,'0')}`;
-}
-setInterval(updateClocks, 1000);
-updateClocks();
+    // 12. ЧАСЫ И ЧАСОВЫЕ ПОЯСА
+    // ============================
+    function updateClocks() {
+        const now = new Date();
+        // Основные часы (Москва)
+        clockElement.textContent = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+        // МСК (то же самое, что и сейчас, но для отдельного элемента)
+        document.getElementById('msk-time').textContent = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+        // Нью-Йорк (UTC-4 летом, UTC-5 зимой)
+        const nyTime = new Date(now.toLocaleString('en-US', {timeZone: 'America/New_York'}));
+        document.getElementById('ny-time').textContent = `${String(nyTime.getHours()).padStart(2,'0')}:${String(nyTime.getMinutes()).padStart(2,'0')}`;
+        // Токио (UTC+9)
+        const tokyoTime = new Date(now.toLocaleString('en-US', {timeZone: 'Asia/Tokyo'}));
+        document.getElementById('tokyo-time').textContent = `${String(tokyoTime.getHours()).padStart(2,'0')}:${String(tokyoTime.getMinutes()).padStart(2,'0')}`;
+    }
+    setInterval(updateClocks, 1000);
+    updateClocks();
 
     // ============================
-    // 14. АУДИО
+    // 13. АУДИО
     // ============================
     let isAudioInitialized = false;
     let isAudioPlaying = false;
@@ -553,7 +519,7 @@ updateClocks();
     }
 
     // ============================
-    // 15. СЧЁТЧИК ОНЛАЙН (анимированный)
+    // 14. СЧЁТЧИК ОНЛАЙН (анимированный)
     // ============================
     function updateOnlineCounter() {
         const newVal = Math.floor(Math.random() * 30) + 10;
@@ -572,7 +538,7 @@ updateClocks();
     setInterval(updateOnlineCounter, 5000);
 
     // ============================
-    // 16. ГЕНЕРАТОР ФРАЗ
+    // 15. ГЕНЕРАТОР ФРАЗ
     // ============================
     const quotes = [
         "Искусственный интеллект — это зеркало человечества.",
@@ -612,7 +578,7 @@ updateClocks();
     }, 500);
 
     // ============================
-    // 17. AI-ЧАТ (имитация)
+    // 16. AI-ЧАТ (имитация)
     // ============================
     const botAnswers = {
         'привет': 'Здравствуйте! Рад вас видеть.',
@@ -668,7 +634,7 @@ updateClocks();
     });
 
     // ============================
-    // 18. ЧАСТИЦЫ ОТ ТЕКСТА
+    // 17. ЧАСТИЦЫ ОТ ТЕКСТА
     // ============================
     function createTextParticles(count, centerX, centerY) {
         const rect = centerX ? { left: centerX - 50, top: centerY - 50, width: 100, height: 100 } : textElement.getBoundingClientRect();
@@ -702,7 +668,7 @@ updateClocks();
     }
 
     // ============================
-    // 19. МОДАЛЬНОЕ ОКНО "О ПРОЕКТЕ"
+    // 18. МОДАЛЬНОЕ ОКНО "О ПРОЕКТЕ"
     // ============================
     function openModal() {
         modalOverlay.classList.add('active');
@@ -726,7 +692,7 @@ updateClocks();
     });
 
     // ============================
-    // 20. УПРАВЛЕНИЕ КОММЕНТАРИЯМИ ВК
+    // 19. УПРАВЛЕНИЕ КОММЕНТАРИЯМИ ВК
     // ============================
     function openChat() {
         chatOverlay.classList.add('active');
@@ -761,7 +727,7 @@ updateClocks();
     });
 
     // ============================
-    // 21. ОБРАТНАЯ СВЯЗЬ
+    // 20. ОБРАТНАЯ СВЯЗЬ
     // ============================
     feedbackOpenBtn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -790,7 +756,7 @@ updateClocks();
     });
 
     // ============================
-    // 22. СМЕНА ГРАДИЕНТА ПО ВРЕМЕНИ СУТОК
+    // 21. СМЕНА ГРАДИЕНТА ПО ВРЕМЕНИ СУТОК
     // ============================
     function updateBackground() {
         const hours = new Date().getHours();
@@ -809,7 +775,7 @@ updateClocks();
     setInterval(updateBackground, 60000); // обновляем каждую минуту
 
     // ============================
-    // 23. ОСНОВНОЙ ЦИКЛ
+    // 22. ОСНОВНОЙ ЦИКЛ
     // ============================
     function animate() {
         try {
@@ -842,7 +808,7 @@ updateClocks();
     }
 
     // ============================
-    // 24. СТАРТ
+    // 23. СТАРТ
     // ============================
     resizeCanvases();
     animate();
