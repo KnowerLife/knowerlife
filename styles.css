@@ -280,7 +280,7 @@ body {
     color: #00ffcc;
 }
 
-/* ===== МОДАЛКА ЧАТА (Giscus) ===== */
+/* ===== МОДАЛКА КОММЕНТАРИЕВ (ВК) ===== */
 .chat-modal-overlay {
     display: none;
     position: fixed;
@@ -337,17 +337,14 @@ body {
     transform: rotate(90deg);
 }
 
-/* Стили для Giscus внутри модалки */
-#giscus-container {
+/* Стили для виджета ВК */
+#vk_comments {
     min-height: 300px;
     padding: 5px 0;
 }
-/* Тёмная тема Giscus будет применена через параметры */
-.giscus {
-    background: transparent !important;
-}
-.giscus-frame {
-    background: transparent !important;
+#vk_comments iframe {
+    width: 100% !important;
+    min-height: 300px;
 }
 
 /* ===== КНОПКА ОТКРЫТИЯ ЧАТА ===== */
@@ -449,5 +446,5 @@ footer a:hover, footer button:hover {
     .chat-toggle-btn { width: 50px; height: 50px; font-size: 22px; bottom: 80px; right: 20px; }
     .chat-modal-container { padding: 15px; width: 95%; max-height: 80vh; }
     .chat-close-btn { font-size: 1.8rem; top: 5px; right: 10px; }
-    #giscus-container { min-height: 250px; }
+    #vk_comments { min-height: 200px; }
 }
