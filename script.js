@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. КОНФИГУРАЦИЯ GISCUS (ЗАМЕНИТЕ НА СВОИ ЗНАЧЕНИЯ)
     // ============================
     const GISCUS_CONFIG = {
-        repo: 'KnowerLife/knowerlife',          // Ваш репозиторий
+        repo: 'https://github.com/KnowerLife/knowerlife',          // Ваш репозиторий
         repoId: 'R_kgDOPf9skg',                    // ID репозитория (получить на giscus.app)
         categoryId: 'DIC_kwDOPf9sks4C_ZjY',               // ID категории
         mapping: 'pathname',                     // Способ привязки к странице
