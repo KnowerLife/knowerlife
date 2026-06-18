@@ -14,6 +14,15 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <!-- ===== ВК КОММЕНТАРИИ: ПОДКЛЮЧЕНИЕ БИБЛИОТЕКИ ===== -->
+    <script src="https://vk.com/js/api/openapi.js?169" type="text/javascript"></script>
+    <script type="text/javascript">
+        VK.init({
+            apiId: 0jywk2i0N4e0yQFdaGbD, // ⚠️ ЗАМЕНИТЕ НА ВАШ ID ПРИЛОЖЕНИЯ ВК
+            onlyWidgets: true
+        });
+    </script>
 </head>
 <body>
     <!-- CANVAS слои -->
@@ -55,16 +64,29 @@
         </div>
     </div>
 
-    <!-- Модалка чата -->
+    <!-- ===== МОДАЛКА КОММЕНТАРИЕВ (ВК) ===== -->
     <div id="chat-modal-overlay" class="chat-modal-overlay">
         <div class="chat-modal-container">
             <button id="chat-close-btn" class="chat-close-btn">&times;</button>
             <h3 style="color:#00ffcc; margin-top:0; text-shadow:0 0 20px rgba(0,255,204,0.3);">
-                <i class="fab fa-github"></i> Обсуждение
+                <i class="fab fa-vk"></i> Комментарии ВКонтакте
             </h3>
-            <div id="giscus-container">
-                <script src="https://api.ghostchat.dev/widget.js" data-site="cl1d0dd841b7c84d6eaa9580ac"></script>
-            </div>
+            <!-- Контейнер для виджета комментариев ВК -->
+            <div id="vk_comments"></div>
+            <!-- Инициализация виджета -->
+            <script type="text/javascript">
+                if (typeof VK !== 'undefined' && VK.Widgets) {
+                    VK.Widgets.Comments("vk_comments", {
+                        limit: 10,
+                        attach: "*",
+                        autoPublish: 0,
+                        pageUrl: window.location.href
+                    });
+                }
+            </script>
+            <p style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:10px;">
+                Войдите через ВКонтакте, чтобы оставить комментарий
+            </p>
         </div>
     </div>
 
@@ -84,10 +106,10 @@
 
     <!-- Аудио -->
     <audio id="background-music" preload="auto" loop>
-        <source src="background.mp3" type="audio/mpeg">
+        <source src="/knowerlife/background.mp3" type="audio/mpeg">
     </audio>
     <audio id="click-sound" preload="auto">
-        <source src="click.mp3" type="audio/mpeg">
+        <source src="/knowerlife/click.mp3" type="audio/mpeg">
     </audio>
 
     <script src="script.js"></script>
