@@ -55,23 +55,22 @@
         </div>
     </div>
 
-    <!-- Модалка чата Gitwhisper -->
+    <!-- Модалка чата (Giscus) -->
     <div id="chat-modal-overlay" class="chat-modal-overlay">
         <div class="chat-modal-container">
             <button id="chat-close-btn" class="chat-close-btn">&times;</button>
-            <iframe 
-                src="https://gitwhisper.netlify.app/" 
-                width="100%" 
-                height="550" 
-                style="border: none; border-radius: 8px;"
-                allow="camera; microphone; clipboard-read; clipboard-write"
-            >
-            </iframe>
+            <h3 style="color:#00ffcc; margin-top:0; text-shadow:0 0 20px rgba(0,255,204,0.3);">
+                <i class="fab fa-github"></i> Обсуждение
+            </h3>
+            <div id="giscus-container"></div>
+            <p style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:10px;">
+                Войдите через GitHub, чтобы оставить комментарий
+            </p>
         </div>
     </div>
 
     <!-- Кнопка открытия чата -->
-    <button id="chat-open-btn" class="chat-toggle-btn" aria-label="Открыть чат">
+    <button id="chat-open-btn" class="chat-toggle-btn" aria-label="Открыть обсуждение">
         <i class="fas fa-comment-dots"></i>
     </button>
 
