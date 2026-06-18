@@ -1,25 +1,173 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Основной canvas для анимации AI-сети
+    'use strict';
+
+    // ============================
+    // 1. ПОЛУЧЕНИЕ ЭЛЕМЕНТОВ
+    // ============================
     const canvas = document.getElementById('ai-network');
     const ctx = canvas.getContext('2d');
-    if (!ctx) console.error('Ошибка: не удалось получить контекст для ai-network canvas');
-    else console.log('Контекст ai-network успешно инициализирован');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    // Canvas для эффекта матричного дождя
     const matrixCanvas = document.getElementById('matrix-rain');
     const matrixCtx = matrixCanvas.getContext('2d');
-    if (!matrixCtx) console.error('Ошибка: не удалось получить контекст для matrix-rain canvas');
-    else console.log('Контекст matrix-rain успешно инициализирован');
-    matrixCanvas.width = window.innerWidth;
-    matrixCanvas.height = window.innerHeight;
-    console.log('Инициализация matrixCanvas:', matrixCanvas.width, matrixCanvas.height);
+    const starsCanvas = document.getElementById('stars-canvas');
+    const starsCtx = starsCanvas.getContext('2d');
+    const hexCanvas = document.getElementById('hex-grid');
+    const hexCtx = hexCanvas.getContext('2d');
+    const audioCanvas = document.getElementById('audio-visualizer');
+    const audioCtxVis = audioCanvas.getContext('2d');
+    const rippleCanvas = document.getElementById('ripple-canvas');
+    const rippleCtx = rippleCanvas.getContext('2d');
 
+    const textElement = document.getElementById('knower-life');
+    const mainTitle = document.getElementById('main-title');
+    const audioToggle = document.getElementById('audio-toggle');
+    const backgroundMusic = document.getElementById('background-music');
+    const clickSound = document.getElementById('click-sound');
+    const clockElement = document.getElementById('clock');
+    const terminalElement = document.getElementById('terminal');
+    const modalOverlay = document.getElementById('modal-overlay');
+    const modalClose = document.getElementById('modal-close');
+
+    // ============================
+    // 2. РАЗМЕРЫ CANVAS
+    // ============================
+    function resizeCanvases() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        [canvas, matrixCanvas, starsCanvas, hexCanvas, audioCanvas, rippleCanvas].forEach(c => {
+            c.width = w;
+            c.height = h;
+        });
+        initMatrixRain();
+        initStars();
+        initHexGrid();
+    }
+    window.addEventListener('resize', resizeCanvases);
+
+    // ============================
+    // 3. ЗВЁЗДЫ
+    // ============================
+    let stars = [];
+    function initStars() {
+        const count = Math.floor((starsCanvas.width * starsCanvas.height) / 3000);
+        stars = [];
+        for (let i = 0; i < count; i++) {
+            stars.push({
+                x: Math.random() * starsCanvas.width,
+                y: Math.random() * starsCanvas.height,
+                r: Math.random() * 1.5 + 0.5,
+                alpha: Math.random() * 0.8 + 0.2,
+                speed: Math.random() * 0.01 + 0.005
+            });
+        }
+    }
+    function drawStars() {
+        starsCtx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
+        stars.forEach(star => {
+            star.alpha += (Math.random() - 0.5) * 0.02;
+            star.alpha = Math.min(1, Math.max(0.1, star.alpha));
+            starsCtx.beginPath();
+            starsCtx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+            starsCtx.fillStyle = `rgba(200, 220, 255, ${star.alpha})`;
+            starsCtx.fill();
+        });
+    }
+
+    // ============================
+    // 4. ГЕКСАГОНАЛЬНАЯ СЕТКА
+    // ============================
+    let hexagons = [];
+    let hexOffsetX = 0, hexOffsetY = 0;
+
+    function initHexGrid() {
+        const w = hexCanvas.width, h = hexCanvas.height;
+        const size = 40;
+        const dx = size * Math.sqrt(3);
+        const dy = size * 1.5;
+        hexagons = [];
+        for (let y = -size; y < h + size; y += dy) {
+            for (let x = -size; x < w + size; x += dx) {
+                const offset = (Math.floor(y / dy) % 2 === 0) ? 0 : dx / 2;
+                hexagons.push({
+                    cx: x + offset,
+                    cy: y,
+                    size: size,
+                    phase: Math.random() * Math.PI * 2
+                });
+            }
+        }
+    }
+
+    function drawHexGrid() {
+        hexCtx.clearRect(0, 0, hexCanvas.width, hexCanvas.height);
+        const time = Date.now() / 3000;
+        hexagons.forEach(hex => {
+            const cx = hex.cx + hexOffsetX * 0.1;
+            const cy = hex.cy + hexOffsetY * 0.1;
+            hexCtx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angle = Math.PI / 3 * i + Math.PI / 6;
+                const x = cx + hex.size * Math.cos(angle);
+                const y = cy + hex.size * Math.sin(angle);
+                if (i === 0) hexCtx.moveTo(x, y);
+                else hexCtx.lineTo(x, y);
+            }
+            hexCtx.closePath();
+            const brightness = 0.15 + 0.1 * Math.sin(time + hex.phase);
+            hexCtx.strokeStyle = `rgba(0, 255, 204, ${brightness})`;
+            hexCtx.lineWidth = 0.8;
+            hexCtx.stroke();
+        });
+    }
+
+    // ============================
+    // 5. МАТРИЧНЫЙ ДОЖДЬ
+    // ============================
+    const chars = '0100101101001110010011110101011101000101010100100010000001001100010010010100011001000101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+    let fontSize = 14;
+    let columns = 0;
+    let dropsDown = [];
+    let speedsDown = [];
+
+    function initMatrixRain() {
+        fontSize = Math.min(14, Math.floor(matrixCanvas.width / 80) + 10);
+        columns = Math.floor(matrixCanvas.width / fontSize);
+        dropsDown = Array(columns).fill(0);
+        speedsDown = Array(columns).fill(1);
+    }
+
+    let matrixFrameCounter = 0;
+    function drawMatrixRain() {
+        matrixFrameCounter++;
+        if (matrixFrameCounter % 2 !== 0) return;
+        matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+        matrixCtx.font = `${fontSize}px monospace`;
+        if (!textElement) return;
+        const rect = textElement.getBoundingClientRect();
+
+        for (let i = 0; i < columns; i++) {
+            const x = i * fontSize;
+            const yDown = dropsDown[i] * fontSize;
+            const char = chars.charAt(Math.floor(Math.random() * chars.length));
+            const isInTextArea = x >= rect.left && x <= rect.right && yDown >= rect.top && yDown <= rect.bottom;
+            matrixCtx.fillStyle = isInTextArea
+                ? `rgba(0, 255, 204, ${Math.random() * 0.3 + 0.2})`
+                : `rgba(0, 255, 204, ${Math.random() * 0.7 + 0.3})`;
+            matrixCtx.fillText(char, x, yDown);
+            dropsDown[i] += (isInTextArea ? 0.5 : 1);
+            if (dropsDown[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                dropsDown[i] = 0;
+                speedsDown[i] = 1;
+            }
+        }
+    }
+
+    // ============================
+    // 6. СЕТЬ ИИ (УЗЛЫ И СВЯЗИ)
+    // ============================
     class Node {
         constructor(x, y) {
-            this.x = x;
-            this.y = y;
+            this.x = x; this.y = y;
             this.radius = Math.random() * 2 + 1;
             this.speedX = (Math.random() - 0.5) * 0.5;
             this.speedY = (Math.random() - 0.5) * 0.5;
@@ -53,10 +201,190 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    class Particle {
-        constructor(x, y, color) {
+    const nodes = [];
+    for (let i = 0; i < 50; i++) {
+        nodes.push(new Node(Math.random() * canvas.width, Math.random() * canvas.height));
+    }
+
+    function connectNodes() {
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+                const dist = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
+                if (dist < 100) {
+                    ctx.beginPath();
+                    ctx.moveTo(nodes[i].x, nodes[i].y);
+                    ctx.lineTo(nodes[j].x, nodes[j].y);
+                    ctx.strokeStyle = `rgba(0, 255, 204, ${1 - dist / 100})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    // ============================
+    // 7. ВИЗУАЛИЗАЦИЯ ЗВУКА (эквалайзер)
+    // ============================
+    let audioContext = null;
+    let analyser = null;
+    let dataArray = null;
+    let audioSource = null;
+
+    function initAudioVisualizer() {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 256;
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+        }
+        if (!audioSource && backgroundMusic) {
+            audioSource = audioContext.createMediaElementSource(backgroundMusic);
+            audioSource.connect(analyser);
+            analyser.connect(audioContext.destination);
+        }
+    }
+
+    function drawAudioVisualizer() {
+        if (!analyser || !dataArray) return;
+        analyser.getByteFrequencyData(dataArray);
+        const w = audioCanvas.width, h = audioCanvas.height;
+        audioCtxVis.clearRect(0, 0, w, h);
+        const barWidth = w / dataArray.length * 2.5;
+        let x = 0;
+        for (let i = 0; i < dataArray.length; i++) {
+            const value = dataArray[i] / 255;
+            const barHeight = value * h * 0.8;
+            const hue = 160 + value * 60;
+            audioCtxVis.fillStyle = `hsla(${hue}, 100%, 60%, 0.7)`;
+            audioCtxVis.fillRect(x, h - barHeight, barWidth, barHeight);
+            x += barWidth + 1;
+        }
+    }
+
+    // ============================
+    // 8. ЭФФЕКТ РЯБИ (RIPPLE)
+    // ============================
+    let ripples = [];
+    class Ripple {
+        constructor(x, y) {
             this.x = x;
             this.y = y;
+            this.radius = 5;
+            this.maxRadius = Math.max(window.innerWidth, window.innerHeight) * 0.5;
+            this.alpha = 1;
+            this.speed = 4;
+        }
+        update() {
+            this.radius += this.speed;
+            this.alpha -= 0.015;
+        }
+        draw(ctx) {
+            if (this.alpha <= 0) return;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(0, 255, 204, ${this.alpha * 0.6})`;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            // Внутренний круг
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius * 0.3, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 255, 204, ${this.alpha * 0.2})`;
+            ctx.fill();
+        }
+    }
+
+    function drawRipples() {
+        rippleCtx.clearRect(0, 0, rippleCanvas.width, rippleCanvas.height);
+        for (let i = ripples.length - 1; i >= 0; i--) {
+            const r = ripples[i];
+            r.update();
+            r.draw(rippleCtx);
+            if (r.alpha <= 0) ripples.splice(i, 1);
+        }
+    }
+
+    // Обработчик клика для ряби
+    document.addEventListener('click', (e) => {
+        // Игнорируем клики по интерактивным элементам, чтобы не мешать
+        const target = e.target;
+        if (target.closest('footer') || target.closest('.modal') || target.closest('#main-title')) return;
+        ripples.push(new Ripple(e.clientX, e.clientY));
+        // Ограничим количество ряби
+        if (ripples.length > 20) ripples.shift();
+    });
+
+    // ============================
+    // 9. ТЕРМИНАЛ
+    // ============================
+    const terminalMessages = [
+        '> Инициализация нейросети...',
+        '> Загрузка модулей: 100%',
+        '> Установка связи с сервером...',
+        '> Добро пожаловать в Knower Life',
+        '> Искусственный интеллект активен',
+        '> Данные синхронизированы',
+        '> Будущее начинается здесь'
+    ];
+    let terminalIndex = 0;
+    let charIndex = 0;
+    let isTyping = false;
+
+    function typeNextMessage() {
+        if (isTyping) return;
+        if (terminalIndex >= terminalMessages.length) terminalIndex = 0;
+        const msg = terminalMessages[terminalIndex];
+        terminalElement.textContent = '';
+        charIndex = 0;
+        isTyping = true;
+        function typeChar() {
+            if (charIndex < msg.length) {
+                terminalElement.textContent += msg[charIndex];
+                charIndex++;
+                setTimeout(typeChar, 50 + Math.random() * 30);
+            } else {
+                isTyping = false;
+                terminalIndex++;
+                setTimeout(typeNextMessage, 4000);
+            }
+        }
+        typeChar();
+    }
+
+    // ============================
+    // 10. ВЗАИМОДЕЙСТВИЕ С МЫШЬЮ/ТАЧ
+    // ============================
+    let mouseX = null, mouseY = null;
+    const particles = [];
+
+    function handlePointerMove(x, y) {
+        mouseX = x;
+        mouseY = y;
+        // Параллакс для гексагонов
+        hexOffsetX = (x / window.innerWidth - 0.5) * 40;
+        hexOffsetY = (y / window.innerHeight - 0.5) * 40;
+        // Частицы от мыши
+        for (let i = 0; i < 2; i++) {
+            particles.push(new Particle(mouseX, mouseY, `rgba(0, 255, 204, ${Math.random() * 0.4 + 0.4})`));
+        }
+    }
+
+    canvas.addEventListener('mousemove', (e) => {
+        handlePointerMove(e.clientX, e.clientY);
+    });
+    canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        if (touch) handlePointerMove(touch.clientX, touch.clientY);
+    }, { passive: false });
+    canvas.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        if (touch) handlePointerMove(touch.clientX, touch.clientY);
+    });
+
+    // Частицы (для canvas)
+    class Particle {
+        constructor(x, y, color) {
+            this.x = x; this.y = y;
             this.radius = Math.random() * 2 + 1;
             this.speedX = (Math.random() - 0.5) * 3;
             this.speedY = (Math.random() - 0.5) * 3;
@@ -80,206 +408,86 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Настройка эффекта матричного дождя
-    const chars = '0100101101001110010011110101011101000101010100100010000001001100010010010100011001000101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
-    const fontSize = 14;
-    const columns = Math.floor(matrixCanvas.width / fontSize);
-    const dropsDown = Array(columns).fill(0); // Падающие сверху
-    const speedsDown = Array(columns).fill(1); // Скорость сверху вниз
-    const textElement = document.getElementById('knower-life');
-
-    // Функция отрисовки матричного дождя
-    function drawMatrixRain() {
-        try {
-            if (!matrixCtx) {
-                console.error('matrixCtx не инициализирован');
-                return;
-            }
-            matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-            matrixCtx.font = `${fontSize}px monospace`;
-
-            // Проверяем загрузку textElement
-            if (!textElement) {
-                console.error('textElement не найден');
-                return;
-            }
-            const rect = textElement.getBoundingClientRect();
-            console.log('Координаты текста:', rect.left, rect.right, rect.top, rect.bottom);
-
-            for (let i = 0; i < columns; i++) {
-                const x = i * fontSize;
-                const yDown = dropsDown[i] * fontSize;
-                const char = chars.charAt(Math.floor(Math.random() * chars.length));
-
-                // Проверяем, находится ли символ в области текста
-                const isInTextArea = x >= rect.left && x <= rect.right && yDown >= rect.top && yDown <= rect.bottom;
-
-                matrixCtx.fillStyle = isInTextArea
-                    ? `rgba(0, 255, 204, ${Math.random() * 0.3 + 0.2})` // Полупрозрачные "внутри"
-                    : `rgba(0, 255, 204, ${Math.random() * 0.7 + 0.3})`; // Яркие "сверху"
-                speedsDown[i] = isInTextArea ? 0.5 : 1;
-
-                matrixCtx.fillText(char, x, yDown);
-                dropsDown[i] += speedsDown[i];
-
-                if (dropsDown[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
-                    dropsDown[i] = 0;
-                    speedsDown[i] = 1;
-                }
-            }
-            console.log('drawMatrixRain выполнен, колонн:', columns);
-        } catch (e) {
-            console.error('Ошибка в drawMatrixRain:', e);
-        }
+    // ============================
+    // 11. ЧАСЫ
+    // ============================
+    function updateClock() {
+        const now = new Date();
+        clockElement.textContent = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
     }
+    setInterval(updateClock, 1000);
+    updateClock();
 
-    const nodes = [];
-    const particles = [];
-    for (let i = 0; i < 50; i++) {
-        nodes.push(new Node(Math.random() * canvas.width, Math.random() * canvas.height));
-    }
-
-    function connectNodes() {
-        for (let i = 0; i < nodes.length; i++) {
-            for (let j = i + 1; j < nodes.length; j++) {
-                const dist = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
-                if (dist < 100) {
-                    ctx.beginPath();
-                    ctx.moveTo(nodes[i].x, nodes[i].y);
-                    ctx.lineTo(nodes[j].x, nodes[j].y);
-                    ctx.strokeStyle = `rgba(0, 255, 204, ${1 - dist / 100})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.stroke();
-                }
-            }
-        }
-    }
-
-    let mouseX = null, mouseY = null;
-    canvas.addEventListener('mousemove', (e) => {
-        console.log('Mouse moved:', e.clientX, e.clientY); // Для диагностики
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        for (let i = 0; i < 2; i++) {
-            particles.push(new Particle(mouseX, mouseY, `rgba(0, 255, 204, ${Math.random() * 0.4 + 0.4})`));
-        }
-    });
-
-    // Основной цикл анимации
-    function animate() {
-        try {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawMatrixRain();
-            nodes.forEach(node => {
-                node.update(mouseX, mouseY);
-                node.draw();
-            });
-            particles.forEach((particle, index) => {
-                particle.update();
-                particle.draw();
-                if (particle.life <= 0) particles.splice(index, 1);
-            });
-            connectNodes();
-            requestAnimationFrame(animate);
-        } catch (e) {
-            console.error('Ошибка в animate:', e);
-        }
-    }
-    animate();
-
-    // Обработка изменения размера окна
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        matrixCanvas.width = window.innerWidth;
-        matrixCanvas.height = window.innerHeight;
-        dropsDown.fill(0);
-        speedsDown.fill(1);
-        dropsDown.length = Math.floor(matrixCanvas.width / fontSize);
-        speedsDown.length = Math.floor(matrixCanvas.width / fontSize);
-        console.log('Размеры canvas обновлены:', matrixCanvas.width, matrixCanvas.height);
-    });
-
-    // Воспроизведение аудио
-    const backgroundMusic = document.getElementById('background-music');
-    const clickSound = document.getElementById('click-sound');
-
-    // Проверка загрузки аудиофайлов
-    [backgroundMusic, clickSound].forEach(audio => {
-        audio.addEventListener('loadeddata', () => {
-            console.log(`Аудио ${audio.id} загружено`);
-        });
-        audio.addEventListener('error', (e) => {
-            console.error(`Ошибка загрузки аудио ${audio.id}:`, e);
-        });
-    });
-
-    // Функция для воспроизведения аудио
-    function playSound(audio) {
-        audio.currentTime = 0; // Сбрасываем для повторного воспроизведения
-        audio.play().catch(e => console.error(`Ошибка воспроизведения ${audio.id}:`, e));
-    }
-
-    // Инициализация аудио после первого взаимодействия
+    // ============================
+    // 12. АУДИО (улучшенная инициализация)
+    // ============================
     let isAudioInitialized = false;
-    document.addEventListener('click', () => {
-        if (!isAudioInitialized) {
-            console.log('Инициализация аудио при первом клике');
-            [backgroundMusic, clickSound].forEach(audio => {
-                audio.load(); // Принудительная загрузка
-                console.log(`Принудительная загрузка ${audio.id}`);
-            });
-            isAudioInitialized = true;
-        }
-    }, { once: true });
-
-    // Переключение звука
-    const audioToggle = document.getElementById('audio-toggle');
     let isAudioPlaying = false;
-    audioToggle.addEventListener('click', () => {
-        console.log('Кнопка звука нажата'); // Для диагностики
-        const rect = audioToggle.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        createTextParticles(5, centerX, centerY); // Частицы при клике
+
+    function initAudio() {
+        if (isAudioInitialized) return;
+        [backgroundMusic, clickSound].forEach(audio => {
+            audio.load();
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }).catch(e => console.warn('Аудио инициализация:', e));
+            }
+        });
+        isAudioInitialized = true;
+        try {
+            initAudioVisualizer();
+        } catch (e) { console.warn('Визуализатор звука не доступен'); }
+    }
+
+    document.addEventListener('click', initAudio, { once: true });
+
+    audioToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!isAudioInitialized) {
+            initAudio();
+            setTimeout(() => toggleAudio(), 100);
+        } else {
+            toggleAudio();
+        }
+    });
+
+    function toggleAudio() {
+        if (!isAudioInitialized) return;
         if (!isAudioPlaying) {
-            playSound(backgroundMusic);
+            backgroundMusic.play().catch(e => console.error('Ошибка воспроизведения музыки:', e));
             audioToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+            audioToggle.setAttribute('aria-pressed', 'true');
             isAudioPlaying = true;
         } else {
             backgroundMusic.pause();
             audioToggle.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            audioToggle.setAttribute('aria-pressed', 'false');
             isAudioPlaying = false;
         }
-        playSound(clickSound);
-    });
+        clickSound.currentTime = 0;
+        clickSound.play().catch(e => console.warn('Не удалось воспроизвести click:', e));
+    }
 
-    // Частицы и звуки для текста
-    textElement.addEventListener('click', () => {
-        createTextParticles(20);
-        createCanvasParticles(10);
-        if (isAudioPlaying && isAudioInitialized) {
-            playSound(clickSound); // Воспроизводим только если звук включен и инициализирован
-        }
-    });
-
+    // ============================
+    // 13. ЧАСТИЦЫ ОТ ТЕКСТА
+    // ============================
     function createTextParticles(count, centerX, centerY) {
         const rect = centerX ? { left: centerX - 50, top: centerY - 50, width: 100, height: 100 } : textElement.getBoundingClientRect();
-        centerX = centerX || rect.left + rect.width / 2;
-        centerY = centerY || rect.top + rect.height / 2;
-        const colors = ['cyan', 'purple', 'white'];
+        const cx = centerX || rect.left + rect.width / 2;
+        const cy = centerY || rect.top + rect.height / 2;
+        const colors = ['cyan', 'purple', 'white', 'matrix1', 'matrix2'];
         for (let i = 0; i < count; i++) {
             const particle = document.createElement('span');
-            particle.className = `particle particle--${colors[Math.floor(Math.random() * 3)]}`;
+            particle.className = `particle particle--${colors[Math.floor(Math.random() * colors.length)]}`;
             const angle = Math.random() * Math.PI * 2;
             const distance = Math.random() * 100 + 50;
-            const tx = Math.cos(angle) * distance;
-            const ty = Math.sin(angle) * distance;
-            particle.style.left = `${centerX}px`;
-            particle.style.top = `${centerY}px`;
-            particle.style.setProperty('--tx', `${tx}px`);
-            particle.style.setProperty('--ty', `${ty}px`);
+            particle.style.left = `${cx}px`;
+            particle.style.top = `${cy}px`;
+            particle.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+            particle.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
             document.body.appendChild(particle);
             setTimeout(() => particle.remove(), 1500);
         }
@@ -287,10 +495,81 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createCanvasParticles(count) {
         const rect = textElement.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
         for (let i = 0; i < count; i++) {
-            particles.push(new Particle(centerX, centerY, `rgba(${Math.random() * 255}, 0, ${Math.random() * 255}, 0.8)`));
+            const r = Math.floor(Math.random() * 200 + 55);
+            const g = Math.floor(Math.random() * 200 + 55);
+            const b = Math.floor(Math.random() * 200 + 55);
+            particles.push(new Particle(cx, cy, `rgba(${r}, ${g}, ${b}, 0.8)`));
         }
     }
+
+    // ============================
+    // 14. МОДАЛЬНОЕ ОКНО
+    // ============================
+    function openModal() {
+        modalOverlay.classList.add('active');
+    }
+    function closeModal() {
+        modalOverlay.classList.remove('active');
+    }
+    mainTitle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        createTextParticles(30);
+        createCanvasParticles(15);
+        openModal();
+        if (isAudioPlaying && isAudioInitialized) {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(e => console.warn('click sound:', e));
+        }
+    });
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
+
+    // ============================
+    // 15. ОСНОВНОЙ ЦИКЛ АНИМАЦИИ
+    // ============================
+    function animate() {
+        try {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawStars();
+            drawHexGrid();
+            drawMatrixRain();
+            drawAudioVisualizer();
+            drawRipples();
+
+            // Узлы
+            nodes.forEach(node => {
+                node.update(mouseX, mouseY);
+                node.draw();
+            });
+
+            // Частицы
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.update();
+                p.draw();
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+
+            connectNodes();
+
+            requestAnimationFrame(animate);
+        } catch (e) {
+            console.error('Ошибка в animate:', e);
+        }
+    }
+
+    // ============================
+    // 16. СТАРТ
+    // ============================
+    resizeCanvases();
+    animate();
+    setTimeout(typeNextMessage, 1000);
+
+    window.addEventListener('resize', resizeCanvases);
 });
