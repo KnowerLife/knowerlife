@@ -2,7 +2,44 @@ document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
     // ============================
-    // 1. ПОЛУЧЕНИЕ ЭЛЕМЕНТОВ
+    // 1. КАСТОМНЫЙ КУРСОР
+    // ============================
+    const cursor = document.createElement('div');
+    cursor.className = 'custom-cursor';
+    document.body.appendChild(cursor);
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+    document.addEventListener('mouseleave', () => {
+        cursor.style.display = 'none';
+    });
+    document.addEventListener('mouseenter', () => {
+        cursor.style.display = 'block';
+    });
+
+    // ============================
+    // 2. ПРОГРЕСС-БАР ЗАГРУЗКИ
+    // ============================
+    const loaderBar = document.getElementById('loader-bar');
+    let loadProgress = 0;
+    const loadInterval = setInterval(() => {
+        loadProgress += Math.random() * 15;
+        if (loadProgress >= 100) {
+            loadProgress = 100;
+            clearInterval(loadInterval);
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                }, 500);
+            }, 300);
+        }
+        loaderBar.style.width = loadProgress + '%';
+    }, 200);
+
+    // ============================
+    // 3. ПОЛУЧЕНИЕ ЭЛЕМЕНТОВ
     // ============================
     const canvas = document.getElementById('ai-network');
     const ctx = canvas.getContext('2d');
@@ -31,10 +68,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatOpenBtn = document.getElementById('chat-open-btn');
     const chatCloseBtn = document.getElementById('chat-close-btn');
     const chatOverlay = document.getElementById('chat-modal-overlay');
-    const vkCommentsContainer = document.getElementById('vk_comments');
+
+    // Элементы обратной связи
+    const feedbackOpenBtn = document.getElementById('feedback-open-btn');
+    const feedbackClose = document.getElementById('feedback-close');
+    const feedbackModal = document.getElementById('feedback-modal');
+
+    // AI-чат
+    const aiChatBtn = document.getElementById('ai-chat-btn');
+    const aiChatWindow = document.getElementById('ai-chat-window');
+    const aiChatClose = document.getElementById('ai-chat-close');
+    const aiChatInput = document.getElementById('ai-chat-input');
+    const aiChatSend = document.getElementById('ai-chat-send');
+    const aiChatMessages = document.getElementById('ai-chat-messages');
+
+    // Генератор фраз
+    const quoteBtn = document.getElementById('quote-btn');
+    const quoteDisplay = document.getElementById('quote-display');
+
+    // Счётчик онлайн
+    const onlineCount = document.getElementById('online-count');
+
+    // Обновления
+    const updatesPanel = document.getElementById('updates-panel');
 
     // ============================
-    // 2. РАЗМЕРЫ CANVAS
+    // 4. РАЗМЕРЫ CANVAS
     // ============================
     function resizeCanvases() {
         const w = window.innerWidth;
@@ -50,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', resizeCanvases);
 
     // ============================
-    // 3. ЗВЁЗДЫ
+    // 5. ЗВЁЗДЫ
     // ============================
     let stars = [];
     function initStars() {
@@ -79,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 4. ГЕКСАГОНАЛЬНАЯ СЕТКА
+    // 6. ГЕКСАГОНАЛЬНАЯ СЕТКА
     // ============================
     let hexagons = [];
     let hexOffsetX = 0, hexOffsetY = 0;
@@ -126,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 5. МАТРИЧНЫЙ ДОЖДЬ
+    // 7. МАТРИЧНЫЙ ДОЖДЬ
     // ============================
     const chars = '0100101101001110010011110101011101000101010100100010000001001100010010010100011001000101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
     let fontSize = 14;
@@ -169,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 6. СЕТЬ ИИ
+    // 8. СЕТЬ ИИ
     // ============================
     class Node {
         constructor(x, y) {
@@ -229,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 7. ВИЗУАЛИЗАЦИЯ ЗВУКА
+    // 9. ВИЗУАЛИЗАЦИЯ ЗВУКА
     // ============================
     let audioContext = null;
     let analyser = null;
@@ -268,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 8. ЭФФЕКТ РЯБИ
+    // 10. ЭФФЕКТ РЯБИ
     // ============================
     let ripples = [];
     class Ripple {
@@ -310,13 +369,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('click', (e) => {
         const target = e.target;
-        if (target.closest('footer') || target.closest('.modal') || target.closest('#main-title') || target.closest('.chat-modal-overlay') || target.closest('#chat-open-btn')) return;
+        if (target.closest('footer') || target.closest('.modal') || target.closest('#main-title') || target.closest('.chat-modal-overlay') || target.closest('#chat-open-btn') || target.closest('#feedback-open-btn') || target.closest('.feedback-modal') || target.closest('.ai-chat-window') || target.closest('#ai-chat-btn')) return;
         ripples.push(new Ripple(e.clientX, e.clientY));
         if (ripples.length > 20) ripples.shift();
     });
 
     // ============================
-    // 9. ТЕРМИНАЛ
+    // 11. ТЕРМИНАЛ
     // ============================
     const terminalMessages = [
         '> Инициализация нейросети...',
@@ -353,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 10. ВЗАИМОДЕЙСТВИЕ С МЫШЬЮ/ТАЧ
+    // 12. ВЗАИМОДЕЙСТВИЕ С МЫШЬЮ/ТАЧ
     // ============================
     let mouseX = null, mouseY = null;
     const particles = [];
@@ -408,17 +467,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 11. ЧАСЫ
+    // 13. ЧАСЫ И ЧАСОВЫЕ ПОЯСА
     // ============================
-    function updateClock() {
+    function updateClocks() {
         const now = new Date();
+        // Основные часы (Москва)
         clockElement.textContent = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+        // Нью-Йорк (UTC-4 летом, UTC-5 зимой)
+        const nyTime = new Date(now.toLocaleString('en-US', {timeZone: 'America/New_York'}));
+        document.getElementById('ny-time').textContent = `${String(nyTime.getHours()).padStart(2,'0')}:${String(nyTime.getMinutes()).padStart(2,'0')}`;
+        // Токио (UTC+9)
+        const tokyoTime = new Date(now.toLocaleString('en-US', {timeZone: 'Asia/Tokyo'}));
+        document.getElementById('tokyo-time').textContent = `${String(tokyoTime.getHours()).padStart(2,'0')}:${String(tokyoTime.getMinutes()).padStart(2,'0')}`;
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+    setInterval(updateClocks, 1000);
+    updateClocks();
 
     // ============================
-    // 12. АУДИО
+    // 14. АУДИО
     // ============================
     let isAudioInitialized = false;
     let isAudioPlaying = false;
@@ -471,7 +537,122 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 13. ЧАСТИЦЫ ОТ ТЕКСТА
+    // 15. СЧЁТЧИК ОНЛАЙН (анимированный)
+    // ============================
+    function updateOnlineCounter() {
+        const newVal = Math.floor(Math.random() * 30) + 10;
+        const el = onlineCount;
+        let current = parseInt(el.textContent);
+        const step = Math.sign(newVal - current);
+        const interval = setInterval(() => {
+            if (current === newVal) {
+                clearInterval(interval);
+                return;
+            }
+            current += step;
+            el.textContent = current;
+        }, 50);
+    }
+    setInterval(updateOnlineCounter, 5000);
+
+    // ============================
+    // 16. ГЕНЕРАТОР ФРАЗ
+    // ============================
+    const quotes = [
+        "Искусственный интеллект — это зеркало человечества.",
+        "Будущее уже наступило, просто неравномерно распределено.",
+        "Код — это поэзия машин.",
+        "Каждая строка кода — это шаг к новой реальности.",
+        "Мы не создаём ИИ, мы раскрываем его.",
+        "Самый опасный баг — это человеческое неверие.",
+        "Технологии — это инструмент, а не цель.",
+        "В мире алгоритмов нет случайностей.",
+        "Нейросети видят мир иначе, чем мы.",
+        "Граница между человеком и машиной стирается."
+    ];
+    let lastQuote = '';
+    quoteBtn.addEventListener('click', () => {
+        let quote;
+        do {
+            quote = quotes[Math.floor(Math.random() * quotes.length)];
+        } while (quote === lastQuote && quotes.length > 1);
+        lastQuote = quote;
+        quoteDisplay.textContent = `«${quote}»`;
+        // Анимация
+        quoteDisplay.style.opacity = 0;
+        setTimeout(() => { quoteDisplay.style.opacity = 1; }, 50);
+        // Звук
+        if (isAudioPlaying && isAudioInitialized) {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(e => console.warn('click sound:', e));
+        }
+        // Рябь на кнопке
+        const rect = quoteBtn.getBoundingClientRect();
+        ripples.push(new Ripple(rect.left + rect.width/2, rect.top + rect.height/2));
+    });
+    // Инициализация первой фразы
+    setTimeout(() => {
+        quoteDisplay.textContent = '«' + quotes[0] + '»';
+    }, 500);
+
+    // ============================
+    // 17. AI-ЧАТ (имитация)
+    // ============================
+    const botAnswers = {
+        'привет': 'Здравствуйте! Рад вас видеть.',
+        'здравствуй': 'Здравствуйте! Чем могу помочь?',
+        'как дела': 'У меня всё отлично, я - нейросеть, у меня нет выходных.',
+        'кто ты': 'Я — Knower Life, искусственный интеллект, созданный для вдохновения.',
+        'что такое knower life': 'Это проект будущего, объединяющий технологии и творчество.',
+        'расскажи о себе': 'Я — цифровой помощник, который умеет генерировать мысли и поддерживать беседу.',
+        'спасибо': 'Всегда рад помочь!',
+        'пока': 'До встречи! Возвращайтесь за новыми идеями.'
+    };
+    function getBotReply(input) {
+        const lower = input.toLowerCase();
+        for (const [key, reply] of Object.entries(botAnswers)) {
+            if (lower.includes(key)) return reply;
+        }
+        return 'Интересный вопрос! Я думаю, над этим стоит поразмышлять.';
+    }
+
+    function addAIMessage(text, sender) {
+        const msg = document.createElement('div');
+        msg.className = `ai-chat-message ${sender}`;
+        msg.textContent = text;
+        aiChatMessages.appendChild(msg);
+        aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+    }
+
+    function handleAISend() {
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+        addAIMessage(text, 'user');
+        aiChatInput.value = '';
+        // Имитация задержки ответа
+        setTimeout(() => {
+            const reply = getBotReply(text);
+            addAIMessage(reply, 'bot');
+        }, 300 + Math.random() * 500);
+    }
+
+    aiChatSend.addEventListener('click', handleAISend);
+    aiChatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleAISend();
+    });
+
+    aiChatBtn.addEventListener('click', () => {
+        aiChatWindow.classList.toggle('open');
+        if (aiChatWindow.classList.contains('open') && aiChatMessages.children.length === 0) {
+            addAIMessage('Привет! Я — AI-ассистент Knower Life. Задавайте вопросы.', 'bot');
+        }
+    });
+    aiChatClose.addEventListener('click', () => {
+        aiChatWindow.classList.remove('open');
+    });
+
+    // ============================
+    // 18. ЧАСТИЦЫ ОТ ТЕКСТА
     // ============================
     function createTextParticles(count, centerX, centerY) {
         const rect = centerX ? { left: centerX - 50, top: centerY - 50, width: 100, height: 100 } : textElement.getBoundingClientRect();
@@ -505,7 +686,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 14. МОДАЛЬНОЕ ОКНО "О ПРОЕКТЕ"
+    // 19. МОДАЛЬНОЕ ОКНО "О ПРОЕКТЕ"
     // ============================
     function openModal() {
         modalOverlay.classList.add('active');
@@ -529,20 +710,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================
-    // 15. УПРАВЛЕНИЕ МОДАЛЬНЫМ ОКНОМ КОММЕНТАРИЕВ
+    // 20. УПРАВЛЕНИЕ КОММЕНТАРИЯМИ ВК
     // ============================
     function openChat() {
         chatOverlay.classList.add('active');
-        // Добавляем рябь на кнопке
         if (typeof ripples !== 'undefined') {
             const rect = chatOpenBtn.getBoundingClientRect();
             ripples.push(new Ripple(rect.left + rect.width/2, rect.top + rect.height/2));
         }
-        
-        // Переинициализация виджета ВК при открытии модалки
         setTimeout(() => {
             if (typeof VK !== 'undefined' && VK.Widgets) {
-                // Проверяем, инициализирован ли уже виджет
                 const container = document.getElementById('vk_comments');
                 if (container && container.innerHTML.trim() === '') {
                     VK.Widgets.Comments("vk_comments", {
@@ -555,24 +732,68 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 100);
     }
-
     function closeChat() {
         chatOverlay.classList.remove('active');
     }
-
     chatOpenBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         openChat();
     });
-
     chatCloseBtn.addEventListener('click', closeChat);
-
     chatOverlay.addEventListener('click', (e) => {
         if (e.target === chatOverlay) closeChat();
     });
 
     // ============================
-    // 16. ОСНОВНОЙ ЦИКЛ
+    // 21. ОБРАТНАЯ СВЯЗЬ
+    // ============================
+    feedbackOpenBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        feedbackModal.classList.add('active');
+        if (typeof ripples !== 'undefined') {
+            const rect = feedbackOpenBtn.getBoundingClientRect();
+            ripples.push(new Ripple(rect.left + rect.width/2, rect.top + rect.height/2));
+        }
+    });
+    feedbackClose.addEventListener('click', () => {
+        feedbackModal.classList.remove('active');
+    });
+    feedbackModal.addEventListener('click', (e) => {
+        if (e.target === feedbackModal) feedbackModal.classList.remove('active');
+    });
+    // Форма отправляется через mailto – дополнительно обрабатываем клик
+    document.getElementById('feedback-form').addEventListener('submit', (e) => {
+        // не блокируем отправку, просто показываем анимацию
+        if (isAudioPlaying && isAudioInitialized) {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(e => console.warn('click sound:', e));
+        }
+        setTimeout(() => {
+            feedbackModal.classList.remove('active');
+        }, 500);
+    });
+
+    // ============================
+    // 22. СМЕНА ГРАДИЕНТА ПО ВРЕМЕНИ СУТОК
+    // ============================
+    function updateBackground() {
+        const hours = new Date().getHours();
+        const bg = document.getElementById('background');
+        if (hours >= 6 && hours < 12) {
+            bg.style.background = 'linear-gradient(135deg, rgba(0, 200, 255, 0.15), rgba(100, 50, 255, 0.1), #0a0a1a)';
+        } else if (hours >= 12 && hours < 18) {
+            bg.style.background = 'linear-gradient(135deg, rgba(0, 255, 200, 0.15), rgba(200, 50, 255, 0.1), #0f0f1f)';
+        } else if (hours >= 18 && hours < 22) {
+            bg.style.background = 'linear-gradient(135deg, rgba(255, 150, 0, 0.15), rgba(200, 0, 100, 0.1), #0a0a0f)';
+        } else {
+            bg.style.background = 'linear-gradient(135deg, rgba(0, 50, 100, 0.2), rgba(50, 0, 100, 0.2), #000000)';
+        }
+    }
+    updateBackground();
+    setInterval(updateBackground, 60000); // обновляем каждую минуту
+
+    // ============================
+    // 23. ОСНОВНОЙ ЦИКЛ
     // ============================
     function animate() {
         try {
@@ -605,7 +826,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 17. СТАРТ
+    // 24. СТАРТ
     // ============================
     resizeCanvases();
     animate();
