@@ -37,12 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. КОНФИГУРАЦИЯ GISCUS (ЗАМЕНИТЕ НА СВОИ ЗНАЧЕНИЯ)
     // ============================
     const GISCUS_CONFIG = {
-        repo: 'KnowerLife/knowerlife/discussions/1',          // Ваш репозиторий
+        repo: 'KnowerLife/knowerlife',          // Ваш репозиторий
         repoId: 'R_kgDOPf9skg',                    // ID репозитория (получить на giscus.app)
         categoryId: 'DIC_kwDOPf9sks4C_ZjY',               // ID категории
         mapping: 'pathname',                     // Способ привязки к странице
         data-category="Announcements"
-        strict: '1',
+        strict: '0',
         reactionsEnabled: '1',
         emitMetadata: '0',
         inputPosition: 'bottom',
