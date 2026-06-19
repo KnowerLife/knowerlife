@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Knower Life</title>
-    <meta name="description" content="Knower Life – киберпанк-портал с интерактивной анимацией, музыкой и эффектами">
-    <meta property="og:title" content="Knower Life">
-    <meta property="og:description" content="Погрузитесь в атмосферу будущего с Knower Life">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://knowerlife.ru">
-    <meta property="og:image" content="https://knowerlife.ru/og-image.jpg">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏣</text></svg>">
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    
-    <!-- ВК Комментарии: подключение библиотеки -->
+    <meta name="description" content="Knower Life – киберпанк-портал с интерактивной анимацией, музыкой и эффектами" />
+    <meta property="og:title" content="Knower Life" />
+    <meta property="og:description" content="Погрузитесь в атмосферу будущего с Knower Life" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://knowerlife.ru" />
+    <meta property="og:image" content="https://knowerlife.ru/og-image.jpg" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏣</text></svg>" />
+    <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+    <!-- ВК Комментарии -->
     <script src="https://vk.com/js/api/openapi.js?169" type="text/javascript"></script>
     <script type="text/javascript">
         VK.init({
-            apiId: 54642529, // ⚠️ ЗАМЕНИТЕ НА ВАШ API ID
+            apiId: 54642529, // замените на ваш ID
             onlyWidgets: true
         });
     </script>
@@ -27,11 +27,9 @@
 <body>
 
     <!-- Прогресс-бар загрузки -->
-    <div id="loader">
-        <div id="loader-bar"></div>
-    </div>
+    <div id="loader"><div id="loader-bar"></div></div>
 
-    <!-- Canvas слои -->
+    <!-- Canvas слои (фон, звёзды, сетка, матрица, ИИ-сеть, визуализатор, рябь) -->
     <canvas id="stars-canvas"></canvas>
     <canvas id="hex-grid"></canvas>
     <div id="background"></div>
@@ -40,111 +38,109 @@
     <canvas id="audio-visualizer"></canvas>
     <canvas id="ripple-canvas"></canvas>
 
-    <!-- Часы -->
-    <div class="clock-container" id="clock">00:00:00</div>
-    <!-- Дополнительные часовые пояса -->
-    <div class="timezones">
-        <div>🇷🇺 Москва: <span id="msk-time">--:--</span></div>
-        <div>🇺🇸 Нью-Йорк: <span id="ny-time">--:--</span></div>
-        <div>🇯🇵 Токио: <span id="tokyo-time">--:--</span></div>
+    <!-- Часы и часовые пояса (группированы справа вверху) -->
+    <div class="top-right-group">
+        <div class="clock-container" id="clock">00:00:00</div>
+        <div class="timezones">
+            <div>🇷🇺 Москва: <span id="msk-time">--:--</span></div>
+            <div>🇺🇸 Нью-Йорк: <span id="ny-time">--:--</span></div>
+            <div>🇯🇵 Токио: <span id="tokyo-time">--:--</span></div>
+        </div>
     </div>
 
-    <!-- Терминал -->
-    <div id="terminal"></div>
-
-    <!-- Счётчик онлайн -->
+    <!-- Онлайн-счётчик (слева внизу, чтобы не мешать кнопкам) -->
     <div class="online-counter">👥 Онлайн: <span id="online-count">42</span></div>
 
-    <!-- Главный текст -->
+    <!-- Панель обновлений (слева, чуть выше счётчика) -->
+    <div class="updates-panel" id="updates-panel">
+        <h4><i class="fas fa-sync-alt"></i> Обновления</h4>
+        <ul>
+            <li><span class="date">2025-03-15</span> Комментарии ВК</li>
+            <li><span class="date">2025-03-10</span> AI-генератор</li>
+            <li><span class="date">2025-03-01</span> Часовые пояса</li>
+            <li><span class="date">2025-02-20</span> Запуск</li>
+        </ul>
+    </div>
+
+    <!-- Главный контент (центр) -->
     <div class="text-container" id="knower-life">
         <div class="text" id="main-title">
             <span>K</span><span>N</span><span>O</span><span>W</span><span>E</span><span>R</span><span>&nbsp;</span><span>L</span><span>I</span><span>F</span><span>E</span>
         </div>
         <div class="sub-text">// ИСКУССТВЕННЫЙ ИНТЕЛЛЕКТ • БУДУЩЕЕ УЖЕ ЗДЕСЬ</div>
-        <!-- Кнопка генерации фразы -->
         <button id="quote-btn" class="quote-btn"><i class="fas fa-brain"></i> Сгенерировать мысль</button>
         <div id="quote-display" class="quote-display">Нажмите, чтобы узнать, что думает ИИ...</div>
     </div>
 
-    <!-- Модалка "О проекте" -->
-    <div id="modal-overlay" class="modal-overlay">
-        <div class="modal">
-            <button class="modal-close" id="modal-close">&times;</button>
-            <h2>KNOWER LIFE</h2>
-            <p>Это интерактивный арт-проект, объединяющий эстетику киберпанка, искусственного интеллекта и цифровой культуры. Здесь каждый элемент — от мерцающей сетки до пульсирующего звука — создаёт погружение в мир будущего.</p>
-            <p>Проект открыт для коллабораций и вдохновения. Присоединяйтесь к нам в социальных сетях!</p>
-            <div class="modal-socials">
-                <a href="https://github.com/knowerlife" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
-                <a href="https://t.me/knowerlife" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram-plane"></i></a>
-                <a href="https://vk.com/knowerlife" target="_blank" rel="noopener noreferrer"><i class="fab fa-vk"></i></a>
-                <a href="https://instagram.com/knowerlife" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-            </div>
-        </div>
+    <!-- Терминал (внизу по центру) -->
+    <div id="terminal">
+        <span id="terminal-text"></span><span id="terminal-cursor">▌</span>
     </div>
 
-    <!-- Модалка комментариев ВК -->
-    <div id="chat-modal-overlay" class="chat-modal-overlay">
-        <div class="chat-modal-container">
-            <button id="chat-close-btn" class="chat-close-btn">&times;</button>
-            <h3 style="color:#00ffcc; margin-top:0; text-shadow:0 0 20px rgba(0,255,204,0.3);">
-                <i class="fab fa-vk"></i> Комментарии ВКонтакте
-            </h3>
-            <div id="vk_comments"></div>
-            <p style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:10px;">
-                Войдите через ВКонтакте, чтобы оставить комментарий
-            </p>
-        </div>
+    <!-- Кнопки управления (справа, снизу, компактно) -->
+    <div id="control-buttons">
+        <button class="ctrl-btn" id="chat-open-btn" title="Комментарии ВК"><i class="fab fa-vk"></i></button>
+        <button class="ctrl-btn" id="feedback-open-btn" title="Обратная связь"><i class="fas fa-envelope"></i></button>
+        <button class="ctrl-btn" id="ai-chat-btn" title="AI-помощник"><i class="fas fa-robot"></i></button>
+        <button class="ctrl-btn" id="audio-toggle" title="Аудио"><i class="fas fa-volume-up"></i></button>
     </div>
 
-    <!-- Модалка обратной связи -->
-    <div id="feedback-modal" class="feedback-modal">
-        <div class="feedback-container">
-            <button id="feedback-close" class="feedback-close">&times;</button>
-            <h3><i class="fas fa-envelope"></i> Написать нам</h3>
-            <form id="feedback-form" action="mailto:info@knowerlife.ru" method="post" enctype="text/plain">
-                <input type="text" name="name" placeholder="Ваше имя" required>
-                <input type="email" name="email" placeholder="Ваш Email" required>
-                <textarea name="message" placeholder="Сообщение..." rows="4" required></textarea>
-                <button type="submit"><i class="fas fa-paper-plane"></i> Отправить</button>
-            </form>
-            <p style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:10px;">
-                Откроется ваш почтовый клиент
-            </p>
-        </div>
-    </div>
-
-    <!-- Секция "Последние обновления" -->
-    <div class="updates-panel" id="updates-panel">
-        <h4><i class="fas fa-sync-alt"></i> Обновления</h4>
-        <ul>
-            <li><span class="date">2025-03-15</span> Добавлены комментарии ВК</li>
-            <li><span class="date">2025-03-10</span> AI-генератор фраз</li>
-            <li><span class="date">2025-03-01</span> Часовые пояса</li>
-            <li><span class="date">2025-02-20</span> Запуск проекта</li>
-        </ul>
-    </div>
-
-    <!-- Кнопки "Поделиться" -->
+    <!-- Кнопки "Поделиться" (слева, вертикально) -->
     <div class="share-buttons">
         <a href="https://vk.com/share.php?url=https://knowerlife.ru" target="_blank" class="share-vk" title="Поделиться ВКонтакте"><i class="fab fa-vk"></i></a>
         <a href="https://t.me/share/url?url=https://knowerlife.ru&text=Knower%20Life%20-%20киберпанк%20портал" target="_blank" class="share-tg" title="Поделиться в Telegram"><i class="fab fa-telegram-plane"></i></a>
         <a href="https://twitter.com/intent/tweet?text=Knower%20Life%20-%20киберпанк%20портал&url=https://knowerlife.ru" target="_blank" class="share-tw" title="Поделиться в Twitter"><i class="fab fa-x-twitter"></i></a>
     </div>
 
-    <!-- Кнопка открытия чата -->
-    <button id="chat-open-btn" class="chat-toggle-btn" aria-label="Открыть обсуждение">
-        <i class="fas fa-comment-dots"></i>
-    </button>
+    <!-- Футер (аудио-контроль вынесен в кнопку управления) -->
+    <footer>
+        <a href="https://github.com/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://t.me/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="Telegram" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+        <a href="https://vk.com/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="VK" title="ВКонтакте"><i class="fab fa-vk"></i></a>
+        <a href="https://instagram.com/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+    </footer>
 
-    <!-- Кнопка обратной связи -->
-    <button id="feedback-open-btn" class="feedback-toggle-btn" aria-label="Написать нам">
-        <i class="fas fa-envelope"></i>
-    </button>
+    <!-- Модальные окна -->
+    <!-- О проекте -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <h2>KNOWER LIFE</h2>
+            <p>Интерактивный арт-проект, объединяющий киберпанк-эстетику, искусственный интеллект и цифровую культуру.</p>
+            <div class="modal-socials">
+                <a href="https://github.com/knowerlife" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://t.me/knowerlife" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+                <a href="https://vk.com/knowerlife" target="_blank"><i class="fab fa-vk"></i></a>
+                <a href="https://instagram.com/knowerlife" target="_blank"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
 
-    <!-- Простой AI-чат (иконка) -->
-    <button id="ai-chat-btn" class="ai-chat-toggle" aria-label="Поговорить с ИИ">
-        <i class="fas fa-robot"></i>
-    </button>
+    <!-- Комментарии ВК -->
+    <div id="chat-modal-overlay" class="modal-overlay">
+        <div class="modal">
+            <button class="modal-close" id="chat-close-btn">&times;</button>
+            <h2><i class="fab fa-vk"></i> Комментарии ВКонтакте</h2>
+            <div id="vk_comments"></div>
+            <p style="font-size:0.8rem; opacity:0.5;">Авторизуйтесь через ВК, чтобы оставить сообщение</p>
+        </div>
+    </div>
+
+    <!-- Обратная связь -->
+    <div id="feedback-modal" class="modal-overlay">
+        <div class="modal">
+            <button class="modal-close" id="feedback-close">&times;</button>
+            <h2><i class="fas fa-envelope"></i> Написать нам</h2>
+            <form id="feedback-form" action="mailto:info@knowerlife.ru" method="post" enctype="text/plain">
+                <input type="text" name="name" placeholder="Ваше имя" required>
+                <input type="email" name="email" placeholder="Ваш Email" required>
+                <textarea name="message" placeholder="Сообщение..." rows="4" required></textarea>
+                <button type="submit"><i class="fas fa-paper-plane"></i> Отправить</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- AI-чат (выдвижное окно) -->
     <div id="ai-chat-window" class="ai-chat-window">
         <div class="ai-chat-header">
             <span><i class="fas fa-robot"></i> AI-помощник</span>
@@ -157,16 +153,7 @@
         </div>
     </div>
 
-    <!-- Футер -->
-    <footer>
-        <a href="https://github.com/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub"><i class="fab fa-github"></i></a>
-        <a href="https://t.me/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="Telegram" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
-        <a href="https://vk.com/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="VK" title="ВКонтакте"><i class="fab fa-vk"></i></a>
-        <a href="https://instagram.com/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
-        <button id="audio-toggle" aria-label="Toggle audio" aria-pressed="false"><i class="fas fa-volume-up"></i></button>
-    </footer>
-
-    <!-- Аудио -->
+    <!-- Аудио элементы (скрыты) -->
     <audio id="background-music" preload="auto" loop>
         <source src="background.mp3" type="audio/mpeg">
     </audio>
