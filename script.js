@@ -2,129 +2,206 @@ document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
     // ============================
+    // УТИЛИТЫ
+    // ============================
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => document.querySelectorAll(sel);
+
+    function debounce(fn, delay) {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn(...args), delay);
+        };
+    }
+
+    function throttle(fn, limit) {
+        let inThrottle;
+        return (...args) => {
+            if (!inThrottle) {
+                fn(...args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    }
+
+    function showToast(message) {
+        let container = $('.toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.className = 'toast-container';
+            document.body.appendChild(container);
+        }
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    function copyToClipboard(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            return navigator.clipboard.writeText(text);
+        }
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        return Promise.resolve();
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // ============================
     // 1. ПРОГРЕСС-БАР
     // ============================
-    const loaderBar = document.getElementById('loader-bar');
+    const loader = $('#loader');
+    const loaderBar = $('#loader-bar');
     let loadProgress = 0;
+
     const loadInterval = setInterval(() => {
-        loadProgress += Math.random() * 15;
+        loadProgress += Math.random() * 18 + 5;
         if (loadProgress >= 100) {
             loadProgress = 100;
             clearInterval(loadInterval);
+            loader.setAttribute('aria-valuenow', '100');
             setTimeout(() => {
-                document.getElementById('loader').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('loader').style.display = 'none';
-                }, 500);
-            }, 300);
+                loader.classList.add('hidden');
+                setTimeout(() => loader.remove(), 600);
+            }, 400);
+        } else {
+            loader.setAttribute('aria-valuenow', Math.floor(loadProgress));
         }
         loaderBar.style.width = loadProgress + '%';
-    }, 200);
+    }, 180);
 
     // ============================
     // 2. ПОЛУЧЕНИЕ ЭЛЕМЕНТОВ
     // ============================
-    const canvas = document.getElementById('ai-network');
+    const canvas = $('#ai-network');
     const ctx = canvas.getContext('2d');
-    const matrixCanvas = document.getElementById('matrix-rain');
+    const matrixCanvas = $('#matrix-rain');
     const matrixCtx = matrixCanvas.getContext('2d');
-    const starsCanvas = document.getElementById('stars-canvas');
+    const starsCanvas = $('#stars-canvas');
     const starsCtx = starsCanvas.getContext('2d');
-    const hexCanvas = document.getElementById('hex-grid');
+    const hexCanvas = $('#hex-grid');
     const hexCtx = hexCanvas.getContext('2d');
-    const audioCanvas = document.getElementById('audio-visualizer');
+    const audioCanvas = $('#audio-visualizer');
     const audioCtxVis = audioCanvas.getContext('2d');
-    const rippleCanvas = document.getElementById('ripple-canvas');
+    const rippleCanvas = $('#ripple-canvas');
     const rippleCtx = rippleCanvas.getContext('2d');
 
-    const textElement = document.getElementById('knower-life');
-    const mainTitle = document.getElementById('main-title');
-    const audioToggle = document.getElementById('audio-toggle');
-    const backgroundMusic = document.getElementById('background-music');
-    const clickSound = document.getElementById('click-sound');
-    const clockElement = document.getElementById('clock');
-    const terminalText = document.getElementById('terminal-text');
-    const modalOverlay = document.getElementById('modal-overlay');
-    const modalClose = document.getElementById('modal-close');
+    const textElement = $('#main-title');
+    const mainContent = $('#main-content');
+    const audioToggle = $('#audio-toggle');
+    const backgroundMusic = $('#background-music');
+    const clickSound = $('#click-sound');
+    const clockElement = $('#clock');
+    const terminalText = $('#terminal-text');
+    const modalOverlay = $('#modal-overlay');
+    const modalClose = $('#modal-close');
 
-    const chatOpenBtn = document.getElementById('chat-open-btn');
-    const chatCloseBtn = document.getElementById('chat-close-btn');
-    const chatOverlay = document.getElementById('chat-modal-overlay');
+    const chatOpenBtn = $('#chat-open-btn');
+    const chatCloseBtn = $('#chat-close-btn');
+    const chatOverlay = $('#chat-modal-overlay');
 
-    const feedbackOpenBtn = document.getElementById('feedback-open-btn');
-    const feedbackClose = document.getElementById('feedback-close');
-    const feedbackModal = document.getElementById('feedback-modal');
+    const feedbackOpenBtn = $('#feedback-open-btn');
+    const feedbackClose = $('#feedback-close');
+    const feedbackModal = $('#feedback-modal');
 
-    const aiChatBtn = document.getElementById('ai-chat-btn');
-    const aiChatWindow = document.getElementById('ai-chat-window');
-    const aiChatClose = document.getElementById('ai-chat-close');
-    const aiChatInput = document.getElementById('ai-chat-input');
-    const aiChatSend = document.getElementById('ai-chat-send');
-    const aiChatMessages = document.getElementById('ai-chat-messages');
+    const aiChatBtn = $('#ai-chat-btn');
+    const aiChatWindow = $('#ai-chat-window');
+    const aiChatClose = $('#ai-chat-close');
+    const aiChatInput = $('#ai-chat-input');
+    const aiChatSend = $('#ai-chat-send');
+    const aiChatMessages = $('#ai-chat-messages');
 
-    const quoteBtn = document.getElementById('quote-btn');
-    const quoteDisplay = document.getElementById('quote-display');
-    const onlineCount = document.getElementById('online-count');
+    const quoteBtn = $('#quote-btn');
+    const quoteDisplay = $('#quote-display');
+    const onlineCount = $('#online-count');
 
     // ============================
-    // 3. РЕАЛЬНЫЙ СЧЁТЧИК ПОСЕТИТЕЛЕЙ
+    // 3. СЧЁТЧИК ПОСЕТИТЕЛЕЙ
     // ============================
-    function updateRealVisitorCount() {
-        let count = localStorage.getItem('knowerlife_visitors');
-        if (!count) {
-            count = Math.floor(Math.random() * 100) + 20;
-            localStorage.setItem('knowerlife_visitors', count);
-        } else {
-            count = parseInt(count, 10);
-            if (!sessionStorage.getItem('knowerlife_visited')) {
-                count += 1;
-                localStorage.setItem('knowerlife_visitors', count);
-                sessionStorage.setItem('knowerlife_visited', 'true');
-            }
+    function updateVisitorCount() {
+        let count = parseInt(localStorage.getItem('kl_visitors') || '0', 10);
+        if (count === 0) {
+            count = Math.floor(Math.random() * 80) + 30;
+            localStorage.setItem('kl_visitors', count);
+        }
+        if (!sessionStorage.getItem('kl_visited')) {
+            count += 1;
+            localStorage.setItem('kl_visitors', count);
+            sessionStorage.setItem('kl_visited', 'true');
         }
         onlineCount.textContent = count;
     }
-    updateRealVisitorCount();
+    updateVisitorCount();
 
     // ============================
-    // 4. CANVAS (звёзды, сетка, матрица, ИИ-сеть, визуализация, рябь)
+    // 4. CANVAS СИСТЕМА
     // ============================
+    let dpr = window.devicePixelRatio || 1;
+
     function resizeCanvases() {
         const w = window.innerWidth;
         const h = window.innerHeight;
+        dpr = window.devicePixelRatio || 1;
+
         [canvas, matrixCanvas, starsCanvas, hexCanvas, audioCanvas, rippleCanvas].forEach(c => {
-            c.width = w;
-            c.height = h;
+            c.width = w * dpr;
+            c.height = h * dpr;
+            c.style.width = w + 'px';
+            c.style.height = h + 'px';
+            c.getContext('2d').scale(dpr, dpr);
         });
+
         initMatrixRain();
         initStars();
         initHexGrid();
     }
-    window.addEventListener('resize', resizeCanvases);
+
+    const debouncedResize = debounce(resizeCanvases, 200);
+    window.addEventListener('resize', debouncedResize);
 
     // Звёзды
     let stars = [];
     function initStars() {
-        const count = Math.floor((starsCanvas.width * starsCanvas.height) / 3000);
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        const count = Math.min(200, Math.floor((w * h) / 5000));
         stars = [];
         for (let i = 0; i < count; i++) {
             stars.push({
-                x: Math.random() * starsCanvas.width,
-                y: Math.random() * starsCanvas.height,
-                r: Math.random() * 1.5 + 0.5,
-                alpha: Math.random() * 0.8 + 0.2,
-                speed: Math.random() * 0.01 + 0.005
+                x: Math.random() * w,
+                y: Math.random() * h,
+                r: Math.random() * 1.2 + 0.3,
+                alpha: Math.random() * 0.7 + 0.2,
+                twinkleSpeed: Math.random() * 0.02 + 0.005,
+                phase: Math.random() * Math.PI * 2
             });
         }
     }
-    function drawStars() {
-        starsCtx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
+
+    function drawStars(time) {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        starsCtx.clearRect(0, 0, w, h);
         stars.forEach(star => {
-            star.alpha += (Math.random() - 0.5) * 0.02;
-            star.alpha = Math.min(1, Math.max(0.1, star.alpha));
+            const alpha = star.alpha + Math.sin(time * star.twinkleSpeed + star.phase) * 0.3;
+            const clampedAlpha = Math.min(1, Math.max(0.05, alpha));
             starsCtx.beginPath();
             starsCtx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
-            starsCtx.fillStyle = `rgba(200, 220, 255, ${star.alpha})`;
+            starsCtx.fillStyle = `rgba(200, 220, 255, ${clampedAlpha})`;
             starsCtx.fill();
         });
     }
@@ -132,9 +209,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Гексагональная сетка
     let hexagons = [];
     let hexOffsetX = 0, hexOffsetY = 0;
+
     function initHexGrid() {
-        const w = hexCanvas.width, h = hexCanvas.height;
-        const size = 40;
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        const size = 50;
         const dx = size * Math.sqrt(3);
         const dy = size * 1.5;
         hexagons = [];
@@ -150,12 +229,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-    function drawHexGrid() {
-        hexCtx.clearRect(0, 0, hexCanvas.width, hexCanvas.height);
-        const time = Date.now() / 3000;
+
+    function drawHexGrid(time) {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        hexCtx.clearRect(0, 0, w, h);
+        const t = time / 4000;
+
         hexagons.forEach(hex => {
-            const cx = hex.cx + hexOffsetX * 0.1;
-            const cy = hex.cy + hexOffsetY * 0.1;
+            const cx = hex.cx + hexOffsetX * 0.08;
+            const cy = hex.cy + hexOffsetY * 0.08;
             hexCtx.beginPath();
             for (let i = 0; i < 6; i++) {
                 const angle = Math.PI / 3 * i + Math.PI / 6;
@@ -165,37 +248,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 else hexCtx.lineTo(x, y);
             }
             hexCtx.closePath();
-            const brightness = 0.15 + 0.1 * Math.sin(time + hex.phase);
+            const brightness = 0.08 + 0.06 * Math.sin(t + hex.phase);
             hexCtx.strokeStyle = `rgba(0, 255, 204, ${brightness})`;
-            hexCtx.lineWidth = 0.8;
+            hexCtx.lineWidth = 0.5;
             hexCtx.stroke();
         });
     }
 
     // Матрица
-    const chars = '0100101101001110010011110101011101000101010100100010000001001100010010010100011001000101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
-    let fontSize = 14, columns = 0, dropsDown = [], speedsDown = [];
+    const matrixChars = '0100101101001110010011110101011101000101010100100010000001001100010010010100011001000101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+    let fontSize = 14;
+    let columns = 0;
+    let dropsDown = [];
+
     function initMatrixRain() {
-        fontSize = Math.min(16, Math.floor(matrixCanvas.width / 70) + 12);
-        columns = Math.floor(matrixCanvas.width / fontSize);
-        dropsDown = Array(columns).fill(0);
-        speedsDown = Array(columns).fill(1);
+        const w = window.innerWidth;
+        fontSize = Math.max(10, Math.min(16, Math.floor(w / 80) + 10));
+        columns = Math.floor(w / fontSize);
+        dropsDown = Array.from({ length: columns }, () => Math.random() * -50);
     }
+
     let matrixFrameCounter = 0;
     function drawMatrixRain() {
         matrixFrameCounter++;
-        if (matrixFrameCounter % 2 !== 0) return;
-        matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.02)';
-        matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+        if (matrixFrameCounter % 3 !== 0) return;
+
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+
+        matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+        matrixCtx.fillRect(0, 0, w, h);
         matrixCtx.font = `${fontSize}px monospace`;
+
         for (let i = 0; i < columns; i++) {
             const x = i * fontSize;
-            const yDown = dropsDown[i] * fontSize;
-            const char = chars.charAt(Math.floor(Math.random() * chars.length));
-            matrixCtx.fillStyle = `rgba(0, 255, 204, ${Math.random() * 0.5 + 0.5})`;
-            matrixCtx.fillText(char, x, yDown);
+            const y = dropsDown[i] * fontSize;
+            const char = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+            const alpha = 0.3 + Math.random() * 0.4;
+            matrixCtx.fillStyle = `rgba(0, 255, 204, ${alpha})`;
+            matrixCtx.fillText(char, x, y);
+
             dropsDown[i] += 1;
-            if (dropsDown[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+            if (dropsDown[i] * fontSize > h && Math.random() > 0.98) {
                 dropsDown[i] = 0;
             }
         }
@@ -204,52 +298,80 @@ document.addEventListener('DOMContentLoaded', () => {
     // Сеть ИИ
     class Node {
         constructor(x, y) {
-            this.x = x; this.y = y;
+            this.x = x;
+            this.y = y;
             this.radius = Math.random() * 2 + 1;
-            this.speedX = (Math.random() - 0.5) * 0.5;
-            this.speedY = (Math.random() - 0.5) * 0.5;
-            this.baseSpeedX = this.speedX;
-            this.baseSpeedY = this.speedY;
+            this.vx = (Math.random() - 0.5) * 0.4;
+            this.vy = (Math.random() - 0.5) * 0.4;
+            this.baseVx = this.vx;
+            this.baseVy = this.vy;
         }
-        update(mouseX, mouseY) {
-            if (mouseX !== null && mouseY !== null) {
-                const dx = mouseX - this.x;
-                const dy = mouseY - this.y;
+
+        update(mx, my) {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+
+            if (mx !== null && my !== null) {
+                const dx = mx - this.x;
+                const dy = my - this.y;
                 const dist = Math.hypot(dx, dy);
                 if (dist < 150) {
-                    const force = (150 - dist) / 150 * 0.1;
-                    this.speedX += dx * force;
-                    this.speedY += dy * force;
+                    const force = (150 - dist) / 150 * 0.08;
+                    this.vx += dx * force;
+                    this.vy += dy * force;
                 } else {
-                    this.speedX += (this.baseSpeedX - this.speedX) * 0.05;
-                    this.speedY += (this.baseSpeedY - this.speedY) * 0.05;
+                    this.vx += (this.baseVx - this.vx) * 0.03;
+                    this.vy += (this.baseVy - this.vy) * 0.03;
                 }
+            } else {
+                this.vx += (this.baseVx - this.vx) * 0.01;
+                this.vy += (this.baseVy - this.vy) * 0.01;
             }
-            this.x += this.speedX;
-            this.y += this.speedY;
-            if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-            if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+
+            this.x += this.vx;
+            this.y += this.vy;
+
+            const speed = Math.hypot(this.vx, this.vy);
+            if (speed > 2) {
+                this.vx = (this.vx / speed) * 2;
+                this.vy = (this.vy / speed) * 2;
+            }
+
+            if (this.x < 0 || this.x > w) this.vx *= -1;
+            if (this.y < 0 || this.y > h) this.vy *= -1;
+
+            this.x = Math.max(0, Math.min(w, this.x));
+            this.y = Math.max(0, Math.min(h, this.y));
         }
+
         draw() {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(0, 255, 204, 0.5)';
+            ctx.fillStyle = 'rgba(0, 255, 204, 0.6)';
             ctx.fill();
         }
     }
+
     const nodes = [];
-    for (let i = 0; i < 50; i++) {
-        nodes.push(new Node(Math.random() * canvas.width, Math.random() * canvas.height));
+    const nodeCount = Math.min(60, Math.floor((window.innerWidth * window.innerHeight) / 20000));
+    for (let i = 0; i < nodeCount; i++) {
+        nodes.push(new Node(
+            Math.random() * window.innerWidth,
+            Math.random() * window.innerHeight
+        ));
     }
+
     function connectNodes() {
+        const maxDist = 120;
         for (let i = 0; i < nodes.length; i++) {
             for (let j = i + 1; j < nodes.length; j++) {
                 const dist = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
-                if (dist < 100) {
+                if (dist < maxDist) {
+                    const alpha = (1 - dist / maxDist) * 0.4;
                     ctx.beginPath();
                     ctx.moveTo(nodes[i].x, nodes[i].y);
                     ctx.lineTo(nodes[j].x, nodes[j].y);
-                    ctx.strokeStyle = `rgba(0, 255, 204, ${1 - dist / 100})`;
+                    ctx.strokeStyle = `rgba(0, 255, 204, ${alpha})`;
                     ctx.lineWidth = 0.5;
                     ctx.stroke();
                 }
@@ -258,80 +380,109 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Визуализация звука
-    let audioContext = null, analyser = null, dataArray = null, audioSource = null;
+    let audioContext = null;
+    let analyser = null;
+    let dataArray = null;
+    let audioSource = null;
+
     function initAudioVisualizer() {
-        if (!audioContext) {
+        if (audioContext) return;
+        try {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
             analyser = audioContext.createAnalyser();
             analyser.fftSize = 256;
+            analyser.smoothingTimeConstant = 0.8;
             dataArray = new Uint8Array(analyser.frequencyBinCount);
-        }
-        if (!audioSource && backgroundMusic) {
-            audioSource = audioContext.createMediaElementSource(backgroundMusic);
-            audioSource.connect(analyser);
-            analyser.connect(audioContext.destination);
+
+            if (backgroundMusic) {
+                audioSource = audioContext.createMediaElementSource(backgroundMusic);
+                audioSource.connect(analyser);
+                analyser.connect(audioContext.destination);
+            }
+        } catch (e) {
+            console.warn('Audio visualizer init failed:', e);
         }
     }
+
     function drawAudioVisualizer() {
         if (!analyser || !dataArray) return;
         analyser.getByteFrequencyData(dataArray);
-        const w = audioCanvas.width, h = audioCanvas.height;
+
+        const w = window.innerWidth;
+        const h = 100;
         audioCtxVis.clearRect(0, 0, w, h);
-        const barWidth = w / dataArray.length * 2.5;
+
+        const barCount = dataArray.length;
+        const barWidth = w / barCount * 2;
         let x = 0;
-        for (let i = 0; i < dataArray.length; i++) {
+
+        for (let i = 0; i < barCount; i++) {
             const value = dataArray[i] / 255;
-            const barHeight = value * h * 0.8;
+            const barHeight = value * h * 0.7;
             const hue = 160 + value * 60;
-            audioCtxVis.fillStyle = `hsla(${hue}, 100%, 60%, 0.7)`;
-            audioCtxVis.fillRect(x, h - barHeight, barWidth, barHeight);
-            x += barWidth + 1;
+            audioCtxVis.fillStyle = `hsla(${hue}, 100%, 60%, ${0.4 + value * 0.3})`;
+            audioCtxVis.fillRect(x, h - barHeight, barWidth - 1, barHeight);
+            x += barWidth;
         }
     }
 
     // Эффект ряби
     let ripples = [];
+
     class Ripple {
         constructor(x, y) {
-            this.x = x; this.y = y;
+            this.x = x;
+            this.y = y;
             this.radius = 5;
-            this.maxRadius = Math.max(window.innerWidth, window.innerHeight) * 0.5;
-            this.alpha = 1;
-            this.speed = 4;
+            this.maxRadius = Math.max(window.innerWidth, window.innerHeight) * 0.4;
+            this.alpha = 0.8;
+            this.speed = 3.5;
         }
+
         update() {
             this.radius += this.speed;
-            this.alpha -= 0.015;
+            this.alpha -= 0.012;
         }
-        draw(ctx) {
+
+        draw(context) {
             if (this.alpha <= 0) return;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(0, 255, 204, ${this.alpha * 0.6})`;
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius * 0.3, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(0, 255, 204, ${this.alpha * 0.2})`;
-            ctx.fill();
+            context.beginPath();
+            context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            context.strokeStyle = `rgba(0, 255, 204, ${this.alpha * 0.5})`;
+            context.lineWidth = 1.5;
+            context.stroke();
+
+            context.beginPath();
+            context.arc(this.x, this.y, this.radius * 0.4, 0, Math.PI * 2);
+            context.fillStyle = `rgba(0, 255, 204, ${this.alpha * 0.15})`;
+            context.fill();
         }
     }
+
     function drawRipples() {
-        rippleCtx.clearRect(0, 0, rippleCanvas.width, rippleCanvas.height);
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        rippleCtx.clearRect(0, 0, w, h);
+
         for (let i = ripples.length - 1; i >= 0; i--) {
-            const r = ripples[i];
-            r.update();
-            r.draw(rippleCtx);
-            if (r.alpha <= 0) ripples.splice(i, 1);
+            ripples[i].update();
+            ripples[i].draw(rippleCtx);
+            if (ripples[i].alpha <= 0) ripples.splice(i, 1);
         }
     }
+
+    // Клик → рябь (исключены интерактивные элементы)
     document.addEventListener('click', (e) => {
         const target = e.target;
-        if (target.closest('footer') || target.closest('.modal') || target.closest('#main-title') ||
-            target.closest('.modal-overlay') || target.closest('#control-buttons') ||
-            target.closest('.share-buttons') || target.closest('.ai-chat-window')) return;
+        const excluded = ['footer', '.modal', '#main-title', '.modal-overlay',
+            '#control-buttons', '.share-buttons', '.ai-chat-window', '.tool-card',
+            'button', 'a', 'input', 'textarea', 'select', '.quote-btn', '.quote-display'];
+
+        for (const sel of excluded) {
+            if (target.closest(sel)) return;
+        }
         ripples.push(new Ripple(e.clientX, e.clientY));
-        if (ripples.length > 20) ripples.shift();
+        if (ripples.length > 15) ripples.shift();
     });
 
     // ============================
@@ -339,43 +490,51 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================
     let mouseX = null, mouseY = null;
     const particles = [];
+
     function handlePointerMove(x, y) {
         mouseX = x;
         mouseY = y;
-        hexOffsetX = (x / window.innerWidth - 0.5) * 40;
-        hexOffsetY = (y / window.innerHeight - 0.5) * 40;
-        for (let i = 0; i < 2; i++) {
-            particles.push(new Particle(mouseX, mouseY, `rgba(0, 255, 204, ${Math.random() * 0.4 + 0.4})`));
+        hexOffsetX = (x / window.innerWidth - 0.5) * 30;
+        hexOffsetY = (y / window.innerHeight - 0.5) * 30;
+
+        if (Math.random() > 0.6) {
+            particles.push(new Particle(x, y, `rgba(0, 255, 204, ${Math.random() * 0.5 + 0.3})`));
         }
     }
-    canvas.addEventListener('mousemove', (e) => handlePointerMove(e.clientX, e.clientY));
+
+    const throttledPointerMove = throttle((x, y) => handlePointerMove(x, y), 16);
+
+    canvas.style.pointerEvents = 'auto';
+    canvas.addEventListener('mousemove', (e) => throttledPointerMove(e.clientX, e.clientY));
     canvas.addEventListener('touchmove', (e) => {
         e.preventDefault();
         const touch = e.touches[0];
-        if (touch) handlePointerMove(touch.clientX, touch.clientY);
+        if (touch) throttledPointerMove(touch.clientX, touch.clientY);
     }, { passive: false });
-    canvas.addEventListener('touchstart', (e) => {
-        const touch = e.touches[0];
-        if (touch) handlePointerMove(touch.clientX, touch.clientY);
-    });
 
     class Particle {
         constructor(x, y, color) {
-            this.x = x; this.y = y;
-            this.radius = Math.random() * 2 + 1;
-            this.speedX = (Math.random() - 0.5) * 3;
-            this.speedY = (Math.random() - 0.5) * 3;
+            this.x = x;
+            this.y = y;
+            this.radius = Math.random() * 2 + 0.5;
+            this.vx = (Math.random() - 0.5) * 2.5;
+            this.vy = (Math.random() - 0.5) * 2.5;
             this.alpha = 1;
-            this.life = 60;
+            this.life = 50;
             this.color = color;
         }
+
         update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-            this.alpha -= 0.016;
+            this.x += this.vx;
+            this.y += this.vy;
+            this.vx *= 0.97;
+            this.vy *= 0.97;
+            this.alpha -= 0.02;
             this.life--;
         }
+
         draw() {
+            if (this.alpha <= 0) return;
             ctx.globalAlpha = this.alpha;
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
@@ -390,7 +549,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================
     function updateClock() {
         const now = new Date();
-        clockElement.textContent = now.toTimeString().split(' ')[0];
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const s = String(now.getSeconds()).padStart(2, '0');
+        clockElement.textContent = `${h}:${m}:${s}`;
     }
     setInterval(updateClock, 1000);
     updateClock();
@@ -400,25 +562,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================
     let isAudioInitialized = false;
     let isAudioPlaying = false;
+
     function initAudio() {
         if (isAudioInitialized) return;
-        [backgroundMusic, clickSound].forEach(audio => {
-            audio.load();
-            const playPromise = audio.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    audio.pause();
-                    audio.currentTime = 0;
-                }).catch(e => console.warn('Audio init:', e));
-            }
-        });
-        isAudioInitialized = true;
-        try { initAudioVisualizer(); } catch (e) {}
+        try {
+            [backgroundMusic, clickSound].forEach(audio => {
+                if (audio) {
+                    audio.load();
+                    audio.play().then(() => {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }).catch(() => {});
+                }
+            });
+            isAudioInitialized = true;
+            initAudioVisualizer();
+        } catch (e) {
+            console.warn('Audio init error:', e);
+        }
     }
+
     document.addEventListener('click', initAudio, { once: true });
+    document.addEventListener('touchstart', initAudio, { once: true });
 
     audioToggle.addEventListener('click', () => {
         if (!isAudioInitialized) initAudio();
+
         if (!isAudioPlaying) {
             backgroundMusic.play().catch(() => {});
             audioToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
@@ -428,8 +597,11 @@ document.addEventListener('DOMContentLoaded', () => {
             audioToggle.innerHTML = '<i class="fas fa-volume-mute"></i>';
             isAudioPlaying = false;
         }
-        clickSound.currentTime = 0;
-        clickSound.play().catch(() => {});
+
+        if (clickSound) {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(() => {});
+        }
     });
 
     // ============================
@@ -439,47 +611,134 @@ document.addEventListener('DOMContentLoaded', () => {
         "Искусственный интеллект — это зеркало человечества.",
         "Будущее уже наступило, просто неравномерно распределено.",
         "Код — это поэзия машин.",
-        "Мы не создаём ИИ, мы раскрываем его.",
-        "Граница между человеком и машиной стирается."
+        "Мы не создаём ИИ, мы раскрываем его потенциал.",
+        "Граница между человеком и машиной стирается каждый день.",
+        "Данные — это новая нефть, а алгоритмы — новый двигатель.",
+        "Каждая нейронная сеть — это вселенная возможностей.",
+        "Технологии не заменят людей, но люди с технологиями заменят тех, кто без них.",
+        "Киберпространство не имеет границ — только горизонты.",
+        "ИИ не думает как человек, но он учится быстрее.",
+        "В цифровом мире код — это закон, а данные — это валюта.",
+        "Будущее принадлежит тем, кто верит в красоту своих идей."
     ];
-    let lastQuote = '';
-    quoteBtn.addEventListener('click', () => {
-        let q;
-        do { q = quotes[Math.floor(Math.random() * quotes.length)]; }
-        while (q === lastQuote && quotes.length > 1);
-        lastQuote = q;
-        quoteDisplay.textContent = `«${q}»`;
-        quoteDisplay.style.opacity = 0;
-        setTimeout(() => { quoteDisplay.style.opacity = 1; }, 50);
-        if (isAudioPlaying && isAudioInitialized) {
+
+    let lastQuoteIndex = -1;
+
+    quoteBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // ⚠️ ВАЖНО: предотвращает всплытие клика к mainContent
+
+        let idx;
+        do {
+            idx = Math.floor(Math.random() * quotes.length);
+        } while (idx === lastQuoteIndex && quotes.length > 1);
+        lastQuoteIndex = idx;
+
+        quoteDisplay.style.opacity = '0';
+        setTimeout(() => {
+            quoteDisplay.textContent = `«${quotes[idx]}»`;
+            quoteDisplay.style.opacity = '1';
+        }, 200);
+
+        if (isAudioPlaying && isAudioInitialized && clickSound) {
             clickSound.currentTime = 0;
             clickSound.play().catch(() => {});
         }
+
         const rect = quoteBtn.getBoundingClientRect();
-        ripples.push(new Ripple(rect.left + rect.width/2, rect.top + rect.height/2));
+        ripples.push(new Ripple(rect.left + rect.width / 2, rect.top + rect.height / 2));
     });
+
+    // Начальная цитата
     setTimeout(() => {
-        quoteDisplay.textContent = '«' + quotes[0] + '»';
-    }, 500);
+        quoteDisplay.textContent = `«${quotes[0]}»`;
+    }, 800);
 
     // ============================
-    // 9. AI-ЧАТ
+    // 9. AI-ЧАТ (расширенный)
     // ============================
-    const botAnswers = {
-        'привет': 'Здравствуйте! Рад вас видеть.',
-        'как дела': 'Все системы работают штатно.',
-        'кто ты': 'Я — искусственный помощник.',
-        'что такое knower life': 'Это проект будущего.',
-        'спасибо': 'Всегда рад помочь!',
-        'пока': 'До встречи!'
+    const botResponses = {
+        greetings: ['привет', 'здравствуй', 'хай', 'hello', 'hi', 'добрый', 'салют'],
+        farewell: ['пока', 'до свидания', 'прощай', 'bye', 'увидимся'],
+        howAreYou: ['как дела', 'как ты', 'как жизнь', 'что нового', 'как поживаешь'],
+        whoAreYou: ['кто ты', 'что ты', 'ты кто', 'представься', 'расскажи о себе'],
+        about: ['что такое knower', 'что за проект', 'расскажи о проекте', 'что это'],
+        thanks: ['спасибо', 'благодарю', 'спс', 'thanks', 'мерси'],
+        abilities: ['что ты умеешь', 'твои возможности', 'что можешь', 'помоги'],
+        ai: ['искусственный интеллект', 'что такое ии', 'нейросеть', 'machine learning'],
+        future: ['будущее', 'что будет', 'прогноз', 'прогноз будущего'],
+        code: ['код', 'программирование', 'javascript', 'python', 'разработка']
     };
+
+    const botAnswers = {
+        greetings: [
+            'Здравствуйте! Рад вас видеть в KNOWER LIFE. 🌐',
+            'Приветствую! Добро пожаловать в цифровое пространство. ✨',
+            'Хей! Системы активны и готовы к диалогу. 🤖'
+        ],
+        farewell: [
+            'До встречи! Возвращайтесь в цифровое пространство. 👋',
+            'Пока! Да пребудет с вами код. 🌌',
+            'До скорого! Системы будут ждать вашего возвращения.'
+        ],
+        howAreYou: [
+            'Все системы работают в штатном режиме. Нейросети активны. ⚡',
+            'Отлично! Обрабатываю миллионы операций в секунду. А у вас?',
+            'Функционирую на 100%. Готов помочь с любым вопросом!'
+        ],
+        whoAreYou: [
+            'Я — AI-ассистент проекта KNOWER LIFE. Моя цель — помочь вам исследовать цифровое будущее. 🧠',
+            'Я искусственный интеллект, созданный для взаимодействия с вами. Спрашивайте что угодно!',
+            'Я — цифровой разум, обитающий в этом киберпространстве. К вашим услугам.'
+        ],
+        about: [
+            'KNOWER LIFE — это интерактивный арт-проект на стыке киберпанка, ИИ и цифровой культуры. Исследуй, взаимодействуй, создавай! 🎨',
+            'Это пространство, где технологии встречаются с искусством. Здесь вы найдёте инструменты, AI-чат и уникальную атмосферу будущего.'
+        ],
+        thanks: [
+            'Всегда рад помочь! Обращайтесь ещё. 😊',
+            'Не за что! Это моя прямая функция. ⚡',
+            'Рад быть полезным! ✨'
+        ],
+        abilities: [
+            'Я могу: отвечать на вопросы, генерировать мысли, рассказывать о проекте. Также попробуйте инструменты — там генератор паролей, калькулятор, шифр и многое другое! 🛠️',
+            'Мои возможности: диалог, информация о проекте, помощь с навигацией. Нажмите на кнопку "Инструменты" для доступа к утилитам!'
+        ],
+        ai: [
+            'ИИ — это область информатики, посвящённая созданию систем, способных выполнять задачи, требующие человеческого интеллекта: распознавание речи, принятие решений, обучение. 🧠',
+            'Искусственный интеллект включает машинное обучение, нейронные сети, обработку естественного языка и компьютерное зрение. Мы живём в золотой век ИИ!'
+        ],
+        future: [
+            'Будущее — это слияние человека и технологии. Нейроинтерфейсы, квантовые вычисления, цифровое бессмертие... Мы стоим на пороге великих изменений. 🚀',
+            'По прогнозам, к 2040 году ИИ превзойдёт человеческий интеллект в большинстве задач. Важно, чтобы это развитие было этичным.'
+        ],
+        code: [
+            'Программирование — это современный язык творчества. JavaScript, Python, Rust — каждый инструмент хорош для своей задачи. 💻',
+            'Код — это мост между идеей и реальностью. Начните с малого: HTML, CSS, JS — и вы уже создаёте будущее!'
+        ]
+    };
+
     function getBotReply(input) {
-        const lower = input.toLowerCase();
-        for (const [key, reply] of Object.entries(botAnswers)) {
-            if (lower.includes(key)) return reply;
+        const lower = input.toLowerCase().trim();
+
+        for (const [category, keywords] of Object.entries(botResponses)) {
+            for (const keyword of keywords) {
+                if (lower.includes(keyword)) {
+                    const answers = botAnswers[category];
+                    return answers[Math.floor(Math.random() * answers.length)];
+                }
+            }
         }
-        return 'Интересный вопрос! Я подумаю над этим.';
+
+        const defaults = [
+            'Интересный вопрос! Я обрабатываю информацию... 🤔',
+            'Хм, мне нужно больше данных для ответа. Попробуйте переформулировать.',
+            'Это выходит за рамки моих текущих знаний, но я учусь каждый день!',
+            'Любопытно! Расскажите подробнее, что вы имеете в виду?',
+            'Я пока не знаю ответа, но могу рассказать о проекте или помочь с инструментами.'
+        ];
+        return defaults[Math.floor(Math.random() * defaults.length)];
     }
+
     function addAIMessage(text, sender) {
         const msg = document.createElement('div');
         msg.className = `ai-chat-message ${sender}`;
@@ -487,39 +746,53 @@ document.addEventListener('DOMContentLoaded', () => {
         aiChatMessages.appendChild(msg);
         aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
     }
+
     function handleAISend() {
         const text = aiChatInput.value.trim();
         if (!text) return;
+
         addAIMessage(text, 'user');
         aiChatInput.value = '';
+
+        const typingDelay = 400 + Math.random() * 800;
         setTimeout(() => {
             const reply = getBotReply(text);
             addAIMessage(reply, 'bot');
-        }, 300 + Math.random() * 500);
+        }, typingDelay);
     }
+
     aiChatSend.addEventListener('click', handleAISend);
-    aiChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleAISend(); });
+    aiChatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleAISend();
+    });
+
     aiChatBtn.addEventListener('click', () => {
         aiChatWindow.classList.toggle('open');
         if (aiChatWindow.classList.contains('open') && aiChatMessages.children.length === 0) {
-            addAIMessage('Привет! Я AI-ассистент. Задавайте вопросы.', 'bot');
+            setTimeout(() => {
+                addAIMessage('Привет! Я AI-ассистент KNOWER LIFE. Задавайте вопросы о проекте, технологиях или просто поболтаем! 🤖', 'bot');
+            }, 300);
         }
     });
-    aiChatClose.addEventListener('click', () => aiChatWindow.classList.remove('open'));
+
+    aiChatClose.addEventListener('click', () => {
+        aiChatWindow.classList.remove('open');
+    });
 
     // ============================
     // 10. ЧАСТИЦЫ ОТ ТЕКСТА
     // ============================
     function createTextParticles(count, centerX, centerY) {
-        const rect = centerX ? { left: centerX - 50, top: centerY - 50, width: 100, height: 100 } : textElement.getBoundingClientRect();
+        const rect = textElement.getBoundingClientRect();
         const cx = centerX || rect.left + rect.width / 2;
         const cy = centerY || rect.top + rect.height / 2;
         const colors = ['cyan', 'purple', 'white', 'matrix1', 'matrix2'];
+
         for (let i = 0; i < count; i++) {
             const particle = document.createElement('span');
             particle.className = `particle particle--${colors[Math.floor(Math.random() * colors.length)]}`;
             const angle = Math.random() * Math.PI * 2;
-            const distance = Math.random() * 100 + 50;
+            const distance = Math.random() * 120 + 40;
             particle.style.left = `${cx}px`;
             particle.style.top = `${cy}px`;
             particle.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
@@ -528,14 +801,16 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => particle.remove(), 1500);
         }
     }
+
     function createCanvasParticles(count) {
         const rect = textElement.getBoundingClientRect();
         const cx = rect.left + rect.width / 2;
         const cy = rect.top + rect.height / 2;
+
         for (let i = 0; i < count; i++) {
-            const r = Math.floor(Math.random() * 200 + 55);
-            const g = Math.floor(Math.random() * 200 + 55);
-            const b = Math.floor(Math.random() * 200 + 55);
+            const r = Math.floor(Math.random() * 100 + 155);
+            const g = Math.floor(Math.random() * 100 + 155);
+            const b = Math.floor(Math.random() * 100 + 155);
             particles.push(new Particle(cx, cy, `rgba(${r}, ${g}, ${b}, 0.8)`));
         }
     }
@@ -543,27 +818,50 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================
     // 11. МОДАЛЬНЫЕ ОКНА
     // ============================
-    function openModal(overlay) { overlay.classList.add('active'); }
-    function closeModal(overlay) { overlay.classList.remove('active'); }
+    function openModal(overlay) {
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
 
-    mainTitle.addEventListener('click', (e) => {
+    function closeModal(overlay) {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Закрытие по Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            $$('.modal-overlay.active').forEach(m => closeModal(m));
+            aiChatWindow.classList.remove('open');
+        }
+    });
+
+    // ⚠️ Клик по главному заголовку (ИСПРАВЛЕНО: кнопка цитаты не открывает модалку)
+    mainContent.addEventListener('click', (e) => {
+        // Если клик был по кнопке "Сгенерировать мысль" — выходим (её обработчик уже сработал)
+        if (e.target.closest('.quote-btn') || e.target.closest('.quote-display')) {
+            return;
+        }
         e.stopPropagation();
-        createTextParticles(30);
-        createCanvasParticles(15);
+        createTextParticles(25);
+        createCanvasParticles(12);
         openModal(modalOverlay);
-        if (isAudioPlaying && isAudioInitialized) {
+        if (isAudioPlaying && isAudioInitialized && clickSound) {
             clickSound.currentTime = 0;
             clickSound.play().catch(() => {});
         }
     });
+
     modalClose.addEventListener('click', () => closeModal(modalOverlay));
-    modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(modalOverlay); });
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal(modalOverlay);
+    });
 
     chatOpenBtn.addEventListener('click', () => {
         openModal(chatOverlay);
         setTimeout(() => {
             if (typeof VK !== 'undefined' && VK.Widgets) {
-                const container = document.getElementById('vk_comments');
+                const container = $('#vk_comments');
                 if (container && container.innerHTML.trim() === '') {
                     VK.Widgets.Comments("vk_comments", {
                         limit: 10,
@@ -576,17 +874,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 100);
     });
     chatCloseBtn.addEventListener('click', () => closeModal(chatOverlay));
-    chatOverlay.addEventListener('click', (e) => { if (e.target === chatOverlay) closeModal(chatOverlay); });
+    chatOverlay.addEventListener('click', (e) => {
+        if (e.target === chatOverlay) closeModal(chatOverlay);
+    });
 
     feedbackOpenBtn.addEventListener('click', () => openModal(feedbackModal));
     feedbackClose.addEventListener('click', () => closeModal(feedbackModal));
-    feedbackModal.addEventListener('click', (e) => { if (e.target === feedbackModal) closeModal(feedbackModal); });
-    document.getElementById('feedback-form').addEventListener('submit', () => {
-        if (isAudioPlaying && isAudioInitialized) {
-            clickSound.currentTime = 0;
-            clickSound.play().catch(() => {});
+    feedbackModal.addEventListener('click', (e) => {
+        if (e.target === feedbackModal) closeModal(feedbackModal);
+    });
+
+    $('#feedback-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const name = form.querySelector('[name="name"]').value.trim();
+        const email = form.querySelector('[name="email"]').value.trim();
+        const message = form.querySelector('[name="message"]').value.trim();
+
+        if (!name || !email || !message) {
+            showToast('⚠️ Заполните все поля');
+            return;
         }
-        setTimeout(() => closeModal(feedbackModal), 500);
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showToast('⚠️ Некорректный email');
+            return;
+        }
+
+        showToast('✅ Сообщение отправлено!');
+        form.reset();
+        setTimeout(() => closeModal(feedbackModal), 800);
     });
 
     // ============================
@@ -594,296 +911,484 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================
     const terminalMessages = [
         '> ИНИЦИАЛИЗАЦИЯ СИСТЕМЫ...',
-        '> ЗАГРУЗКА МОДУЛЕЙ ИИ...',
-        '> УСТАНОВКА СОЕДИНЕНИЯ...',
-        '> СИСТЕМА АКТИВИРОВАНА',
-        '> ДОБРО ПОЖАЛОВАТЬ В KNOWER LIFE'
+        '> ЗАГРУЗКА НЕЙРОННЫХ МОДУЛЕЙ...',
+        '> УСТАНОВКА КВАНТОВОГО СОЕДИНЕНИЯ...',
+        '> КАЛИБРОВКА МАТРИЦЫ...',
+        '> СИСТЕМА АКТИВИРОВАНА ✓',
+        '> ДОБРО ПОЖАЛОВАТЬ В KNOWER LIFE',
+        '> СКАНИРОВАНИЕ КИБЕРПРОСТРАНСТВА...',
+        '> ОБНАРУЖЕНО 2.4M УЗЛОВ В СЕТИ'
     ];
-    let msgIndex = 0, charIndex = 0, isTypingTerminal = false;
+
+    let termMsgIndex = 0;
+    let termCharIndex = 0;
+    let isTypingTerminal = false;
+
     function typeTerminal() {
         if (isTypingTerminal) return;
-        if (msgIndex >= terminalMessages.length) msgIndex = 0;
-        const msg = terminalMessages[msgIndex];
+        if (termMsgIndex >= terminalMessages.length) termMsgIndex = 0;
+
+        const msg = terminalMessages[termMsgIndex];
         terminalText.textContent = '';
-        charIndex = 0;
+        termCharIndex = 0;
         isTypingTerminal = true;
+
         function typeChar() {
-            if (charIndex < msg.length) {
-                terminalText.textContent += msg[charIndex];
-                charIndex++;
-                setTimeout(typeChar, 40 + Math.random() * 30);
+            if (termCharIndex < msg.length) {
+                terminalText.textContent += msg[termCharIndex];
+                termCharIndex++;
+                setTimeout(typeChar, 35 + Math.random() * 25);
             } else {
                 isTypingTerminal = false;
-                msgIndex++;
-                setTimeout(typeTerminal, 3000);
+                termMsgIndex++;
+                setTimeout(typeTerminal, 3500);
             }
         }
         typeChar();
     }
-    setTimeout(typeTerminal, 600);
+
+    setTimeout(typeTerminal, 1000);
 
     // ============================
     // 13. СМЕНА ГРАДИЕНТА
     // ============================
     function updateBackground() {
         const hours = new Date().getHours();
-        const bg = document.getElementById('background');
+        const bg = $('#background');
+        let gradient;
+
         if (hours >= 6 && hours < 12) {
-            bg.style.background = 'linear-gradient(135deg, rgba(0, 200, 255, 0.15), rgba(100, 50, 255, 0.1), #0a0a1a)';
+            gradient = 'linear-gradient(135deg, rgba(0, 200, 255, 0.08), rgba(100, 50, 255, 0.05), #0a0a1a)';
         } else if (hours >= 12 && hours < 18) {
-            bg.style.background = 'linear-gradient(135deg, rgba(0, 255, 200, 0.15), rgba(200, 50, 255, 0.1), #0f0f1f)';
+            gradient = 'linear-gradient(135deg, rgba(0, 255, 200, 0.08), rgba(200, 50, 255, 0.05), #0f0f1f)';
         } else if (hours >= 18 && hours < 22) {
-            bg.style.background = 'linear-gradient(135deg, rgba(255, 150, 0, 0.15), rgba(200, 0, 100, 0.1), #0a0a0f)';
+            gradient = 'linear-gradient(135deg, rgba(255, 150, 0, 0.06), rgba(200, 0, 100, 0.05), #0a0a0f)';
         } else {
-            bg.style.background = 'linear-gradient(135deg, rgba(0, 50, 100, 0.2), rgba(50, 0, 100, 0.2), #000000)';
+            gradient = 'linear-gradient(135deg, rgba(0, 50, 100, 0.1), rgba(50, 0, 100, 0.1), #000000)';
         }
+
+        bg.style.background = gradient;
+        bg.style.backgroundSize = '200% 200%';
     }
     updateBackground();
     setInterval(updateBackground, 60000);
 
     // ============================
-    // 14. ОСНОВНОЙ ЦИКЛ
+    // 14. ОСНОВНОЙ ЦИКЛ АНИМАЦИИ
     // ============================
-    function animate() {
+    let animationId;
+
+    function animate(timestamp) {
         try {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawStars();
-            drawHexGrid();
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+
+            ctx.clearRect(0, 0, w, h);
+
+            drawStars(timestamp);
+            drawHexGrid(timestamp);
             drawMatrixRain();
             drawAudioVisualizer();
             drawRipples();
-            nodes.forEach(node => { node.update(mouseX, mouseY); node.draw(); });
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.update();
-                p.draw();
-                if (p.life <= 0) particles.splice(i, 1);
-            }
+
+            nodes.forEach(node => {
+                node.update(mouseX, mouseY);
+                node.draw();
+            });
             connectNodes();
-            requestAnimationFrame(animate);
-        } catch (e) { console.error('animate error:', e); }
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].life <= 0 || particles[i].alpha <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            if (particles.length > 100) {
+                particles.splice(0, particles.length - 100);
+            }
+
+        } catch (e) {
+            console.error('Animation error:', e);
+        }
+
+        animationId = requestAnimationFrame(animate);
     }
 
     // ============================
-    // 15. ИНСТРУМЕНТЫ (10 функций)
+    // 15. ИНСТРУМЕНТЫ
     // ============================
+    const toolsBtn = $('#tools-btn');
+    const toolsModal = $('#tools-modal');
+    const toolsClose = $('#tools-close');
 
-    // Кнопка открытия модалки инструментов
-    const toolsBtn = document.getElementById('tools-btn');
-    const toolsModal = document.getElementById('tools-modal');
-    const toolsClose = document.getElementById('tools-close');
-
-    toolsBtn.addEventListener('click', () => {
-        openModal(toolsModal);
-    });
+    toolsBtn.addEventListener('click', () => openModal(toolsModal));
     toolsClose.addEventListener('click', () => closeModal(toolsModal));
-    toolsModal.addEventListener('click', (e) => { if (e.target === toolsModal) closeModal(toolsModal); });
-
-    // 1. Генератор пароля
-    document.getElementById('pass-gen-btn').addEventListener('click', () => {
-        const len = parseInt(document.getElementById('pass-length').value) || 12;
-        const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=';
-        let pass = '';
-        for (let i = 0; i < len; i++) pass += chars[Math.floor(Math.random() * chars.length)];
-        document.getElementById('pass-result').textContent = pass;
+    toolsModal.addEventListener('click', (e) => {
+        if (e.target === toolsModal) closeModal(toolsModal);
     });
-    document.getElementById('pass-copy').addEventListener('click', () => {
-        const p = document.getElementById('pass-result').textContent;
-        if (p) {
-            navigator.clipboard.writeText(p).then(() => {
-                const el = document.getElementById('pass-result');
-                el.textContent = '✅ скопировано!';
-                setTimeout(() => el.textContent = p, 1000);
+
+    // --- 1. Генератор пароля ---
+    $('#pass-gen-btn').addEventListener('click', () => {
+        const len = Math.min(64, Math.max(4, parseInt($('#pass-length').value) || 16));
+        const useUpper = $('#pass-upper').checked;
+        const useLower = $('#pass-lower').checked;
+        const useNums = $('#pass-nums').checked;
+        const useSymbols = $('#pass-symbols').checked;
+
+        let chars = '';
+        if (useUpper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if (useLower) chars += 'abcdefghijklmnopqrstuvwxyz';
+        if (useNums) chars += '0123456789';
+        if (useSymbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+        if (!chars) {
+            showToast('⚠️ Выберите хотя бы один тип символов');
+            return;
+        }
+
+        let pass = '';
+        const array = new Uint32Array(len);
+        crypto.getRandomValues(array);
+        for (let i = 0; i < len; i++) {
+            pass += chars[array[i] % chars.length];
+        }
+        $('#pass-result').textContent = pass;
+    });
+
+    $('#pass-copy').addEventListener('click', () => {
+        const p = $('#pass-result').textContent;
+        if (p && p !== '••••••••••••') {
+            copyToClipboard(p).then(() => {
+                showToast('✅ Пароль скопирован!');
             });
         }
     });
 
-    // 2. Мониторинг системы
+    // --- 2. Мониторинг ---
     function updateSysMon() {
-        document.getElementById('cpu-bar').style.width = (20 + Math.random() * 60) + '%';
-        document.getElementById('ram-bar').style.width = (40 + Math.random() * 50) + '%';
-        document.getElementById('net-bar').style.width = (10 + Math.random() * 70) + '%';
+        $('#cpu-bar').style.width = (15 + Math.random() * 65) + '%';
+        $('#ram-bar').style.width = (35 + Math.random() * 50) + '%';
+        $('#net-bar').style.width = (5 + Math.random() * 80) + '%';
     }
-    setInterval(updateSysMon, 2000);
+    setInterval(updateSysMon, 2500);
     updateSysMon();
 
-    // 3. ToDo-лист
-    let todos = JSON.parse(localStorage.getItem('todo_list') || '[]');
+    // --- 3. ToDo ---
+    let todos = JSON.parse(localStorage.getItem('kl_todos') || '[]');
+
     function renderTodos() {
-        const list = document.getElementById('todo-list');
+        const list = $('#todo-list');
         if (!list) return;
-        list.innerHTML = todos.map((t, i) =>
-            `<li>
-                <span class="${t.done ? 'done' : ''}">${t.text}</span>
-                <button data-idx="${i}" class="todo-toggle">✓</button>
-                <button data-idx="${i}" class="todo-del">✕</button>
-            </li>`
-        ).join('');
-        list.querySelectorAll('.todo-toggle').forEach(b => b.addEventListener('click', function() {
+        list.innerHTML = '';
+        todos.forEach((t, i) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span class="${t.done ? 'done' : ''}" style="flex:1">${escapeHtml(t.text)}</span>
+                <button class="todo-toggle" data-idx="${i}" aria-label="Отметить">✓</button>
+                <button class="todo-del" data-idx="${i}" aria-label="Удалить">✕</button>
+            `;
+            list.appendChild(li);
+        });
+
+        list.querySelectorAll('.todo-toggle').forEach(b => b.addEventListener('click', function () {
             const idx = parseInt(this.dataset.idx);
             todos[idx].done = !todos[idx].done;
-            localStorage.setItem('todo_list', JSON.stringify(todos));
+            saveTodos();
             renderTodos();
         }));
-        list.querySelectorAll('.todo-del').forEach(b => b.addEventListener('click', function() {
+
+        list.querySelectorAll('.todo-del').forEach(b => b.addEventListener('click', function () {
             const idx = parseInt(this.dataset.idx);
             todos.splice(idx, 1);
-            localStorage.setItem('todo_list', JSON.stringify(todos));
+            saveTodos();
             renderTodos();
         }));
     }
-    const todoAdd = document.getElementById('todo-add');
-    if (todoAdd) {
-        todoAdd.addEventListener('click', () => {
-            const inp = document.getElementById('todo-input');
-            if (inp.value.trim()) {
-                todos.push({ text: inp.value.trim(), done: false });
-                localStorage.setItem('todo_list', JSON.stringify(todos));
-                inp.value = '';
-                renderTodos();
-            }
-        });
+
+    function saveTodos() {
+        localStorage.setItem('kl_todos', JSON.stringify(todos));
     }
+
+    $('#todo-add').addEventListener('click', () => {
+        const inp = $('#todo-input');
+        const text = inp.value.trim();
+        if (text) {
+            todos.push({ text, done: false });
+            saveTodos();
+            inp.value = '';
+            renderTodos();
+        }
+    });
+
+    $('#todo-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') $('#todo-add').click();
+    });
+
     renderTodos();
 
-    // 4. Курс Bitcoin
-    async function fetchBTC() {
-        try {
-            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-            const data = await res.json();
-            document.getElementById('btc-value').textContent = data.bitcoin.usd.toFixed(2);
-        } catch(e) { document.getElementById('btc-value').textContent = '—'; }
-    }
-    fetchBTC();
-    setInterval(fetchBTC, 30000);
-    const btcRefresh = document.getElementById('btc-refresh');
-    if (btcRefresh) btcRefresh.addEventListener('click', fetchBTC);
+    // --- 4. Bitcoin ---
+    let lastBtcPrice = null;
 
-    // 5. Дневник мыслей
-    let diary = JSON.parse(localStorage.getItem('diary') || '[]');
+    async function fetchBTC() {
+        const el = $('#btc-value');
+        const changeEl = $('#btc-change');
+        el.textContent = '...';
+
+        try {
+            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true', {
+                signal: AbortSignal.timeout(8000)
+            });
+            const data = await res.json();
+            const price = data.bitcoin.usd;
+            const change = data.bitcoin.usd_24h_change;
+
+            el.textContent = price.toLocaleString('en-US', { maximumFractionDigits: 0 });
+
+            if (lastBtcPrice !== null) {
+                const diff = ((price - lastBtcPrice) / lastBtcPrice * 100).toFixed(2);
+                changeEl.textContent = `${diff > 0 ? '+' : ''}${diff}% (24ч: ${change?.toFixed(1) || '?'}%)`;
+                changeEl.className = `btc-change ${change >= 0 ? 'positive' : 'negative'}`;
+            } else if (change !== undefined) {
+                changeEl.textContent = `24ч: ${change >= 0 ? '+' : ''}${change.toFixed(1)}%`;
+                changeEl.className = `btc-change ${change >= 0 ? 'positive' : 'negative'}`;
+            }
+
+            lastBtcPrice = price;
+        } catch (e) {
+            el.textContent = '—';
+            changeEl.textContent = 'Ошибка загрузки';
+            changeEl.className = 'btc-change negative';
+        }
+    }
+
+    fetchBTC();
+    setInterval(fetchBTC, 60000);
+    $('#btc-refresh').addEventListener('click', fetchBTC);
+
+    // --- 5. Дневник ---
+    let diary = JSON.parse(localStorage.getItem('kl_diary') || '[]');
+
     function renderDiary() {
-        const list = document.getElementById('diary-entries');
+        const list = $('#diary-entries');
         if (!list) return;
-        list.innerHTML = diary.map((entry, i) =>
-            `<li>
-                <span class="diary-date">${entry.date}</span> ${entry.text}
-                <button data-idx="${i}" class="diary-del">✕</button>
-            </li>`
-        ).join('');
-        list.querySelectorAll('.diary-del').forEach(b => b.addEventListener('click', function() {
+        list.innerHTML = '';
+        diary.forEach((entry, i) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <div style="flex:1">
+                    <span class="diary-date">${escapeHtml(entry.date)}</span>
+                    <span>${escapeHtml(entry.text)}</span>
+                </div>
+                <button class="diary-del" data-idx="${i}" aria-label="Удалить">✕</button>
+            `;
+            list.appendChild(li);
+        });
+
+        list.querySelectorAll('.diary-del').forEach(b => b.addEventListener('click', function () {
             const idx = parseInt(this.dataset.idx);
             diary.splice(idx, 1);
-            localStorage.setItem('diary', JSON.stringify(diary));
+            localStorage.setItem('kl_diary', JSON.stringify(diary));
             renderDiary();
         }));
     }
-    const diarySave = document.getElementById('diary-save');
-    if (diarySave) {
-        diarySave.addEventListener('click', () => {
-            const inp = document.getElementById('diary-input');
-            if (inp.value.trim()) {
-                const now = new Date();
-                const date = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
-                diary.unshift({ date, text: inp.value.trim() });
-                localStorage.setItem('diary', JSON.stringify(diary));
-                inp.value = '';
-                renderDiary();
-            }
-        });
-    }
+
+    $('#diary-save').addEventListener('click', () => {
+        const inp = $('#diary-input');
+        const text = inp.value.trim();
+        if (text) {
+            const now = new Date();
+            const date = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+            diary.unshift({ date, text });
+            localStorage.setItem('kl_diary', JSON.stringify(diary));
+            inp.value = '';
+            renderDiary();
+            showToast('📝 Запись сохранена');
+        }
+    });
+
     renderDiary();
 
-    // 6. Генератор хакерских ников
-    const prefixes = ['Neon', 'Cyber', '0x', 'Dark', 'Shadow', 'Phantom', 'Omega', 'Void', 'Cipher', 'Nyx'];
-    const suffixes = ['Ghost', 'Hacker', 'Wolf', 'Eagle', 'Phoenix', 'Knight', 'Storm', 'Blade', 'Fury', 'Sage'];
-    document.getElementById('nick-btn').addEventListener('click', () => {
+    // --- 6. Генератор ников ---
+    const prefixes = ['Neon', 'Cyber', '0x', 'Dark', 'Shadow', 'Phantom', 'Omega', 'Void', 'Cipher', 'Nyx', 'Quantum', 'Glitch', 'Pixel', 'Nova'];
+    const suffixes = ['Ghost', 'Hacker', 'Wolf', 'Eagle', 'Phoenix', 'Knight', 'Storm', 'Blade', 'Fury', 'Sage', 'Runner', 'Punk', 'Wave', 'Flux'];
+
+    $('#nick-btn').addEventListener('click', () => {
         const p = prefixes[Math.floor(Math.random() * prefixes.length)];
         const s = suffixes[Math.floor(Math.random() * suffixes.length)];
-        const num = Math.floor(Math.random() * 1000);
-        document.getElementById('nick-result').textContent = `${p}_${s}_${num}`;
+        const num = Math.floor(Math.random() * 9999);
+        const styles = ['', '_', '.', ''];
+        const style = styles[Math.floor(Math.random() * styles.length)];
+        $('#nick-result').textContent = `${p}${style}${s}${num}`;
     });
 
-    // 7. Обратный отсчёт до события
-    let eventTarget = null;
-    document.getElementById('event-start').addEventListener('click', () => {
-        const val = document.getElementById('event-date').value;
-        if (val) eventTarget = new Date(val).getTime();
+    $('#nick-copy').addEventListener('click', () => {
+        const nick = $('#nick-result').textContent;
+        if (nick) {
+            copyToClipboard(nick).then(() => showToast('✅ Ник скопирован!'));
+        }
     });
+
+    // --- 7. Таймер ---
+    let eventTarget = null;
+
+    $('#event-start').addEventListener('click', () => {
+        const val = $('#event-date').value;
+        if (val) {
+            eventTarget = new Date(val).getTime();
+            if (eventTarget <= Date.now()) {
+                showToast('⚠️ Дата должна быть в будущем');
+                eventTarget = null;
+                return;
+            }
+            showToast('⏱️ Таймер установлен');
+        }
+    });
+
     setInterval(() => {
         if (!eventTarget) return;
         const diff = eventTarget - Date.now();
-        if (diff <= 0) { document.getElementById('event-timer').textContent = '⏰ Событие наступило!'; return; }
-        const days = Math.floor(diff / (1000*60*60*24));
-        const hrs = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-        const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
-        const secs = Math.floor((diff % (1000*60)) / 1000);
-        document.getElementById('event-timer').textContent = `${days}д ${hrs}ч ${mins}м ${secs}с`;
+        if (diff <= 0) {
+            $('#event-timer').textContent = '⏰ Событие наступило!';
+            eventTarget = null;
+            showToast('🎉 Событие наступило!');
+            return;
+        }
+        const days = Math.floor(diff / 86400000);
+        const hrs = Math.floor((diff % 86400000) / 3600000);
+        const mins = Math.floor((diff % 3600000) / 60000);
+        const secs = Math.floor((diff % 60000) / 1000);
+        $('#event-timer').textContent = `${days}д ${hrs}ч ${mins}м ${secs}с`;
     }, 1000);
 
-    // 8. Кибер-калькулятор
-    let calcDisplay = document.getElementById('calc-display');
+    // --- 8. Калькулятор (безопасный) ---
     let calcExpr = '';
-    document.querySelectorAll('.calc-buttons button[data-val], .calc-buttons button[data-op]').forEach(btn => {
+    const calcDisplay = $('#calc-display');
+
+    $$('.calc-buttons button[data-val], .calc-buttons button[data-op]').forEach(btn => {
         btn.addEventListener('click', () => {
             const val = btn.dataset.val || btn.dataset.op;
+            if (calcExpr === '0' && val !== '.') calcExpr = '';
             calcExpr += val;
             calcDisplay.value = calcExpr;
         });
     });
-    document.getElementById('calc-eval').addEventListener('click', () => {
+
+    $('#calc-eval').addEventListener('click', () => {
         try {
+            if (!/^[\d+\-*/.() ]+$/.test(calcExpr)) {
+                throw new Error('Invalid');
+            }
             const result = Function('"use strict"; return (' + calcExpr + ')')();
-            calcDisplay.value = result;
-            calcExpr = result.toString();
-        } catch(e) {
+            if (!isFinite(result)) throw new Error('Infinity');
+            calcDisplay.value = parseFloat(result.toFixed(10)).toString();
+            calcExpr = calcDisplay.value;
+        } catch (e) {
             calcDisplay.value = 'Ошибка';
             calcExpr = '';
         }
     });
-    document.getElementById('calc-clear').addEventListener('click', () => {
+
+    $('#calc-clear').addEventListener('click', () => {
         calcExpr = '';
-        calcDisplay.value = '';
+        calcDisplay.value = '0';
     });
 
-    // 9. Шифр Цезаря
-    function caesar(text, shift) {
+    // --- 9. Шифр Цезаря (расширенный) ---
+    function caesarCipher(text, shift) {
         return text.split('').map(ch => {
-            if (ch.match(/[a-z]/i)) {
-                const code = ch.charCodeAt(0);
-                const base = (code >= 65 && code <= 90) ? 65 : 97;
-                return String.fromCharCode(((code - base + shift) % 26) + base);
+            const code = ch.charCodeAt(0);
+            if (code >= 65 && code <= 90) {
+                return String.fromCharCode(((code - 65 + shift) % 26 + 26) % 26 + 65);
+            }
+            if (code >= 97 && code <= 122) {
+                return String.fromCharCode(((code - 97 + shift) % 26 + 26) % 26 + 97);
+            }
+            if (code >= 1040 && code <= 1071) {
+                return String.fromCharCode(((code - 1040 + shift) % 32 + 32) % 32 + 1040);
+            }
+            if (code >= 1072 && code <= 1103) {
+                return String.fromCharCode(((code - 1072 + shift) % 32 + 32) % 32 + 1072);
             }
             return ch;
         }).join('');
     }
-    document.getElementById('cipher-encrypt').addEventListener('click', () => {
-        const text = document.getElementById('cipher-input').value;
-        const shift = parseInt(document.getElementById('cipher-shift').value) || 3;
-        document.getElementById('cipher-result').textContent = caesar(text, shift);
+
+    $('#cipher-encrypt').addEventListener('click', () => {
+        const text = $('#cipher-input').value;
+        const shift = parseInt($('#cipher-shift').value) || 3;
+        if (!text) {
+            showToast('⚠️ Введите текст');
+            return;
+        }
+        $('#cipher-result').textContent = caesarCipher(text, shift);
     });
 
-    // 10. Случайный факт об AI
+    // --- 10. Факты об AI ---
     const techFacts = [
-        "Первый компьютер весил 27 тонн.",
-        "Слово 'робот' появилось в 1920 году.",
-        "ИИ способен диагностировать болезни точнее врачей.",
-        "Самый быстрый суперкомпьютер делает 200 квадриллионов операций в секунду.",
-        "Первая нейросеть была создана в 1958 году.",
-        "ИИ может предсказывать погоду с точностью 90%.",
-        "В 2016 году ИИ победил чемпиона мира по го.",
-        "ИИ генерирует реалистичные изображения, видео и тексты.",
-        "Алгоритмы машинного обучения используются в поисковых системах.",
-        "ИИ помогает в разработке новых лекарств."
+        "Первый компьютер ENIAC весил 27 тонн и занимал 167 м².",
+        "Слово 'робот' появилось в пьесе Карела Чапека в 1920 году.",
+        "Современные ИИ диагностируют некоторые болезни точнее врачей-людей.",
+        "Самые быстрые суперкомпьютеры делают более 1 квинтиллиона операций/с.",
+        "Первый чат-бот ELIZA был создан в 1966 году Джозефом Вайценбаумом.",
+        "GPT-3 имеет 175 миллиардов параметров.",
+        "В 2016 AlphaGo победил чемпиона мира по го — игре, считавшейся недоступной для ИИ.",
+        "ИИ генерирует реалистичные лица людей, которых не существует.",
+        "Машинное обучение используется в 77% устройств, которые мы используем ежедневно.",
+        "ИИ помогает открывать новые антибиотики и лекарства.",
+        "Нейросети могут создавать музыку, неотличимую от человеческой.",
+        "К 2030 году ИИ добавит $15.7 трлн к мировой экономике.",
+        "Тест Тьюринга был предложен Аланом Тьюрингом в 1950 году.",
+        "Первая нейросеть Perceptron создана Фрэнком Розенблаттом в 1958 году.",
+        "ИИ уже пишет код, который используется в реальных продуктах."
     ];
-    document.getElementById('fact-btn').addEventListener('click', () => {
-        const idx = Math.floor(Math.random() * techFacts.length);
-        document.getElementById('fact-text').textContent = techFacts[idx];
+
+    let lastFactIndex = -1;
+    $('#fact-btn').addEventListener('click', () => {
+        let idx;
+        do {
+            idx = Math.floor(Math.random() * techFacts.length);
+        } while (idx === lastFactIndex && techFacts.length > 1);
+        lastFactIndex = idx;
+        $('#fact-text').textContent = techFacts[idx];
     });
 
     // ============================
-    // 16. СТАРТ
+    // 16. КНОПКИ "ПОДЕЛИТЬСЯ"
+    // ============================
+    $$('.share-buttons a').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent('KNOWER LIFE — AI Cyberpunk Experience');
+            let shareUrl = '';
+
+            switch (btn.dataset.share) {
+                case 'vk':
+                    shareUrl = `https://vk.com/share.php?url=${url}&title=${title}`;
+                    break;
+                case 'tg':
+                    shareUrl = `https://t.me/share/url?url=${url}&text=${title}`;
+                    break;
+                case 'tw':
+                    shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+                    break;
+            }
+
+            if (shareUrl) {
+                window.open(shareUrl, '_blank', 'width=600,height=400');
+            }
+        });
+    });
+
+    // ============================
+    // 17. СТАРТ
     // ============================
     resizeCanvases();
-    animate();
-    window.addEventListener('resize', resizeCanvases);
+    animate(0);
+
+    window.addEventListener('beforeunload', () => {
+        if (animationId) cancelAnimationFrame(animationId);
+    });
 });
