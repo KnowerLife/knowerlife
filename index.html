@@ -19,7 +19,7 @@
     <script src="https://vk.com/js/api/openapi.js?169" type="text/javascript"></script>
     <script type="text/javascript">
         VK.init({
-            apiId: 54642529, // замените на ваш ID
+            apiId: 54642529,
             onlyWidgets: true
         });
     </script>
@@ -38,13 +38,13 @@
     <canvas id="audio-visualizer"></canvas>
     <canvas id="ripple-canvas"></canvas>
 
-    <!-- Часы (верхний правый угол) -->
+    <!-- Часы -->
     <div class="clock-container" id="clock">00:00:00</div>
 
-    <!-- Онлайн-счётчик (слева внизу) -->
+    <!-- Онлайн-счётчик (реальный) -->
     <div class="online-counter">👥 Онлайн: <span id="online-count">0</span></div>
 
-    <!-- Главный контент -->
+    <!-- Главный текст -->
     <div class="text-container" id="knower-life">
         <div class="text" id="main-title">
             <span>K</span><span>N</span><span>O</span><span>W</span><span>E</span><span>R</span><span>&nbsp;</span><span>L</span><span>I</span><span>F</span><span>E</span>
@@ -54,7 +54,7 @@
         <div id="quote-display" class="quote-display">Нажмите, чтобы узнать, что думает ИИ...</div>
     </div>
 
-    <!-- Терминал (внизу, со смещением вправо, чтобы не перекрывать иконки) -->
+    <!-- Терминал (поднят выше, центрирован) -->
     <div id="terminal">
         <span id="terminal-text"></span><span id="terminal-cursor">▌</span>
     </div>
@@ -122,7 +122,7 @@
         </div>
     </div>
 
-    <!-- AI-чат (выдвижное окно) -->
+    <!-- AI-чат -->
     <div id="ai-chat-window" class="ai-chat-window">
         <div class="ai-chat-header">
             <span><i class="fas fa-robot"></i> AI-помощник</span>
