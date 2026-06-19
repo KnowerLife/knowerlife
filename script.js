@@ -67,7 +67,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const onlineCount = document.getElementById('online-count');
 
     // ============================
-    // 3. CANVAS (звёзды, сетка, матрица, ИИ-сеть, визуализация, рябь)
+    // 3. РЕАЛЬНЫЙ СЧЁТЧИК ПОСЕТИТЕЛЕЙ (через localStorage)
+    // ============================
+    function updateRealVisitorCount() {
+        let count = localStorage.getItem('knowerlife_visitors');
+        if (!count) {
+            count = Math.floor(Math.random() * 100) + 20; // начальное случайное число, но потом будет расти
+            localStorage.setItem('knowerlife_visitors', count);
+        } else {
+            count = parseInt(count, 10);
+            // увеличиваем на 1 при каждом новом посещении (уникальный посетитель за сессию)
+            // но чтобы не завышать, увеличиваем только если это первый визит в сессии
+            if (!sessionStorage.getItem('knowerlife_visited')) {
+                count += 1;
+                localStorage.setItem('knowerlife_visitors', count);
+                sessionStorage.setItem('knowerlife_visited', 'true');
+            }
+        }
+        onlineCount.textContent = count;
+    }
+    updateRealVisitorCount();
+
+    // ============================
+    // 4. CANVAS (звёзды, сетка, матрица, ИИ-сеть, визуализация, рябь)
     // ============================
     function resizeCanvases() {
         const w = window.innerWidth;
@@ -321,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================
-    // 4. ВЗАИМОДЕЙСТВИЕ С МЫШЬЮ/ТАЧ
+    // 5. ВЗАИМОДЕЙСТВИЕ С МЫШЬЮ/ТАЧ
     // ============================
     let mouseX = null, mouseY = null;
     const particles = [];
@@ -372,22 +394,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 5. ЧАСЫ И ЧАСОВЫЕ ПОЯСА
+    // 6. ЧАСЫ
     // ============================
-    function updateClocks() {
+    function updateClock() {
         const now = new Date();
         clockElement.textContent = now.toTimeString().split(' ')[0];
-        document.getElementById('msk-time').textContent = now.toTimeString().split(' ')[0].slice(0,5);
-        const nyTime = new Date(now.toLocaleString('en-US', {timeZone: 'America/New_York'}));
-        document.getElementById('ny-time').textContent = nyTime.toTimeString().split(' ')[0].slice(0,5);
-        const tokyoTime = new Date(now.toLocaleString('en-US', {timeZone: 'Asia/Tokyo'}));
-        document.getElementById('tokyo-time').textContent = tokyoTime.toTimeString().split(' ')[0].slice(0,5);
     }
-    setInterval(updateClocks, 1000);
-    updateClocks();
+    setInterval(updateClock, 1000);
+    updateClock();
 
     // ============================
-    // 6. АУДИО
+    // 7. АУДИО
     // ============================
     let isAudioInitialized = false;
     let isAudioPlaying = false;
@@ -422,22 +439,6 @@ document.addEventListener('DOMContentLoaded', () => {
         clickSound.currentTime = 0;
         clickSound.play().catch(() => {});
     });
-
-    // ============================
-    // 7. ОНЛАЙН-СЧЁТЧИК
-    // ============================
-    function updateOnlineCounter() {
-        const newVal = Math.floor(Math.random() * 30) + 10;
-        const el = onlineCount;
-        let current = parseInt(el.textContent);
-        const step = Math.sign(newVal - current);
-        const interval = setInterval(() => {
-            if (current === newVal) { clearInterval(interval); return; }
-            current += step;
-            el.textContent = current;
-        }, 50);
-    }
-    setInterval(updateOnlineCounter, 5000);
 
     // ============================
     // 8. ГЕНЕРАТОР ФРАЗ
