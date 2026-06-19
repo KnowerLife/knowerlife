@@ -29,7 +29,7 @@
     <!-- Прогресс-бар загрузки -->
     <div id="loader"><div id="loader-bar"></div></div>
 
-    <!-- Canvas слои (фон, звёзды, сетка, матрица, ИИ-сеть, визуализатор, рябь) -->
+    <!-- Canvas слои -->
     <canvas id="stars-canvas"></canvas>
     <canvas id="hex-grid"></canvas>
     <div id="background"></div>
@@ -38,31 +38,13 @@
     <canvas id="audio-visualizer"></canvas>
     <canvas id="ripple-canvas"></canvas>
 
-    <!-- Часы и часовые пояса (группированы справа вверху) -->
-    <div class="top-right-group">
-        <div class="clock-container" id="clock">00:00:00</div>
-        <div class="timezones">
-            <div>🇷🇺 Москва: <span id="msk-time">--:--</span></div>
-            <div>🇺🇸 Нью-Йорк: <span id="ny-time">--:--</span></div>
-            <div>🇯🇵 Токио: <span id="tokyo-time">--:--</span></div>
-        </div>
-    </div>
+    <!-- Часы (верхний правый угол) -->
+    <div class="clock-container" id="clock">00:00:00</div>
 
-    <!-- Онлайн-счётчик (слева внизу, чтобы не мешать кнопкам) -->
-    <div class="online-counter">👥 Онлайн: <span id="online-count">42</span></div>
+    <!-- Онлайн-счётчик (слева внизу) -->
+    <div class="online-counter">👥 Онлайн: <span id="online-count">0</span></div>
 
-    <!-- Панель обновлений (слева, чуть выше счётчика) -->
-    <div class="updates-panel" id="updates-panel">
-        <h4><i class="fas fa-sync-alt"></i> Обновления</h4>
-        <ul>
-            <li><span class="date">2025-03-15</span> Комментарии ВК</li>
-            <li><span class="date">2025-03-10</span> AI-генератор</li>
-            <li><span class="date">2025-03-01</span> Часовые пояса</li>
-            <li><span class="date">2025-02-20</span> Запуск</li>
-        </ul>
-    </div>
-
-    <!-- Главный контент (центр) -->
+    <!-- Главный контент -->
     <div class="text-container" id="knower-life">
         <div class="text" id="main-title">
             <span>K</span><span>N</span><span>O</span><span>W</span><span>E</span><span>R</span><span>&nbsp;</span><span>L</span><span>I</span><span>F</span><span>E</span>
@@ -72,12 +54,12 @@
         <div id="quote-display" class="quote-display">Нажмите, чтобы узнать, что думает ИИ...</div>
     </div>
 
-    <!-- Терминал (внизу по центру) -->
+    <!-- Терминал (внизу, со смещением вправо, чтобы не перекрывать иконки) -->
     <div id="terminal">
         <span id="terminal-text"></span><span id="terminal-cursor">▌</span>
     </div>
 
-    <!-- Кнопки управления (справа, снизу, компактно) -->
+    <!-- Кнопки управления (справа снизу) -->
     <div id="control-buttons">
         <button class="ctrl-btn" id="chat-open-btn" title="Комментарии ВК"><i class="fab fa-vk"></i></button>
         <button class="ctrl-btn" id="feedback-open-btn" title="Обратная связь"><i class="fas fa-envelope"></i></button>
@@ -85,14 +67,14 @@
         <button class="ctrl-btn" id="audio-toggle" title="Аудио"><i class="fas fa-volume-up"></i></button>
     </div>
 
-    <!-- Кнопки "Поделиться" (слева, вертикально) -->
+    <!-- Кнопки "Поделиться" (слева) -->
     <div class="share-buttons">
         <a href="https://vk.com/share.php?url=https://knowerlife.ru" target="_blank" class="share-vk" title="Поделиться ВКонтакте"><i class="fab fa-vk"></i></a>
         <a href="https://t.me/share/url?url=https://knowerlife.ru&text=Knower%20Life%20-%20киберпанк%20портал" target="_blank" class="share-tg" title="Поделиться в Telegram"><i class="fab fa-telegram-plane"></i></a>
         <a href="https://twitter.com/intent/tweet?text=Knower%20Life%20-%20киберпанк%20портал&url=https://knowerlife.ru" target="_blank" class="share-tw" title="Поделиться в Twitter"><i class="fab fa-x-twitter"></i></a>
     </div>
 
-    <!-- Футер (аудио-контроль вынесен в кнопку управления) -->
+    <!-- Футер -->
     <footer>
         <a href="https://github.com/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub"><i class="fab fa-github"></i></a>
         <a href="https://t.me/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="Telegram" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
@@ -153,7 +135,7 @@
         </div>
     </div>
 
-    <!-- Аудио элементы (скрыты) -->
+    <!-- Аудио -->
     <audio id="background-music" preload="auto" loop>
         <source src="background.mp3" type="audio/mpeg">
     </audio>
