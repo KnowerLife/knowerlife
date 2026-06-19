@@ -1,277 +1,334 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Knower Life</title>
-    <meta name="description" content="Knower Life – киберпанк-портал с интерактивной анимацией, музыкой и эффектами" />
-    <meta property="og:title" content="Knower Life" />
-    <meta property="og:description" content="Погрузитесь в атмосферу будущего с Knower Life" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://knowerlife.ru" />
-    <meta property="og:image" content="https://knowerlife.ru/og-image.jpg" />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏣</text></svg>" />
-    <link rel="stylesheet" href="styles.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-
-    <!-- ВК Комментарии -->
-    <script src="https://vk.com/js/api/openapi.js?169" type="text/javascript"></script>
-    <script type="text/javascript">
-        VK.init({
-            apiId: 54642529, // замените на ваш ID
-            onlyWidgets: true
-        });
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KNOWER LIFE — интерактивный арт-проект, объединяющий киберпанк-эстетику, искусственный интеллект и цифровую культуру">
+    <meta name="theme-color" content="#0a0a1a">
+    <meta property="og:title" content="KNOWER LIFE — AI Cyberpunk Experience">
+    <meta property="og:description" content="Будущее уже здесь. Интерактивный арт-проект с ИИ.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://knowerlife.ru">
+    <title>KNOWER LIFE — Искусственный Интеллект • Будущее Уже Здесь</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
     <!-- Прогресс-бар загрузки -->
-    <div id="loader"><div id="loader-bar"></div></div>
+    <div id="loader" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        <div id="loader-bar"></div>
+        <span class="loader-text">ИНИЦИАЛИЗАЦИЯ...</span>
+    </div>
 
-    <!-- Canvas слои -->
-    <canvas id="stars-canvas"></canvas>
-    <canvas id="hex-grid"></canvas>
-    <div id="background"></div>
-    <canvas id="matrix-rain"></canvas>
-    <canvas id="ai-network"></canvas>
-    <canvas id="audio-visualizer"></canvas>
-    <canvas id="ripple-canvas"></canvas>
+    <!-- Фоновые canvas-слои -->
+    <canvas id="stars-canvas" aria-hidden="true"></canvas>
+    <canvas id="hex-grid" aria-hidden="true"></canvas>
+    <div id="background" aria-hidden="true"></div>
+    <canvas id="matrix-rain" aria-hidden="true"></canvas>
+    <canvas id="ai-network" aria-hidden="true"></canvas>
+    <canvas id="audio-visualizer" aria-hidden="true"></canvas>
+    <canvas id="ripple-canvas" aria-hidden="true"></canvas>
 
     <!-- Часы -->
-    <div class="clock-container" id="clock">00:00:00</div>
-
-    <!-- Онлайн-счётчик (реальный) -->
-    <div class="online-counter">👥 Онлайн: <span id="online-count">0</span></div>
-
-    <!-- Главный текст -->
-    <div class="text-container" id="knower-life">
-        <div class="text" id="main-title">
-            <span>K</span><span>N</span><span>O</span><span>W</span><span>E</span><span>R</span><span>&nbsp;</span><span>L</span><span>I</span><span>F</span><span>E</span>
-        </div>
-        <div class="sub-text">// ИСКУССТВЕННЫЙ ИНТЕЛЛЕКТ • БУДУЩЕЕ УЖЕ ЗДЕСЬ</div>
-        <button id="quote-btn" class="quote-btn"><i class="fas fa-brain"></i> Сгенерировать мысль</button>
-        <div id="quote-display" class="quote-display">Нажмите, чтобы узнать, что думает ИИ...</div>
+    <div class="clock-container" aria-label="Текущее время">
+        <i class="fas fa-clock"></i>
+        <span id="clock">00:00:00</span>
     </div>
+
+    <!-- Счётчик онлайн -->
+    <div class="online-counter" aria-label="Количество посетителей онлайн">
+        <i class="fas fa-users"></i>
+        <span>Онлайн: </span>
+        <span id="online-count">0</span>
+    </div>
+
+    <!-- Основной контент -->
+    <main class="text-container" id="main-content">
+        <h1 class="text" id="main-title">
+            <span>K</span><span>N</span><span>O</span><span>W</span><span>E</span><span>R</span>
+            <span class="space"></span>
+            <span>L</span><span>I</span><span>F</span><span>E</span>
+        </h1>
+        <p class="sub-text">ИСКУССТВЕННЫЙ ИНТЕЛЛЕКТ • БУДУЩЕЕ УЖЕ ЗДЕСЬ</p>
+        <button class="quote-btn" id="quote-btn" aria-label="Сгенерировать цитату">
+            <i class="fas fa-brain"></i> Сгенерировать мысль
+        </button>
+        <p class="quote-display" id="quote-display" aria-live="polite"></p>
+    </main>
 
     <!-- Терминал -->
-    <div id="terminal">
-        <span id="terminal-text"></span><span id="terminal-cursor">▌</span>
+    <div id="terminal" aria-label="Системный терминал">
+        <span id="terminal-text"></span>
+        <span id="terminal-cursor">▌</span>
     </div>
 
-    <!-- Кнопки управления (добавлена кнопка инструментов) -->
-    <div id="control-buttons">
-        <button class="ctrl-btn" id="chat-open-btn" title="Комментарии ВК"><i class="fab fa-vk"></i></button>
-        <button class="ctrl-btn" id="feedback-open-btn" title="Обратная связь"><i class="fas fa-envelope"></i></button>
-        <button class="ctrl-btn" id="ai-chat-btn" title="AI-помощник"><i class="fas fa-robot"></i></button>
-        <button class="ctrl-btn" id="audio-toggle" title="Аудио"><i class="fas fa-volume-up"></i></button>
-        <button class="ctrl-btn" id="tools-btn" title="Инструменты"><i class="fas fa-cogs"></i></button>
-    </div>
+    <!-- Кнопки "Поделиться" -->
+    <nav class="share-buttons" aria-label="Поделиться в соцсетях">
+        <a href="https://vk.com/share.php?url=https://knowerlife.ru" target="_blank" rel="noopener" class="share-vk" data-share="vk" aria-label="Поделиться ВКонтакте" title="Поделиться ВКонтакте">
+            <i class="fab fa-vk"></i>
+        </a>
+        <a href="https://t.me/share/url?url=https://knowerlife.ru&text=Knower%20Life%20-%20киберпанк%20портал" target="_blank" rel="noopener" class="share-tg" data-share="tg" aria-label="Поделиться в Telegram" title="Поделиться в Telegram">
+            <i class="fab fa-telegram-plane"></i>
+        </a>
+        <a href="https://twitter.com/intent/tweet?text=Knower%20Life%20-%20киберпанк%20портал&url=https://knowerlife.ru" target="_blank" rel="noopener" class="share-tw" data-share="tw" aria-label="Поделиться в Twitter" title="Поделиться в Twitter">
+            <i class="fab fa-x-twitter"></i>
+        </a>
+    </nav>
 
-    <!-- Кнопки "Поделиться" (слева) -->
-    <div class="share-buttons">
-        <a href="https://vk.com/share.php?url=https://knowerlife.ru" target="_blank" class="share-vk" title="Поделиться ВКонтакте"><i class="fab fa-vk"></i></a>
-        <a href="https://t.me/share/url?url=https://knowerlife.ru&text=Knower%20Life%20-%20киберпанк%20портал" target="_blank" class="share-tg" title="Поделиться в Telegram"><i class="fab fa-telegram-plane"></i></a>
-        <a href="https://twitter.com/intent/tweet?text=Knower%20Life%20-%20киберпанк%20портал&url=https://knowerlife.ru" target="_blank" class="share-tw" title="Поделиться в Twitter"><i class="fab fa-x-twitter"></i></a>
+    <!-- Кнопки управления -->
+    <div id="control-buttons" role="toolbar" aria-label="Панель управления">
+        <button class="ctrl-btn" id="audio-toggle" aria-label="Включить/выключить звук" title="Звук">
+            <i class="fas fa-volume-mute"></i>
+        </button>
+        <button class="ctrl-btn" id="tools-btn" aria-label="Инструменты" title="Инструменты">
+            <i class="fas fa-tools"></i>
+        </button>
+        <button class="ctrl-btn" id="ai-chat-btn" aria-label="AI-чат" title="AI-чат">
+            <i class="fas fa-robot"></i>
+        </button>
+        <button class="ctrl-btn" id="feedback-open-btn" aria-label="Обратная связь" title="Написать нам">
+            <i class="fas fa-envelope"></i>
+        </button>
+        <button class="ctrl-btn" id="chat-open-btn" aria-label="Комментарии" title="Комментарии">
+            <i class="fas fa-comments"></i>
+        </button>
     </div>
 
     <!-- Футер -->
     <footer>
-        <a href="https://github.com/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub"><i class="fab fa-github"></i></a>
-        <a href="https://t.me/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="Telegram" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
-        <a href="https://vk.com/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="VK" title="ВКонтакте"><i class="fab fa-vk"></i></a>
-        <a href="https://instagram.com/knowerlife" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://github.com/knowerlife" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://t.me/knowerlife" target="_blank" rel="noopener" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+        <a href="https://vk.com/knowerlife" target="_blank" rel="noopener" aria-label="ВКонтакте"><i class="fab fa-vk"></i></a>
+        <a href="https://instagram.com/knowerlife" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
     </footer>
 
-    <!-- ===== МОДАЛЬНЫЕ ОКНА ===== -->
-
-    <!-- О проекте -->
-    <div id="modal-overlay" class="modal-overlay">
+    <!-- Модальное окно "О проекте" -->
+    <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="modal">
-            <button class="modal-close" id="modal-close">&times;</button>
-            <h2>KNOWER LIFE</h2>
+            <button class="modal-close" id="modal-close" aria-label="Закрыть">&times;</button>
+            <h2 id="modal-title">KNOWER LIFE</h2>
             <p>Интерактивный арт-проект, объединяющий киберпанк-эстетику, искусственный интеллект и цифровую культуру.</p>
+            <p>Исследуй границы между человеком и машиной. Каждый клик — это взаимодействие с нейросетью будущего.</p>
             <div class="modal-socials">
-                <a href="https://github.com/knowerlife" target="_blank"><i class="fab fa-github"></i></a>
-                <a href="https://t.me/knowerlife" target="_blank"><i class="fab fa-telegram-plane"></i></a>
-                <a href="https://vk.com/knowerlife" target="_blank"><i class="fab fa-vk"></i></a>
-                <a href="https://instagram.com/knowerlife" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://vk.com/knowerlife" target="_blank" rel="noopener" aria-label="VK"><i class="fab fa-vk"></i></a>
+                <a href="https://t.me/knowerlife" target="_blank" rel="noopener" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                <a href="https://github.com/knowerlife" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://instagram.com/knowerlife" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
     </div>
 
-    <!-- Комментарии ВК -->
-    <div id="chat-modal-overlay" class="modal-overlay">
+    <!-- Модальное окно комментариев -->
+    <div class="modal-overlay" id="chat-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="chat-modal-title">
         <div class="modal">
-            <button class="modal-close" id="chat-close-btn">&times;</button>
-            <h2><i class="fab fa-vk"></i> Комментарии ВКонтакте</h2>
+            <button class="modal-close" id="chat-close-btn" aria-label="Закрыть">&times;</button>
+            <h2 id="chat-modal-title">Комментарии ВКонтакте</h2>
+            <p class="modal-subtitle">Авторизуйтесь через ВК, чтобы оставить сообщение</p>
             <div id="vk_comments"></div>
-            <p style="font-size:0.8rem; opacity:0.5;">Авторизуйтесь через ВК, чтобы оставить сообщение</p>
         </div>
     </div>
 
-    <!-- Обратная связь -->
-    <div id="feedback-modal" class="modal-overlay">
+    <!-- Модальное окно обратной связи -->
+    <div class="modal-overlay" id="feedback-modal" role="dialog" aria-modal="true" aria-labelledby="feedback-title">
         <div class="modal">
-            <button class="modal-close" id="feedback-close">&times;</button>
-            <h2><i class="fas fa-envelope"></i> Написать нам</h2>
-            <form id="feedback-form" action="mailto:info@knowerlife.ru" method="post" enctype="text/plain">
-                <input type="text" name="name" placeholder="Ваше имя" required>
-                <input type="email" name="email" placeholder="Ваш Email" required>
-                <textarea name="message" placeholder="Сообщение..." rows="4" required></textarea>
+            <button class="modal-close" id="feedback-close" aria-label="Закрыть">&times;</button>
+            <h2 id="feedback-title">Написать нам</h2>
+            <form id="feedback-form" novalidate>
+                <input type="text" name="name" placeholder="Ваше имя" required aria-label="Имя">
+                <input type="email" name="email" placeholder="Email" required aria-label="Email">
+                <textarea name="message" placeholder="Сообщение..." rows="4" required aria-label="Сообщение"></textarea>
                 <button type="submit"><i class="fas fa-paper-plane"></i> Отправить</button>
             </form>
         </div>
     </div>
 
-    <!-- AI-чат -->
-    <div id="ai-chat-window" class="ai-chat-window">
-        <div class="ai-chat-header">
-            <span><i class="fas fa-robot"></i> AI-помощник</span>
-            <button id="ai-chat-close">&times;</button>
-        </div>
-        <div id="ai-chat-messages"></div>
-        <div class="ai-chat-input">
-            <input type="text" id="ai-chat-input" placeholder="Спросите ИИ...">
-            <button id="ai-chat-send"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <!-- ===== НОВОЕ: МОДАЛЬНОЕ ОКНО "ИНСТРУМЕНТЫ" ===== -->
-    <div id="tools-modal" class="modal-overlay">
+    <!-- Модальное окно инструментов -->
+    <div class="modal-overlay" id="tools-modal" role="dialog" aria-modal="true" aria-labelledby="tools-title">
         <div class="modal tools-modal">
-            <button class="modal-close" id="tools-close">&times;</button>
-            <h2>🔧 Инструменты</h2>
+            <button class="modal-close" id="tools-close" aria-label="Закрыть">&times;</button>
+            <h2 id="tools-title"><i class="fas fa-microchip"></i> Инструменты</h2>
             <div class="tools-grid">
-
-                <!-- 1. Генератор пароля -->
+                <!-- Генератор пароля -->
                 <div class="tool-card">
-                    <h3>🔐 Генератор пароля</h3>
+                    <h3><i class="fas fa-key"></i> Генератор пароля</h3>
                     <div class="tool-body">
-                        <input type="number" id="pass-length" value="12" min="6" max="32" class="tool-input">
-                        <button id="pass-gen-btn" class="tool-btn">⚡ Сгенерировать</button>
+                        <div class="tool-row">
+                            <label for="pass-length">Длина:</label>
+                            <input type="number" id="pass-length" class="tool-input" value="16" min="4" max="64">
+                        </div>
+                        <div class="tool-row">
+                            <label><input type="checkbox" id="pass-upper" checked> A-Z</label>
+                            <label><input type="checkbox" id="pass-lower" checked> a-z</label>
+                            <label><input type="checkbox" id="pass-nums" checked> 0-9</label>
+                            <label><input type="checkbox" id="pass-symbols" checked> !@#</label>
+                        </div>
+                        <button class="tool-btn" id="pass-gen-btn"><i class="fas fa-bolt"></i> Сгенерировать</button>
                         <div class="tool-result">
-                            <span id="pass-result">••••••••••••</span>
-                            <button id="pass-copy" class="tool-icon-btn" title="Копировать">📋</button>
+                            <span class="tool-result-text" id="pass-result">••••••••••••</span>
+                            <button class="tool-icon-btn" id="pass-copy" aria-label="Копировать"><i class="fas fa-copy"></i></button>
                         </div>
                     </div>
                 </div>
 
-                <!-- 2. Мониторинг системы -->
+                <!-- Мониторинг системы -->
                 <div class="tool-card">
-                    <h3>📊 Мониторинг</h3>
+                    <h3><i class="fas fa-chart-line"></i> Мониторинг</h3>
                     <div class="tool-body">
                         <div class="sys-monitor">
-                            <div><span>CPU</span><div class="bar"><div id="cpu-bar" style="width:23%"></div></div></div>
-                            <div><span>RAM</span><div class="bar"><div id="ram-bar" style="width:68%"></div></div></div>
-                            <div><span>NET</span><div class="bar"><div id="net-bar" style="width:45%"></div></div></div>
+                            <div><span>CPU</span><div class="bar"><div id="cpu-bar"></div></div></div>
+                            <div><span>RAM</span><div class="bar"><div id="ram-bar"></div></div></div>
+                            <div><span>NET</span><div class="bar"><div id="net-bar"></div></div></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. ToDo-лист -->
+                <!-- ToDo -->
                 <div class="tool-card">
-                    <h3>✅ ToDo-лист</h3>
-                    <div class="tool-body">
-                        <div class="todo-widget">
-                            <input id="todo-input" placeholder="Новая задача..." class="tool-input">
-                            <button id="todo-add" class="tool-btn">+</button>
-                            <ul id="todo-list"></ul>
+                    <h3><i class="fas fa-check-square"></i> ToDo-лист</h3>
+                    <div class="tool-body todo-widget">
+                        <div class="todo-input-row">
+                            <input type="text" id="todo-input" class="tool-input" placeholder="Новая задача...">
+                            <button class="tool-btn" id="todo-add"><i class="fas fa-plus"></i></button>
                         </div>
+                        <ul id="todo-list"></ul>
                     </div>
                 </div>
 
-                <!-- 4. Курс Bitcoin -->
+                <!-- Bitcoin -->
                 <div class="tool-card">
-                    <h3>₿ Bitcoin</h3>
+                    <h3><i class="fab fa-bitcoin"></i> Bitcoin</h3>
                     <div class="tool-body">
                         <div class="btc-price">
-                            <i class="fab fa-bitcoin"></i> <span id="btc-value">--</span> USD
-                            <button id="btc-refresh" class="tool-icon-btn" title="Обновить">🔄</button>
+                            <i class="fab fa-bitcoin"></i>
+                            <span id="btc-value">Загрузка...</span>
+                            <span>USD</span>
+                            <button class="tool-icon-btn" id="btc-refresh" aria-label="Обновить"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                        <small id="btc-change" class="btc-change"></small>
+                    </div>
+                </div>
+
+                <!-- Дневник -->
+                <div class="tool-card">
+                    <h3><i class="fas fa-book"></i> Дневник</h3>
+                    <div class="tool-body diary-widget">
+                        <textarea id="diary-input" class="tool-input" placeholder="Записать мысль..." rows="2"></textarea>
+                        <button class="tool-btn" id="diary-save"><i class="fas fa-save"></i> Сохранить</button>
+                        <ul id="diary-entries"></ul>
+                    </div>
+                </div>
+
+                <!-- Генератор ников -->
+                <div class="tool-card">
+                    <h3><i class="fas fa-user-ninja"></i> Никнейм</h3>
+                    <div class="tool-body">
+                        <button class="tool-btn" id="nick-btn"><i class="fas fa-dice"></i> Сгенерировать</button>
+                        <div class="tool-result">
+                            <span class="tool-result-text" id="nick-result">Hacker_1337</span>
+                            <button class="tool-icon-btn" id="nick-copy" aria-label="Копировать"><i class="fas fa-copy"></i></button>
                         </div>
                     </div>
                 </div>
 
-                <!-- 5. Дневник мыслей -->
+                <!-- Таймер -->
                 <div class="tool-card">
-                    <h3>📓 Дневник</h3>
-                    <div class="tool-body">
-                        <div class="diary-widget">
-                            <textarea id="diary-input" placeholder="Запишите мысль..." class="tool-input"></textarea>
-                            <button id="diary-save" class="tool-btn">Записать</button>
-                            <ul id="diary-entries"></ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 6. Генератор хакерских ников -->
-                <div class="tool-card">
-                    <h3>🎭 Никнейм</h3>
-                    <div class="tool-body">
-                        <button id="nick-btn" class="tool-btn">Сгенерировать</button>
-                        <span id="nick-result" class="tool-result-text">Hacker_1337</span>
-                    </div>
-                </div>
-
-                <!-- 7. Обратный отсчёт до события -->
-                <div class="tool-card">
-                    <h3>⏳ Таймер события</h3>
+                    <h3><i class="fas fa-hourglass-half"></i> Таймер события</h3>
                     <div class="tool-body">
                         <input type="datetime-local" id="event-date" class="tool-input">
-                        <button id="event-start" class="tool-btn">Установить</button>
-                        <span id="event-timer" class="tool-result-text">--:--:--</span>
-                    </div>
-                </div>
-
-                <!-- 8. Кибер-калькулятор -->
-                <div class="tool-card">
-                    <h3>🧮 Калькулятор</h3>
-                    <div class="tool-body">
-                        <div class="cyber-calc">
-                            <input id="calc-display" readonly class="tool-input">
-                            <div class="calc-buttons">
-                                <button data-val="7">7</button><button data-val="8">8</button><button data-val="9">9</button><button data-op="/">/</button>
-                                <button data-val="4">4</button><button data-val="5">5</button><button data-val="6">6</button><button data-op="*">*</button>
-                                <button data-val="1">1</button><button data-val="2">2</button><button data-val="3">3</button><button data-op="-">-</button>
-                                <button data-val="0">0</button><button data-val=".">.</button><button id="calc-eval">=</button><button data-op="+">+</button>
-                                <button id="calc-clear" class="calc-clear">C</button>
-                            </div>
+                        <button class="tool-btn" id="event-start"><i class="fas fa-play"></i> Установить</button>
+                        <div class="tool-result">
+                            <span class="tool-result-text" id="event-timer">--:--:--</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 9. Шифр Цезаря -->
+                <!-- Калькулятор -->
                 <div class="tool-card">
-                    <h3>🔐 Шифр Цезаря</h3>
-                    <div class="tool-body">
-                        <input id="cipher-input" placeholder="Текст" class="tool-input">
-                        <input type="number" id="cipher-shift" value="3" min="1" max="25" class="tool-input" style="width:60px;">
-                        <button id="cipher-encrypt" class="tool-btn">Зашифровать</button>
-                        <span id="cipher-result" class="tool-result-text"></span>
+                    <h3><i class="fas fa-calculator"></i> Калькулятор</h3>
+                    <div class="tool-body cyber-calc">
+                        <input type="text" id="calc-display" class="tool-input" readonly value="0">
+                        <div class="calc-buttons">
+                            <button data-val="7">7</button>
+                            <button data-val="8">8</button>
+                            <button data-val="9">9</button>
+                            <button data-op="/">÷</button>
+                            <button data-val="4">4</button>
+                            <button data-val="5">5</button>
+                            <button data-val="6">6</button>
+                            <button data-op="*">×</button>
+                            <button data-val="1">1</button>
+                            <button data-val="2">2</button>
+                            <button data-val="3">3</button>
+                            <button data-op="-">−</button>
+                            <button data-val="0">0</button>
+                            <button data-val=".">.</button>
+                            <button id="calc-eval">=</button>
+                            <button data-op="+">+</button>
+                        </div>
+                        <button class="tool-btn calc-clear" id="calc-clear"><i class="fas fa-eraser"></i> C</button>
                     </div>
                 </div>
 
-                <!-- 10. Случайный факт об AI -->
+                <!-- Шифр Цезаря -->
                 <div class="tool-card">
-                    <h3>🤖 Факт об AI</h3>
+                    <h3><i class="fas fa-lock"></i> Шифр Цезаря</h3>
                     <div class="tool-body">
-                        <button id="fact-btn" class="tool-btn">Показать факт</button>
-                        <span id="fact-text" class="tool-result-text">Нажмите для факта</span>
+                        <input type="text" id="cipher-input" class="tool-input" placeholder="Текст для шифрования">
+                        <div class="tool-row">
+                            <label for="cipher-shift">Сдвиг:</label>
+                            <input type="number" id="cipher-shift" class="tool-input" value="3" min="1" max="25" style="width:60px">
+                        </div>
+                        <button class="tool-btn" id="cipher-encrypt"><i class="fas fa-shield-alt"></i> Зашифровать</button>
+                        <div class="tool-result">
+                            <span class="tool-result-text" id="cipher-result"></span>
+                        </div>
                     </div>
                 </div>
 
+                <!-- Факт об AI -->
+                <div class="tool-card">
+                    <h3><i class="fas fa-lightbulb"></i> Факт об AI</h3>
+                    <div class="tool-body">
+                        <button class="tool-btn" id="fact-btn"><i class="fas fa-robot"></i> Показать факт</button>
+                        <p class="tool-fact" id="fact-text">Нажмите для факта</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- AI-чат -->
+    <aside class="ai-chat-window" id="ai-chat-window" role="complementary" aria-label="AI-ассистент">
+        <div class="ai-chat-header">
+            <span><i class="fas fa-robot"></i> AI-Ассистент</span>
+            <button id="ai-chat-close" aria-label="Закрыть чат">&times;</button>
+        </div>
+        <div id="ai-chat-messages" aria-live="polite"></div>
+        <div class="ai-chat-input">
+            <input type="text" id="ai-chat-input" placeholder="Спросите что-нибудь..." aria-label="Введите сообщение">
+            <button id="ai-chat-send" aria-label="Отправить"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </aside>
+
     <!-- Аудио -->
-    <audio id="background-music" preload="auto" loop>
-        <source src="background.mp3" type="audio/mpeg">
+    <audio id="background-music" loop preload="none">
+        <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
     </audio>
-    <audio id="click-sound" preload="auto">
-        <source src="click.mp3" type="audio/mpeg">
+    <audio id="click-sound" preload="none">
+        <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
     </audio>
 
+    <!-- VK API -->
+    <script src="https://vk.com/js/api/openapi.js?169" type="text/javascript"></script>
+    <script>
+        VK.init({
+            apiId: 54642529,
+            onlyWidgets: true
+        });
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
