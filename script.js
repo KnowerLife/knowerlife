@@ -67,17 +67,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const onlineCount = document.getElementById('online-count');
 
     // ============================
-    // 3. РЕАЛЬНЫЙ СЧЁТЧИК ПОСЕТИТЕЛЕЙ (через localStorage)
+    // 3. РЕАЛЬНЫЙ СЧЁТЧИК ПОСЕТИТЕЛЕЙ
     // ============================
     function updateRealVisitorCount() {
         let count = localStorage.getItem('knowerlife_visitors');
         if (!count) {
-            count = Math.floor(Math.random() * 100) + 20; // начальное случайное число, но потом будет расти
+            count = Math.floor(Math.random() * 100) + 20;
             localStorage.setItem('knowerlife_visitors', count);
         } else {
             count = parseInt(count, 10);
-            // увеличиваем на 1 при каждом новом посещении (уникальный посетитель за сессию)
-            // но чтобы не завышать, увеличиваем только если это первый визит в сессии
             if (!sessionStorage.getItem('knowerlife_visited')) {
                 count += 1;
                 localStorage.setItem('knowerlife_visitors', count);
@@ -174,11 +172,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Матричный дождь
+    // ============================
+    // 5. МАТРИЦА (исправлена: яркая, медленное затухание)
+    // ============================
     const chars = '0100101101001110010011110101011101000101010100100010000001001100010010010100011001000101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
     let fontSize = 14, columns = 0, dropsDown = [], speedsDown = [];
     function initMatrixRain() {
-        fontSize = Math.min(14, Math.floor(matrixCanvas.width / 80) + 10);
+        fontSize = Math.min(16, Math.floor(matrixCanvas.width / 70) + 12);
         columns = Math.floor(matrixCanvas.width / fontSize);
         dropsDown = Array(columns).fill(0);
         speedsDown = Array(columns).fill(1);
@@ -187,29 +187,28 @@ document.addEventListener('DOMContentLoaded', () => {
     function drawMatrixRain() {
         matrixFrameCounter++;
         if (matrixFrameCounter % 2 !== 0) return;
-        matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        // медленное затухание
+        matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.02)';
         matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
         matrixCtx.font = `${fontSize}px monospace`;
-        if (!textElement) return;
-        const rect = textElement.getBoundingClientRect();
+
         for (let i = 0; i < columns; i++) {
             const x = i * fontSize;
             const yDown = dropsDown[i] * fontSize;
             const char = chars.charAt(Math.floor(Math.random() * chars.length));
-            const isInTextArea = x >= rect.left && x <= rect.right && yDown >= rect.top && yDown <= rect.bottom;
-            matrixCtx.fillStyle = isInTextArea
-                ? `rgba(0, 255, 204, ${Math.random() * 0.3 + 0.2})`
-                : `rgba(0, 255, 204, ${Math.random() * 0.7 + 0.3})`;
+            // яркие символы
+            matrixCtx.fillStyle = `rgba(0, 255, 204, ${Math.random() * 0.5 + 0.5})`;
             matrixCtx.fillText(char, x, yDown);
-            dropsDown[i] += (isInTextArea ? 0.5 : 1);
+            dropsDown[i] += 1;
             if (dropsDown[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
                 dropsDown[i] = 0;
-                speedsDown[i] = 1;
             }
         }
     }
 
-    // Сеть ИИ (узлы)
+    // ============================
+    // 6. СЕТЬ ИИ
+    // ============================
     class Node {
         constructor(x, y) {
             this.x = x; this.y = y;
@@ -265,7 +264,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Визуализация звука
+    // ============================
+    // 7. ВИЗУАЛИЗАЦИЯ ЗВУКА
+    // ============================
     let audioContext = null, analyser = null, dataArray = null, audioSource = null;
     function initAudioVisualizer() {
         if (!audioContext) {
@@ -297,7 +298,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Эффект ряби
+    // ============================
+    // 8. ЭФФЕКТ РЯБИ
+    // ============================
     let ripples = [];
     class Ripple {
         constructor(x, y) {
@@ -343,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================
-    // 5. ВЗАИМОДЕЙСТВИЕ С МЫШЬЮ/ТАЧ
+    // 9. ВЗАИМОДЕЙСТВИЕ С МЫШЬЮ
     // ============================
     let mouseX = null, mouseY = null;
     const particles = [];
@@ -394,7 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 6. ЧАСЫ
+    // 10. ЧАСЫ
     // ============================
     function updateClock() {
         const now = new Date();
@@ -404,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateClock();
 
     // ============================
-    // 7. АУДИО
+    // 11. АУДИО
     // ============================
     let isAudioInitialized = false;
     let isAudioPlaying = false;
@@ -441,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================
-    // 8. ГЕНЕРАТОР ФРАЗ
+    // 12. ГЕНЕРАТОР ФРАЗ
     // ============================
     const quotes = [
         "Искусственный интеллект — это зеркало человечества.",
@@ -471,7 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500);
 
     // ============================
-    // 9. AI-ЧАТ
+    // 13. AI-ЧАТ
     // ============================
     const botAnswers = {
         'привет': 'Здравствуйте! Рад вас видеть.',
@@ -516,7 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
     aiChatClose.addEventListener('click', () => aiChatWindow.classList.remove('open'));
 
     // ============================
-    // 10. ЧАСТИЦЫ ОТ ТЕКСТА
+    // 14. ЧАСТИЦЫ ОТ ТЕКСТА
     // ============================
     function createTextParticles(count, centerX, centerY) {
         const rect = centerX ? { left: centerX - 50, top: centerY - 50, width: 100, height: 100 } : textElement.getBoundingClientRect();
@@ -549,12 +552,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 11. МОДАЛЬНЫЕ ОКНА
+    // 15. МОДАЛЬНЫЕ ОКНА
     // ============================
     function openModal(overlay) { overlay.classList.add('active'); }
     function closeModal(overlay) { overlay.classList.remove('active'); }
 
-    // О проекте
     mainTitle.addEventListener('click', (e) => {
         e.stopPropagation();
         createTextParticles(30);
@@ -568,7 +570,6 @@ document.addEventListener('DOMContentLoaded', () => {
     modalClose.addEventListener('click', () => closeModal(modalOverlay));
     modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(modalOverlay); });
 
-    // Комментарии ВК
     chatOpenBtn.addEventListener('click', () => {
         openModal(chatOverlay);
         setTimeout(() => {
@@ -588,7 +589,6 @@ document.addEventListener('DOMContentLoaded', () => {
     chatCloseBtn.addEventListener('click', () => closeModal(chatOverlay));
     chatOverlay.addEventListener('click', (e) => { if (e.target === chatOverlay) closeModal(chatOverlay); });
 
-    // Обратная связь
     feedbackOpenBtn.addEventListener('click', () => openModal(feedbackModal));
     feedbackClose.addEventListener('click', () => closeModal(feedbackModal));
     feedbackModal.addEventListener('click', (e) => { if (e.target === feedbackModal) closeModal(feedbackModal); });
@@ -601,7 +601,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================
-    // 12. ТЕРМИНАЛ (бегущая строка)
+    // 16. ТЕРМИНАЛ (бегущая строка)
     // ============================
     const terminalMessages = [
         '> ИНИЦИАЛИЗАЦИЯ СИСТЕМЫ...',
@@ -634,7 +634,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(typeTerminal, 600);
 
     // ============================
-    // 13. СМЕНА ГРАДИЕНТА ПО ВРЕМЕНИ
+    // 17. СМЕНА ГРАДИЕНТА
     // ============================
     function updateBackground() {
         const hours = new Date().getHours();
@@ -653,7 +653,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateBackground, 60000);
 
     // ============================
-    // 14. ОСНОВНОЙ ЦИКЛ
+    // 18. ОСНОВНОЙ ЦИКЛ
     // ============================
     function animate() {
         try {
@@ -676,7 +676,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================
-    // 15. СТАРТ
+    // 19. СТАРТ
     // ============================
     resizeCanvases();
     animate();
