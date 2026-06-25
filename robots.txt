@@ -1,7 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /auth
-Disallow: /profile
-Disallow: /admin
 
 Sitemap: https://knowerlife.ru/sitemap.xml
