@@ -18,7 +18,7 @@
 - **Контактная форма** и виджет комментариев ВКонтакте.
 - **SEO‑оптимизация**, Open Graph, JSON‑LD микроразметка.
 
-Исходный код сайта открыт и находится в репозитории **[portfolio](https://github.com/KnowerLife/portfolio)**
+Исходный код сайта открыт и находится в репозитории **[portfolio](https://github.com/KnowerLife/portfolio)**.
 
 ## Обо мне
 
@@ -85,3 +85,95 @@
 ---
 
 © 2026 KnowerLife — системный анализ & разработка, которые приносят результат.
+
+---
+
+## English version
+
+# KnowerLife
+
+🧠 **The best job is a highly paid hobby.**
+
+Welcome to KnowerLife's GitHub profile!  
+I'm a **system analyst & full‑stack developer**, building digital products that bring profit to businesses.
+
+This profile combines my open‑source projects, Telegram bots, automation utilities and a **portfolio website** available at:
+
+🌐 **[knowerlife.ru](https://knowerlife.ru/)** – personal portfolio with interactive tools, Roscosmos case studies and SMM projects.
+
+### 🚀 Portfolio at knowerlife.ru
+
+The website features:
+- **Dark / light theme**, animated cursor, responsive layout.
+- **Sections**: competencies, system analysis, Roscosmos case, portfolio of websites and SMM.
+- **Built‑in mini‑apps**: password generator, ToDo list, calculator, countdown timer, Caesar cipher and more.
+- **Contact form** and VK comments widget.
+- **SEO optimization**, Open Graph, JSON‑LD structured data.
+
+The source code is open and available in the **[portfolio](https://github.com/KnowerLife/portfolio)** repository.
+
+### About me
+
+I specialize in web application development, business process automation and system analysis. My projects cover:
+
+- 🔹 Building websites and online stores with integrations (1C, CDEK, Kafka).
+- 🔹 SEO and SMM strategies that achieved 10x growth.
+- 🔹 System analysis: BPMN, UML, writing technical specifications, working with Agile teams.
+- 🔹 Creating Telegram bots and macOS utilities.
+
+### Key projects
+
+- **[portfolio](https://github.com/KnowerLife/portfolio)**  
+  Portfolio website source code. Responsive design, built‑in tools, micro‑markup.  
+  **Language**: HTML, CSS, JavaScript
+
+- **[SecretSanta](https://github.com/KnowerLife/SecretSanta)**  
+  Full‑featured Telegram bot for "Secret Santa" game with reminders, anonymous messages and multilingual support.  
+  **Language**: Python
+
+- **[VPN](https://github.com/KnowerLife/VPN)**  
+  Cloudflare WARP config generator for AmneziaWG, AmneziaVPN and WireGuard.  
+  **Language**: Shell
+
+- **[Calculator](https://github.com/KnowerLife/calculator)**  
+  Telegram bot for splitting group purchases: manual entry, QR‑code receipt or CSV file. Generates a detailed CSV report.  
+  **Language**: Python
+
+- **[MMOGAME](https://github.com/KnowerLife/MMOGAME)**  
+  Telegram bot for an MMO‑style game inside the messenger.  
+  **Language**: Python
+
+- **[SCHIPSGAME](https://github.com/KnowerLife/SCHIPSGAME)**  
+  A game of "Fishki/Sotki" for schoolchildren — nostalgia and fun.  
+  **Language**: Python
+
+- **[socialnetwork](https://github.com/KnowerLife/socialnetwork)**  
+  SocialBot — a Telegram bot that creates a social network inside the messenger.  
+  **Language**: Python
+
+- **[SA](https://github.com/KnowerLife/SA)**  
+  System analyst's cheat sheet (Essential Guide) — a useful reference.  
+  **Language**: HTML
+
+- **[shadowsocksmanager](https://github.com/KnowerLife/shadowsocksmanager)**  
+  macOS application for managing Shadowsocks connections.  
+  **Language**: Swift
+
+### Contacts
+
+Let's discuss collaboration, share an idea or just chat:
+
+- 🌐 **Website**: [knowerlife.ru](https://knowerlife.ru/)
+- 📧 **Email**: [info@knowerlife.ru](mailto:info@knowerlife.ru)
+- 📂 **GitHub**: [KnowerLife](https://github.com/KnowerLife)
+- ✈️ **Telegram**: [@knowerlife](https://t.me/knowerlife)
+- 📘 **VK**: [knowerlife](https://vk.com/knowerlife)
+- 📸 **Instagram**: [knowerlife](https://instagram.com/knowerlife)
+
+### Contributing
+
+If you want to suggest an improvement, create a fork or report a bug – open an issue or pull request in any repository. I'll be glad to collaborate!
+
+---
+
+© 2026 KnowerLife — system analysis & development that brings results.
