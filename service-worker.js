@@ -1,4 +1,4 @@
-const CACHE_NAME = 'knowerlife-v2';
+const CACHE_NAME = 'knowerlife-v3';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -17,7 +17,15 @@ const urlsToCache = [
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+    caches.open(CACHE_NAME).then(cache => {
+      return Promise.allSettled(
+        urlsToCache.map(url => {
+          return cache.add(url).catch(err => {
+            console.warn('Failed to cache:', url, err);
+          });
+        })
+      );
+    })
   );
 });
 
