@@ -63,6 +63,9 @@
     --grid-dot: rgba(0,0,0,0.05);
 }
 * { margin:0; padding:0; box-sizing:border-box; }
+* {
+    cursor: none !important;
+}
 html { scroll-behavior:smooth; scroll-padding-top:100px; font-size:16px; }
 body {
     font-family:var(--font-primary); background-color:var(--bg-primary); color:var(--text-primary);
