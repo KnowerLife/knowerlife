@@ -1,319 +1,40 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="KNOWER LIFE — интерактивный арт-проект, объединяющий киберпанк-эстетику, искусственный интеллект и цифровую культуру">
+    
+    <!-- SEO мета-теги -->
+    <title>KnowerLife — Системный аналитик & Full‑stack разработчик | Портфолио</title>
+    <meta name="description" content="Системный аналитик и full‑stack разработчик. Создаю сайты, интегрирую системы, увеличиваю продажи. Кейсы Роскосмоса, интернет‑магазинов и SMM. Портфолио и инструменты.">
+    <meta name="keywords" content="системный аналитик, full‑stack разработчик, создание сайтов, seo, smm, интеграции 1С, Kafka, BPMN, UML, портфолио разработчика, заказать сайт, рост продаж">
+    <meta name="robots" content="index, follow">
     <meta name="yandex-verification" content="0fbfd3505f201dbf" />
-    <meta name="theme-color" content="#0a0a1a">
-    <meta property="og:title" content="KNOWER LIFE — AI Cyberpunk Experience">
-    <meta property="og:description" content="Будущее уже здесь. Интерактивный арт-проект с ИИ.">
+    <link rel="canonical" href="https://knowerlife.ru/">
+    
+    <!-- Open Graph (для соцсетей) -->
+    <meta property="og:title" content="KnowerLife — Системный аналитик & Full‑stack разработчик">
+    <meta property="og:description" content="Технический партнёр для бизнеса. Разработка сайтов, системная аналитика, интеграции, рост продаж.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://knowerlife.ru">
-    <title>KNOWER LIFE — Искусственный Интеллект • Будущее Уже Здесь</title>
+    <meta property="og:url" content="https://knowerlife.ru/">
+    <meta property="og:image" content="https://knowerlife.ru/og-image.jpg">
+    <meta property="og:site_name" content="KnowerLife">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="KnowerLife — Системный аналитик & Full‑stack разработчик">
+    <meta name="twitter:description" content="Технический партнёр для бизнеса. Разработка сайтов, системная аналитика, интеграции, рост продаж.">
+    <meta name="twitter:image" content="https://knowerlife.ru/og-image.jpg">
+    
+    <!-- Иконка сайта (favicon) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <!-- Прогресс-бар загрузки -->
-    <div id="loader" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-        <div id="loader-bar"></div>
-        <span class="loader-text">ИНИЦИАЛИЗАЦИЯ...</span>
-    </div>
-
-    <!-- Фоновые canvas-слои -->
-    <canvas id="stars-canvas" aria-hidden="true"></canvas>
-    <canvas id="hex-grid" aria-hidden="true"></canvas>
-    <div id="background" aria-hidden="true"></div>
-    <canvas id="matrix-rain" aria-hidden="true"></canvas>
-    <canvas id="ai-network" aria-hidden="true"></canvas>
-    <canvas id="audio-visualizer" aria-hidden="true"></canvas>
-    <canvas id="ripple-canvas" aria-hidden="true"></canvas>
-
-    <!-- Часы -->
-    <div class="clock-container" aria-label="Текущее время">
-        <i class="fas fa-clock"></i>
-        <span id="clock">00:00:00</span>
-    </div>
-
-    <!-- Счётчик онлайн -->
-    <div class="online-counter" aria-label="Количество посетителей онлайн">
-        <i class="fas fa-users"></i>
-        <span>Онлайн: </span>
-        <span id="online-count">0</span>
-    </div>
-
-    <!-- Основной контент -->
-    <main class="text-container" id="main-content">
-        <h1 class="text" id="main-title">
-            <span>K</span><span>N</span><span>O</span><span>W</span><span>E</span><span>R</span>
-            <span class="space"></span>
-            <span>L</span><span>I</span><span>F</span><span>E</span>
-        </h1>
-        <p class="sub-text">ИСКУССТВЕННЫЙ ИНТЕЛЛЕКТ • БУДУЩЕЕ УЖЕ ЗДЕСЬ</p>
-        <button class="quote-btn" id="quote-btn" aria-label="Сгенерировать цитату">
-            <i class="fas fa-brain"></i> Сгенерировать мысль
-        </button>
-        <p class="quote-display" id="quote-display" aria-live="polite"></p>
-    </main>
-
-    <!-- Терминал -->
-    <div id="terminal" aria-label="Системный терминал">
-        <span id="terminal-text"></span>
-        <span id="terminal-cursor">▌</span>
-    </div>
-
-    <!-- Кнопки "Поделиться" -->
-    <nav class="share-buttons" aria-label="Поделиться в соцсетях">
-        <a href="https://vk.com/share.php?url=https://knowerlife.ru" target="_blank" rel="noopener" class="share-vk" data-share="vk" aria-label="Поделиться ВКонтакте" title="Поделиться ВКонтакте">
-            <i class="fab fa-vk"></i>
-        </a>
-        <a href="https://t.me/share/url?url=https://knowerlife.ru&text=Knower%20Life%20-%20киберпанк%20портал" target="_blank" rel="noopener" class="share-tg" data-share="tg" aria-label="Поделиться в Telegram" title="Поделиться в Telegram">
-            <i class="fab fa-telegram-plane"></i>
-        </a>
-        <a href="https://twitter.com/intent/tweet?text=Knower%20Life%20-%20киберпанк%20портал&url=https://knowerlife.ru" target="_blank" rel="noopener" class="share-tw" data-share="tw" aria-label="Поделиться в Twitter" title="Поделиться в Twitter">
-            <i class="fab fa-x-twitter"></i>
-        </a>
-    </nav>
-
-    <!-- Кнопки управления -->
-    <div id="control-buttons" role="toolbar" aria-label="Панель управления">
-        <button class="ctrl-btn" id="audio-toggle" aria-label="Включить/выключить звук" title="Звук">
-            <i class="fas fa-volume-mute"></i>
-        </button>
-        <button class="ctrl-btn" id="tools-btn" aria-label="Инструменты" title="Инструменты">
-            <i class="fas fa-tools"></i>
-        </button>
-        <button class="ctrl-btn" id="ai-chat-btn" aria-label="AI-чат" title="AI-чат">
-            <i class="fas fa-robot"></i>
-        </button>
-        <button class="ctrl-btn" id="feedback-open-btn" aria-label="Обратная связь" title="Написать нам">
-            <i class="fas fa-envelope"></i>
-        </button>
-        <button class="ctrl-btn" id="chat-open-btn" aria-label="Комментарии" title="Комментарии">
-            <i class="fas fa-comments"></i>
-        </button>
-    </div>
-
-    <!-- Футер -->
-    <footer>
-        <a href="https://github.com/knowerlife" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
-        <a href="https://t.me/knowerlife" target="_blank" rel="noopener" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
-        <a href="https://vk.com/knowerlife" target="_blank" rel="noopener" aria-label="ВКонтакте"><i class="fab fa-vk"></i></a>
-        <a href="https://instagram.com/knowerlife" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-    </footer>
-
-    <!-- Модальное окно "О проекте" -->
-    <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <div class="modal">
-            <button class="modal-close" id="modal-close" aria-label="Закрыть">&times;</button>
-            <h2 id="modal-title">KNOWER LIFE</h2>
-            <p>Интерактивный арт-проект, объединяющий киберпанк-эстетику, искусственный интеллект и цифровую культуру.</p>
-            <p>Исследуй границы между человеком и машиной. Каждый клик — это взаимодействие с нейросетью будущего.</p>
-            <div class="modal-socials">
-                <a href="https://vk.com/knowerlife" target="_blank" rel="noopener" aria-label="VK"><i class="fab fa-vk"></i></a>
-                <a href="https://t.me/knowerlife" target="_blank" rel="noopener" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
-                <a href="https://github.com/knowerlife" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                <a href="https://instagram.com/knowerlife" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Модальное окно комментариев -->
-    <div class="modal-overlay" id="chat-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="chat-modal-title">
-        <div class="modal">
-            <button class="modal-close" id="chat-close-btn" aria-label="Закрыть">&times;</button>
-            <h2 id="chat-modal-title">Комментарии ВКонтакте</h2>
-            <p class="modal-subtitle">Авторизуйтесь через ВК, чтобы оставить сообщение</p>
-            <div id="vk_comments"></div>
-        </div>
-    </div>
-
-    <!-- Модальное окно обратной связи -->
-    <div class="modal-overlay" id="feedback-modal" role="dialog" aria-modal="true" aria-labelledby="feedback-title">
-        <div class="modal">
-            <button class="modal-close" id="feedback-close" aria-label="Закрыть">&times;</button>
-            <h2 id="feedback-title">Написать нам</h2>
-            <form id="feedback-form" novalidate>
-                <input type="text" name="name" placeholder="Ваше имя" required aria-label="Имя">
-                <input type="email" name="email" placeholder="Email" required aria-label="Email">
-                <textarea name="message" placeholder="Сообщение..." rows="4" required aria-label="Сообщение"></textarea>
-                <button type="submit"><i class="fas fa-paper-plane"></i> Отправить</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Модальное окно инструментов -->
-    <div class="modal-overlay" id="tools-modal" role="dialog" aria-modal="true" aria-labelledby="tools-title">
-        <div class="modal tools-modal">
-            <button class="modal-close" id="tools-close" aria-label="Закрыть">&times;</button>
-            <h2 id="tools-title"><i class="fas fa-microchip"></i> Инструменты</h2>
-            <div class="tools-grid">
-                <!-- Генератор пароля -->
-                <div class="tool-card">
-                    <h3><i class="fas fa-key"></i> Генератор пароля</h3>
-                    <div class="tool-body">
-                        <div class="tool-row">
-                            <label for="pass-length">Длина:</label>
-                            <input type="number" id="pass-length" class="tool-input" value="16" min="4" max="64">
-                        </div>
-                        <div class="tool-row">
-                            <label><input type="checkbox" id="pass-upper" checked> A-Z</label>
-                            <label><input type="checkbox" id="pass-lower" checked> a-z</label>
-                            <label><input type="checkbox" id="pass-nums" checked> 0-9</label>
-                            <label><input type="checkbox" id="pass-symbols" checked> !@#</label>
-                        </div>
-                        <button class="tool-btn" id="pass-gen-btn"><i class="fas fa-bolt"></i> Сгенерировать</button>
-                        <div class="tool-result">
-                            <span class="tool-result-text" id="pass-result">••••••••••••</span>
-                            <button class="tool-icon-btn" id="pass-copy" aria-label="Копировать"><i class="fas fa-copy"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Мониторинг системы -->
-                <div class="tool-card">
-                    <h3><i class="fas fa-chart-line"></i> Мониторинг</h3>
-                    <div class="tool-body">
-                        <div class="sys-monitor">
-                            <div><span>CPU</span><div class="bar"><div id="cpu-bar"></div></div></div>
-                            <div><span>RAM</span><div class="bar"><div id="ram-bar"></div></div></div>
-                            <div><span>NET</span><div class="bar"><div id="net-bar"></div></div></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ToDo -->
-                <div class="tool-card">
-                    <h3><i class="fas fa-check-square"></i> ToDo-лист</h3>
-                    <div class="tool-body todo-widget">
-                        <div class="todo-input-row">
-                            <input type="text" id="todo-input" class="tool-input" placeholder="Новая задача...">
-                            <button class="tool-btn" id="todo-add"><i class="fas fa-plus"></i></button>
-                        </div>
-                        <ul id="todo-list"></ul>
-                    </div>
-                </div>
-
-                <!-- Bitcoin -->
-                <div class="tool-card">
-                    <h3><i class="fab fa-bitcoin"></i> Bitcoin</h3>
-                    <div class="tool-body">
-                        <div class="btc-price">
-                            <i class="fab fa-bitcoin"></i>
-                            <span id="btc-value">Загрузка...</span>
-                            <span>USD</span>
-                            <button class="tool-icon-btn" id="btc-refresh" aria-label="Обновить"><i class="fas fa-sync-alt"></i></button>
-                        </div>
-                        <small id="btc-change" class="btc-change"></small>
-                    </div>
-                </div>
-
-                <!-- Дневник -->
-                <div class="tool-card">
-                    <h3><i class="fas fa-book"></i> Дневник</h3>
-                    <div class="tool-body diary-widget">
-                        <textarea id="diary-input" class="tool-input" placeholder="Записать мысль..." rows="2"></textarea>
-                        <button class="tool-btn" id="diary-save"><i class="fas fa-save"></i> Сохранить</button>
-                        <ul id="diary-entries"></ul>
-                    </div>
-                </div>
-
-                <!-- Генератор ников -->
-                <div class="tool-card">
-                    <h3><i class="fas fa-user-ninja"></i> Никнейм</h3>
-                    <div class="tool-body">
-                        <button class="tool-btn" id="nick-btn"><i class="fas fa-dice"></i> Сгенерировать</button>
-                        <div class="tool-result">
-                            <span class="tool-result-text" id="nick-result">Hacker_1337</span>
-                            <button class="tool-icon-btn" id="nick-copy" aria-label="Копировать"><i class="fas fa-copy"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Таймер -->
-                <div class="tool-card">
-                    <h3><i class="fas fa-hourglass-half"></i> Таймер события</h3>
-                    <div class="tool-body">
-                        <input type="datetime-local" id="event-date" class="tool-input">
-                        <button class="tool-btn" id="event-start"><i class="fas fa-play"></i> Установить</button>
-                        <div class="tool-result">
-                            <span class="tool-result-text" id="event-timer">--:--:--</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Калькулятор -->
-                <div class="tool-card">
-                    <h3><i class="fas fa-calculator"></i> Калькулятор</h3>
-                    <div class="tool-body cyber-calc">
-                        <input type="text" id="calc-display" class="tool-input" readonly value="0">
-                        <div class="calc-buttons">
-                            <button data-val="7">7</button>
-                            <button data-val="8">8</button>
-                            <button data-val="9">9</button>
-                            <button data-op="/">÷</button>
-                            <button data-val="4">4</button>
-                            <button data-val="5">5</button>
-                            <button data-val="6">6</button>
-                            <button data-op="*">×</button>
-                            <button data-val="1">1</button>
-                            <button data-val="2">2</button>
-                            <button data-val="3">3</button>
-                            <button data-op="-">−</button>
-                            <button data-val="0">0</button>
-                            <button data-val=".">.</button>
-                            <button id="calc-eval">=</button>
-                            <button data-op="+">+</button>
-                        </div>
-                        <button class="tool-btn calc-clear" id="calc-clear"><i class="fas fa-eraser"></i> C</button>
-                    </div>
-                </div>
-
-                <!-- Шифр Цезаря -->
-                <div class="tool-card">
-                    <h3><i class="fas fa-lock"></i> Шифр Цезаря</h3>
-                    <div class="tool-body">
-                        <input type="text" id="cipher-input" class="tool-input" placeholder="Текст для шифрования">
-                        <div class="tool-row">
-                            <label for="cipher-shift">Сдвиг:</label>
-                            <input type="number" id="cipher-shift" class="tool-input" value="3" min="1" max="25" style="width:60px">
-                        </div>
-                        <button class="tool-btn" id="cipher-encrypt"><i class="fas fa-shield-alt"></i> Зашифровать</button>
-                        <div class="tool-result">
-                            <span class="tool-result-text" id="cipher-result"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Факт об AI -->
-                <div class="tool-card">
-                    <h3><i class="fas fa-lightbulb"></i> Факт об AI</h3>
-                    <div class="tool-body">
-                        <button class="tool-btn" id="fact-btn"><i class="fas fa-robot"></i> Показать факт</button>
-                        <p class="tool-fact" id="fact-text">Нажмите для факта</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- AI-чат -->
-    <aside class="ai-chat-window" id="ai-chat-window" role="complementary" aria-label="AI-ассистент">
-        <div class="ai-chat-header">
-            <span><i class="fas fa-robot"></i> AI-Ассистент</span>
-            <button id="ai-chat-close" aria-label="Закрыть чат">&times;</button>
-        </div>
-        <div id="ai-chat-messages" aria-live="polite"></div>
-        <div class="ai-chat-input">
-            <input type="text" id="ai-chat-input" placeholder="Спросите что-нибудь..." aria-label="Введите сообщение">
-            <button id="ai-chat-send" aria-label="Отправить"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </aside>
-
+    
     <!-- Аудио -->
     <audio id="background-music" loop preload="none">
         <source src="background.mp3" type="audio/mpeg">
@@ -321,30 +42,269 @@
     <audio id="click-sound" preload="none">
         <source src="click.mp3" type="audio/mpeg">
     </audio>
+</head>
+<body>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js', 'ym');
+        ym(97600908, 'init', {webvisor:true, clickmap:true, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/97600908" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
 
-    <!-- VK API -->
+    <div class="dot-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+    <div class="toast" id="toast"><span class="toast-dot"></span> Сообщение отправлено!</div>
+
+    <nav class="nav" id="navbar" aria-label="Главное меню">
+        <span class="nav-logo" id="logoBtn">&lt;KnowerLife /&gt;</span>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#hero" class="active" data-section="hero">Главная</a></li>
+            <li><a href="#competencies" data-section="competencies">Компетенции</a></li>
+            <li><a href="#analytics" data-section="analytics">Аналитика</a></li>
+            <li><a href="#corporate" data-section="corporate">Роскосмос</a></li>
+            <li><a href="#projects" data-section="projects">Проекты</a></li>
+            <li><a href="#tools" data-section="tools">Инструменты</a></li>
+            <li><a href="#contact" data-section="contact">Контакты</a></li>
+        </ul>
+        <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">🌙</button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Мобильное меню"><span></span><span></span><span></span></button>
+    </nav>
+
+    <div class="main-container">
+        <!-- Hero -->
+        <section class="section section-hero" id="hero">
+            <div class="hero-grid">
+                <div class="hero-text reveal">
+                    <p class="section-label" style="display:block;">Системный аналитик & Full‑stack разработчик</p>
+                    <h1>Ваш <span class="gradient-text">технический партнёр</span> от идеи до прибыли</h1>
+                    <p class="hero-desc">Перевожу бизнес‑требования в работающие IT‑решения. Увеличиваю продажи, оптимизирую процессы и снижаю риски.</p>
+                    <div class="hero-buttons">
+                        <a href="#analytics" class="btn btn-primary">🧠 Моя экспертиза</a>
+                        <a href="#projects" class="btn btn-outline">📂 Портфолио</a>
+                    </div>
+                </div>
+                <div class="hero-visual reveal reveal-delay-2">
+                    <div class="hero-card"><div class="code-block"><span class="comment">// моя суперсила</span><br><span class="keyword">const</span> ценность = {<br>&nbsp;&nbsp;анализ: <span class="string">'BPMN, UML, SQL'</span>,<br>&nbsp;&nbsp;интеграции: <span class="string">'1С, Kafka, API'</span>,<br>&nbsp;&nbsp;результат: <span class="string">'+900% продаж'</span><br>};</div></div>
+                    <div class="floating-badge badge-1"><span class="badge-dot"></span> Открыт к предложениям</div>
+                    <div class="floating-badge badge-2">⚡ Бизнес‑ориентирован</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Компетенции -->
+        <section class="section" id="competencies">
+            <span class="section-label reveal">Ключевые компетенции</span>
+            <h2 class="section-title reveal reveal-delay-1">Что я даю бизнесу</h2>
+            <div class="cards-grid reveal reveal-delay-2" style="grid-template-columns: repeat(auto-fill, minmax(280px,1fr));">
+                <div class="card"><div class="card-icon">🎯</div><h3>Создание сайтов и систем</h3><p>От лендинга до high‑load маркетплейса. Полный цикл: вёрстка, интеграции, запуск.</p><div class="card-tags"><span class="tag">Next.js</span><span class="tag">Node.js</span><span class="tag">1С</span></div></div>
+                <div class="card"><div class="card-icon">📈</div><h3>Рост продаж и трафика</h3><p>SEO‑оптимизация, SMM‑продвижение, аналитика. Кейс: Saunabani.ru вырос в 10 раз.</p><div class="card-tags"><span class="tag">SEO</span><span class="tag">SMM</span><span class="tag">Яндекс.Метрика</span></div></div>
+                <div class="card"><div class="card-icon">⚙️</div><h3>Enterprise‑интеграции</h3><p>Связываю интернет‑магазины с 1С, СДЭК, Shiptor. Проектирую асинхронный обмен через Kafka.</p><div class="card-tags"><span class="tag">Kafka</span><span class="tag">REST API</span><span class="tag">SOAP</span></div></div>
+                <div class="card"><div class="card-icon">🤝</div><h3>Управление требованиями</h3><p>Сбор, анализ, документирование. Пишу ТЗ по Use Case, BPMN, UML. Работал с топ‑менеджментом.</p><div class="card-tags"><span class="tag">Use Case</span><span class="tag">BPMN</span><span class="tag">UML</span></div></div>
+            </div>
+        </section>
+
+        <!-- Аналитика -->
+        <section class="section" id="analytics">
+            <span class="section-label reveal">Системный анализ — моя основа</span>
+            <h2 class="section-title reveal reveal-delay-1">Как я соединяю бизнес и технологии</h2>
+            <p class="section-subtitle reveal reveal-delay-1">Мой подход позволяет избежать дорогих ошибок на этапе разработки. Я перевожу «хотелки» в чёткие спецификации.</p>
+            <div class="cards-grid reveal reveal-delay-2">
+                <div class="card"><div class="card-icon">📋</div><h3>Сбор требований</h3><p>Интервью, анкетирование, воркшопы. Выявляю истинные потребности.</p><div class="card-tags"><span class="tag">User Story</span><span class="tag">Job Story</span></div></div>
+                <div class="card"><div class="card-icon">📊</div><h3>Моделирование процессов</h3><p>BPMN, UML (Sequence, Activity). Наглядные схемы для всех участников.</p><div class="card-tags"><span class="tag">BPMN 2.0</span><span class="tag">UML</span></div></div>
+                <div class="card"><div class="card-icon">🗄️</div><h3>Работа с данными</h3><p>SQL-запросы любой сложности, проектирование БД, анализ целостности.</p><div class="card-tags"><span class="tag">PostgreSQL</span><span class="tag">MySQL</span></div></div>
+                <div class="card"><div class="card-icon">⚡</div><h3>Проектирование API</h3><p>REST, SOAP, асинхронный обмен. Контракты, схемы, документация.</p><div class="card-tags"><span class="tag">OpenAPI</span><span class="tag">Kafka</span></div></div>
+                <div class="card"><div class="card-icon">📝</div><h3>Техническая документация</h3><p>ТЗ, спецификации, инструкции. Понятно и разработчикам, и менеджменту.</p><div class="card-tags"><span class="tag">Confluence</span><span class="tag">Swagger</span></div></div>
+                <div class="card"><div class="card-icon">🔄</div><h3>Agile-координация</h3><p>Фасилитация Scrum, управление бэклогом. Jira, Bitrix24.</p><div class="card-tags"><span class="tag">Scrum</span><span class="tag">Kanban</span></div></div>
+            </div>
+            <div class="stats-row reveal reveal-delay-2" style="margin-top:30px;">
+                <div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">написанных ТЗ</div></div>
+                <div class="stat-card"><div class="stat-number">10+</div><div class="stat-label">BPMN-моделей</div></div>
+                <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Enterprise-интеграции</div></div>
+                <div class="stat-card"><div class="stat-number">2</div><div class="stat-label">госкорпорации</div></div>
+            </div>
+        </section>
+
+        <!-- Корпоративный опыт -->
+        <section class="section" id="corporate">
+            <span class="section-label reveal">Корпоративный опыт</span>
+            <h2 class="section-title reveal reveal-delay-1">Главкосмос / Роскосмос</h2>
+            <p class="section-subtitle reveal reveal-delay-1">В роли системного аналитика и разработчика участвовал в доработке интернет‑магазина и создании внутренней CRM‑системы.</p>
+            <div class="cards-grid reveal reveal-delay-2">
+                <div class="card"><div class="card-icon">🛒</div><h3>Интернет-магазин Роскосмоса</h3><p>Интеграция с 1С (склад+бухгалтерия), СДЭК, Shiptor. Личный кабинет, отображение ПВЗ на карте.</p><div class="card-tags"><span class="tag">1С</span><span class="tag">API СДЭК</span><span class="tag">Kafka</span></div></div>
+                <div class="card"><div class="card-icon">📄</div><h3>Внутренняя CRM (СРМ)</h3><p>Система электронного документооборота для ДСП и обычных документов. Заменила бумажные листы согласования.</p><div class="card-tags"><span class="tag">Node.js</span><span class="tag">PostgreSQL</span><span class="tag">ЭЦП</span></div></div>
+                <div class="card"><div class="card-icon">🧩</div><h3>Управление требованиями</h3><p>Use Case, Sequence, BPMN для новых фич. Согласование с зам. ген. директора по маркетингу.</p><div class="card-tags"><span class="tag">Use Case</span><span class="tag">BPMN</span></div></div>
+            </div>
+            <div style="margin-top:30px;" class="reveal reveal-delay-2"><p style="color:var(--text-secondary);">Технологический стек: Apache Kafka, REST API, Node.js/PHP, PostgreSQL. Серверы внутри периметра госкорпорации. Обеспечивал безопасность ДСП (шифрование, ролевая модель, аудит).</p></div>
+        </section>
+
+        <!-- Проекты -->
+        <section class="section" id="projects">
+            <span class="section-label reveal">Портфолио проектов</span>
+            <h2 class="section-title reveal reveal-delay-1">Созданные и развитые сайты</h2>
+            <div class="cards-grid reveal reveal-delay-2">
+                <div class="card"><div class="card-icon">🧖</div><h3>Saunabani.ru</h3><p>С нуля до 10‑кратного роста продаж.</p><div class="card-tags"><span class="tag">С нуля</span><span class="tag">SEO</span></div><a href="https://saunabani.ru" target="_blank" rel="noopener" class="card-link">saunabani.ru →</a></div>
+                <div class="card"><div class="card-icon">🛋️</div><h3>Tarra.ru</h3><p>Вёрстка, наполнение, SEO‑продвижение.</p><div class="card-tags"><span class="tag">SEO</span></div><a href="https://tarra.ru" target="_blank" rel="noopener" class="card-link">tarra.ru →</a></div>
+                <div class="card"><div class="card-icon">🔧</div><h3>Pcmmotors.ru</h3><p>Сайт автосервиса с нуля.</p><div class="card-tags"><span class="tag">С нуля</span></div><a href="https://pcmmotors.ru" target="_blank" rel="noopener" class="card-link">pcmmotors.ru →</a></div>
+                <div class="card"><div class="card-icon">🏗️</div><h3>Saunamsk.ru</h3><p>Полный цикл создания.</p><div class="card-tags"><span class="tag">С нуля</span></div><a href="https://saunamsk.ru" target="_blank" rel="noopener" class="card-link">saunamsk.ru →</a></div>
+                <div class="card"><div class="card-icon">📱</div><h3>Phone72.ru</h3><p>Редизайн, вёрстка, наполнение.</p><div class="card-tags"><span class="tag">Редизайн</span></div><a href="https://phone72.ru" target="_blank" rel="noopener" class="card-link">phone72.ru →</a></div>
+                <div class="card"><div class="card-icon">🏡</div><h3>Kamenka.ru</h3><p>SEO и контент.</p><div class="card-tags"><span class="tag">SEO</span></div><a href="https://kamenka.ru" target="_blank" rel="noopener" class="card-link">kamenka.ru →</a></div>
+                <div class="card"><div class="card-icon">🛍️</div><h3>Selbutik.ru</h3><p>60 000 SKU, SMM, SEO (закрыт).</p><div class="card-tags"><span class="tag">60k SKU</span></div><span class="card-link" style="pointer-events:none;">Проект закрыт</span></div>
+                <div class="card"><div class="card-icon">👓</div><h3>Ochv.ru</h3><p>Интернет‑магазин оптики.</p><div class="card-tags"><span class="tag">SEO</span></div><a href="https://ochv.ru" target="_blank" rel="noopener" class="card-link">ochv.ru →</a></div>
+                <div class="card"><div class="card-icon">🦷</div><h3>Stomart.ru</h3><p>Сайт и SMM для стоматологии.</p><div class="card-tags"><span class="tag">SMM</span></div><a href="https://stomart.ru" target="_blank" rel="noopener" class="card-link">stomart.ru →</a></div>
+                <div class="card"><div class="card-icon">🚗</div><h3>karo.spb.ru</h3><p>Исправление ошибок и развитие.</p><div class="card-tags"><span class="tag">Поддержка</span></div><a href="https://karo.spb.ru" target="_blank" rel="noopener" class="card-link">karo.spb.ru →</a></div>
+                <div class="card"><div class="card-icon">🌐</div><h3>Glavstore.com</h3><p>Международный магазин.</p><div class="card-tags"><span class="tag">Full‑cycle</span></div><a href="https://glavstore.com" target="_blank" rel="noopener" class="card-link">glavstore.com →</a></div>
+                <div class="card"><div class="card-icon">💼</div><h3>Consultoff.ru</h3><p>Брендинг и диджитал.</p><div class="card-tags"><span class="tag">SMM</span></div><a href="https://consultoff.ru" target="_blank" rel="noopener" class="card-link">consultoff.ru →</a></div>
+            </div>
+            <div style="margin-top:60px;">
+                <span class="section-label reveal">SMM и соцсети</span>
+                <div class="cards-grid reveal reveal-delay-2" style="grid-template-columns: repeat(auto-fill, minmax(250px,1fr));">
+                    <div class="card"><div class="card-icon">📸</div><h3>Seasonmarket</h3><p>Instagram‑магазин.</p><a href="https://instagram.com/seasonmarket.ru" target="_blank" rel="noopener" class="card-link">@seasonmarket.ru →</a></div>
+                    <div class="card"><div class="card-icon">📘</div><h3>Consultoff VK</h3><p>Ведение и реклама.</p><a href="https://vk.com/consultoff" target="_blank" rel="noopener" class="card-link">vk.com/consultoff →</a></div>
+                    <div class="card"><div class="card-icon">🍺</div><h3>Pivas_76</h3><p>Продвижение алкоголя.</p><a href="https://vk.com/pivas_76" target="_blank" rel="noopener" class="card-link">vk.com/pivas_76 →</a></div>
+                    <div class="card"><div class="card-icon">🧸</div><h3>Rosigrushka</h3><p>Таргет Яндекс+ВК.</p><a href="https://vk.com/rosigrushka" target="_blank" rel="noopener" class="card-link">vk.com/rosigrushka →</a></div>
+                    <div class="card"><div class="card-icon">🛒</div><h3>SED_SPb</h3><p>Оформление и реклама.</p><a href="https://vk.com/sed_spb" target="_blank" rel="noopener" class="card-link">vk.com/sed_spb →</a></div>
+                    <div class="card"><div class="card-icon">👗</div><h3>OpalinskayMari</h3><p>Дизайн и наполнение.</p><a href="https://vk.com/opalinskaymari" target="_blank" rel="noopener" class="card-link">vk.com/opalinskaymari →</a></div>
+                    <div class="card"><div class="card-icon">🎨</div><h3>Sakmarova_design</h3><p>Ведение + реклама.</p><a href="https://vk.com/sakmarova_design" target="_blank" rel="noopener" class="card-link">vk.com/sakmarova_design →</a></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Инструменты -->
+        <section class="section" id="tools">
+            <span class="section-label reveal">Полезные инструменты</span>
+            <h2 class="section-title reveal reveal-delay-1">Мини‑приложения для работы</h2>
+            <div class="tool-grid reveal reveal-delay-2" id="toolGrid">
+                <div class="tool-item" data-tool="sound"><div class="icon">🔊</div>Звук</div>
+                <div class="tool-item" data-tool="time"><div class="icon">🕒</div>Время</div>
+                <div class="tool-item" data-tool="password"><div class="icon">🔐</div>Генератор пароля</div>
+                <div class="tool-item" data-tool="todo"><div class="icon">✅</div>ToDo-лист</div>
+                <div class="tool-item" data-tool="bitcoin"><div class="icon">₿</div>Bitcoin</div>
+                <div class="tool-item" data-tool="diary"><div class="icon">📓</div>Дневник</div>
+                <div class="tool-item" data-tool="nickname"><div class="icon">🆔</div>Никнейм</div>
+                <div class="tool-item" data-tool="countdown"><div class="icon">⏳</div>Таймер события</div>
+                <div class="tool-item" data-tool="calc"><div class="icon">🧮</div>Калькулятор</div>
+                <div class="tool-item" data-tool="caesar"><div class="icon">🔒</div>Шифр Цезаря</div>
+                <div class="tool-item" data-tool="ai"><div class="icon">🤖</div>Факт об AI</div>
+            </div>
+        </section>
+
+        <!-- Контакты -->
+        <section class="section" id="contact">
+            <span class="section-label reveal">Контакты</span>
+            <h2 class="section-title reveal reveal-delay-1">Обсудим ваш проект</h2>
+            <div class="contact-wrapper reveal reveal-delay-2">
+                <form class="contact-form" id="contactForm">
+                    <div class="input-group"><input type="text" id="name" placeholder=" " required><label for="name">Ваше имя</label></div>
+                    <div class="input-group"><input type="email" id="email" placeholder=" " required><label for="email">Email</label></div>
+                    <div class="input-group"><textarea id="message" placeholder=" " rows="4" required></textarea><label for="message">Сообщение</label></div>
+                    <button type="submit" class="btn btn-primary">✉️ Отправить</button>
+                </form>
+                <div class="contact-info">
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon"><i class="fa-regular fa-envelope"></i></div>
+                        <div>
+                            <strong>Email</strong>
+                            <p style="color:var(--text-secondary);">
+                                <a href="mailto:info@knowerlife.ru" style="color:var(--text-secondary); text-decoration:none;">info@knowerlife.ru</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon"><i class="fa-brands fa-github"></i></div>
+                        <div>
+                            <strong>GitHub</strong>
+                            <p style="color:var(--text-secondary);">
+                                <a href="https://github.com/knowerlife" target="_blank" rel="noopener" style="color:var(--text-secondary); text-decoration:none;">github.com/knowerlife</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div style="margin-top:40px; max-width:1200px; margin-left:auto; margin-right:auto; padding:0 28px;" id="vk_comments"></div>
+
+        <footer class="footer">
+            <div class="share-icons" style="justify-content:center;">
+                <a href="https://vk.com/knowerlife" target="_blank" rel="me noopener" aria-label="VK"><i class="fa-brands fa-vk"></i></a>
+                <a href="https://t.me/knowerlife" target="_blank" rel="me noopener" aria-label="Telegram"><i class="fa-brands fa-telegram-plane"></i></a>
+                <a href="https://github.com/knowerlife" target="_blank" rel="me noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://instagram.com/knowerlife" target="_blank" rel="me noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+            <p style="margin-top:16px;">© 2026 KnowerLife — системный анализ и разработка, которые приносят результат</p>
+        </footer>
+    </div>
+
+    <div class="modal" id="logoModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('logoModal')">✕</button>
+            <h3>О разработчике</h3>
+            <p>Привет! Я KnowerLife — системный аналитик и full‑stack разработчик. Создаю сайты, интегрирую сложные системы и помогаю бизнесу расти. Этот сайт — моё портфолио и набор полезных инструментов.</p>
+        </div>
+    </div>
+
+    <div class="modal" id="toolModal">
+        <div class="modal-content" id="toolModalContent">
+            <button class="modal-close" onclick="closeModal('toolModal')">✕</button>
+            <div id="toolContent"></div>
+        </div>
+    </div>
+
+    <!-- Структурированные данные JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "KnowerLife",
+      "jobTitle": "Системный аналитик и Full‑stack разработчик",
+      "description": "Создаю сайты, интегрирую системы и помогаю бизнесу расти. Опыт работы с Роскосмосом и интернет‑магазинами.",
+      "url": "https://knowerlife.ru/",
+      "sameAs": [
+        "https://vk.com/knowerlife",
+        "https://t.me/knowerlife",
+        "https://github.com/knowerlife",
+        "https://instagram.com/knowerlife"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Москва",
+        "addressCountry": "RU"
+      },
+      "image": "https://knowerlife.ru/photo.jpg"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "KnowerLife — Портфолио",
+      "url": "https://knowerlife.ru/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://knowerlife.ru/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
     <script src="https://vk.com/js/api/openapi.js?169" type="text/javascript"></script>
     <script>
         VK.init({
             apiId: 54642529,
             onlyWidgets: true
         });
+        VK.Widgets.Comments('vk_comments', {limit: 5, attach: false});
     </script>
-    
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js', 'ym');
-
-    ym(97600908, 'init', {webvisor:true, clickmap:true, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/97600908" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
-    
     <script src="script.js"></script>
 </body>
 </html>
