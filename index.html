@@ -213,9 +213,18 @@
             <h2 class="section-title reveal reveal-delay-1" data-ru="Обсудим ваш проект" data-en="Let's Discuss Your Project">Обсудим ваш проект</h2>
             <div class="contact-wrapper reveal reveal-delay-2">
                 <form class="contact-form" id="contactForm">
-                    <div class="input-group"><input type="text" id="name" placeholder=" " required><label for="name" data-ru="Ваше имя" data-en="Your Name">Ваше имя</label></div>
-                    <div class="input-group"><input type="email" id="email" placeholder=" " required><label for="email">Email</label></div>
-                    <div class="input-group"><textarea id="message" placeholder=" " rows="4" required></textarea><label for="message" data-ru="Сообщение" data-en="Message">Сообщение</label></div>
+                    <div class="input-group">
+                        <input type="text" id="name" placeholder=" " required autocomplete="name">
+                        <label for="name" data-ru="Ваше имя" data-en="Your Name">Ваше имя</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" id="email" placeholder=" " required autocomplete="email">
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="input-group">
+                        <textarea id="message" placeholder=" " rows="4" required autocomplete="off"></textarea>
+                        <label for="message" data-ru="Сообщение" data-en="Message">Сообщение</label>
+                    </div>
                     <button type="submit" class="btn btn-primary"><span data-ru="✉️ Отправить" data-en="✉️ Send">✉️ Отправить</span></button>
                 </form>
                 <div class="contact-info">
