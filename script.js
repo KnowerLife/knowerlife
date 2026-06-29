@@ -7,6 +7,14 @@ function openModal(id) { document.getElementById(id).classList.add('open'); }
 // Logo popup
 document.getElementById('logoBtn').addEventListener('click', () => openModal('logoModal'));
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(reg => console.log('Service Worker зарегистрирован', reg))
+      .catch(err => console.log('Ошибка Service Worker', err));
+  });
+}
+
 // Tools handling
 document.getElementById('toolGrid').addEventListener('click', (e) => {
     const item = e.target.closest('.tool-item');
