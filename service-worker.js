@@ -1,4 +1,4 @@
-const CACHE_NAME = 'knowerlife-v4';
+const CACHE_NAME = 'knowerlife-v5';
 const urlsToCache = [
   '/',
   '/index.html',
