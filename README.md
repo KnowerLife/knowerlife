@@ -18,8 +18,6 @@
 - **Контактная форма** и виджет комментариев ВКонтакте.
 - **SEO‑оптимизация**, Open Graph, JSON‑LD микроразметка.
 
-Исходный код сайта открыт и находится в репозитории **[portfolio](https://github.com/KnowerLife/portfolio)**.
-
 ## Обо мне
 
 Я специализируюсь на создании веб‑приложений, автоматизации бизнес‑процессов и системном анализе. Мои проекты охватывают:
@@ -105,8 +103,6 @@ The website features:
 - **Built‑in mini‑apps**: password generator, ToDo list, calculator, countdown timer, Caesar cipher and more.
 - **Contact form** and VK comments widget.
 - **SEO optimization**, Open Graph, JSON‑LD structured data.
-
-The source code is open and available in the **[portfolio](https://github.com/KnowerLife/portfolio)** repository.
 
 ### About me
 
