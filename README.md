@@ -31,10 +31,6 @@
 
 ## Ключевые проекты
 
-- **[portfolio](https://github.com/KnowerLife/portfolio)**  
-  Исходный код сайта‑портфолио. Адаптивный дизайн, встроенные инструменты, микроразметка.  
-  **Язык**: HTML, CSS, JavaScript
-
 - **[SecretSanta](https://github.com/KnowerLife/SecretSanta)**  
   Полнофункциональный Telegram‑бот для игры "Тайный Санта" с напоминаниями, анонимными сообщениями и мультиязычной поддержкой.  
   **Язык**: Python
@@ -122,10 +118,6 @@ I specialize in web application development, business process automation and sys
 - 🔹 Creating Telegram bots and macOS utilities.
 
 ### Key projects
-
-- **[portfolio](https://github.com/KnowerLife/portfolio)**  
-  Portfolio website source code. Responsive design, built‑in tools, micro‑markup.  
-  **Language**: HTML, CSS, JavaScript
 
 - **[SecretSanta](https://github.com/KnowerLife/SecretSanta)**  
   Full‑featured Telegram bot for "Secret Santa" game with reminders, anonymous messages and multilingual support.  
