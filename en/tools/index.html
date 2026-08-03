@@ -1,86 +1,204 @@
 <!doctype html>
-    <html lang="en" data-theme="light" data-base="../../">
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>Tools for system analysts — KnowerLife</title>
-      <meta name="description" content="Local browser tools for UUIDs, secure passwords, JSON, Base64, User Stories and project briefs.">
-      <meta name="robots" content="index,follow,max-image-preview:large">
-      <meta name="theme-color" content="#5d4df0">
-      <link rel="canonical" href="https://knowerlife.ru/en/tools/">
-      <link rel="alternate" hreflang="ru" href="https://knowerlife.ru/tools/">
-      <link rel="alternate" hreflang="en" href="https://knowerlife.ru/en/tools/">
-      <link rel="alternate" hreflang="x-default" href="https://knowerlife.ru/tools/">
-      <meta property="og:type" content="website">
-      <meta property="og:site_name" content="KnowerLife">
-      <meta property="og:title" content="Tools for system analysts — KnowerLife">
-      <meta property="og:description" content="Local browser tools for UUIDs, secure passwords, JSON, Base64, User Stories and project briefs.">
-      <meta property="og:url" content="https://knowerlife.ru/en/tools/">
-      <meta property="og:image" content="https://knowerlife.ru/assets/og-cover.png">
-      <meta property="og:image:width" content="1200">
-      <meta property="og:image:height" content="630">
-      <meta name="twitter:card" content="summary_large_image">
-      <link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml">
-      <link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
-      <link rel="manifest" href="../../manifest.webmanifest">
-      <link rel="stylesheet" href="../../assets/css/styles.css">
-
-    </head>
-    <body>
-      <a class="skip-link" href="#main">Skip to content</a>
-<div data-header-sentinel aria-hidden="true"></div>
-<header class="site-header" data-header>
-  <div class="container navbar">
-    <a class="brand" href="../index.html" aria-label="KnowerLife — home">
-      <span class="brand-mark" aria-hidden="true">K</span>
-      <span class="brand-name">KnowerLife</span>
-    </a>
-    <ul class="nav-links" id="main-navigation" data-nav>
-      <li><a data-section-link href="../index.html#services">Services</a></li>
-      <li><a data-section-link href="../index.html#cases">Cases</a></li>
-      <li><a data-section-link href="../index.html#portfolio">Portfolio</a></li>
-      <li><a data-section-link href="../index.html#process">Process</a></li>
-      <li><a href="./index.html" aria-current="page">Tools</a></li>
-      <li><a data-section-link href="../index.html#contact">Contact</a></li>
-    </ul>
-    <div class="nav-actions">
-      <a class="icon-button" href="../../index.html" hreflang="ru" lang="ru" aria-label="Русская версия">RU</a>
-      <button class="icon-button" type="button" data-theme-toggle aria-label="Toggle theme" title="Toggle theme">☾</button>
-      <button class="menu-button" type="button" data-menu-button aria-controls="main-navigation" aria-expanded="false" aria-label="Open menu">☰</button>
-    </div>
-  </div>
-</header>
-      <main id="main">
-  <section class="section"><div class="container"><p class="eyebrow">Local lab</p><h1>Tools for system analysts</h1><p class="lead">Everything runs in the browser. Input stays on your device and no registration is required.</p><div class="tools-grid">
-    <article class="tool"><h2>Secure password</h2><form id="password-form" class="form-grid"><div class="field"><label for="password-length">Length</label><input id="password-length" type="number" min="8" max="128" value="20"></div><div class="checkbox-row"><label><input id="password-lower" type="checkbox" checked> a–z</label><label><input id="password-upper" type="checkbox" checked> A–Z</label><label><input id="password-numbers" type="checkbox" checked> 0–9</label><label><input id="password-symbols" type="checkbox" checked> Symbols</label></div><button class="btn btn--primary" type="submit">Generate</button></form><output class="tool-output" id="password-output" aria-live="polite"></output><div class="tool-actions"><button class="btn btn--secondary btn--small" type="button" data-copy-target="password-output">Copy</button></div></article>
-    <article class="tool"><h2>UUID v4</h2><p class="muted">Cryptographically random identifier.</p><button class="btn btn--primary" id="uuid-generate" type="button">Generate UUID</button><output class="tool-output" id="uuid-output" aria-live="polite"></output><div class="tool-actions"><button class="btn btn--secondary btn--small" type="button" data-copy-target="uuid-output">Copy</button></div></article>
-    <article class="tool"><h2>JSON formatter</h2><div class="field"><label for="json-input">JSON</label><textarea id="json-input" spellcheck="false" placeholder='{"status":"ok"}'></textarea></div><button class="btn btn--primary" id="json-format" type="button">Validate and format</button><output class="tool-output" id="json-output" aria-live="polite"></output><div class="tool-actions"><button class="btn btn--secondary btn--small" type="button" data-copy-target="json-output">Copy</button></div></article>
-    <article class="tool"><h2>Base64</h2><div class="field"><label for="base64-input">Text or Base64</label><textarea id="base64-input"></textarea></div><div class="tool-actions"><button class="btn btn--primary" id="base64-encode" type="button">Encode</button><button class="btn btn--secondary" id="base64-decode" type="button">Decode</button></div><output class="tool-output" id="base64-output" aria-live="polite"></output><div class="tool-actions"><button class="btn btn--secondary btn--small" type="button" data-copy-target="base64-output">Copy</button></div></article>
-    <article class="tool"><h2>Caesar cipher</h2><div class="field"><label for="caesar-input">Text</label><textarea id="caesar-input"></textarea></div><div class="field"><label for="caesar-shift">Shift</label><input id="caesar-shift" type="number" value="3"></div><button class="btn btn--primary" id="caesar-run" type="button">Transform</button><output class="tool-output" id="caesar-output" aria-live="polite"></output></article>
-    <article class="tool"><h2>User Story</h2><div class="form-grid"><div class="field"><label for="story-role">Role</label><input id="story-role" placeholder="customer"></div><div class="field"><label for="story-need">Need</label><input id="story-need" placeholder="save a delivery address"></div><div class="field"><label for="story-value">Value</label><input id="story-value" placeholder="complete the next order faster"></div><div class="field"><label for="story-criteria">Acceptance criteria, one per line</label><textarea id="story-criteria"></textarea></div><button class="btn btn--primary" id="story-generate" type="button">Build story</button></div><output class="tool-output" id="story-output" aria-live="polite"></output><div class="tool-actions"><button class="btn btn--secondary btn--small" type="button" data-copy-target="story-output">Copy</button></div></article>
-  </div></div></section>
-  <section class="section section--tinted"><div class="container"><p class="eyebrow">Builder</p><h2>Project brief in Markdown</h2><p class="lead">Capture essential context and download a file for discovery or stakeholder interviews.</p><div class="form-card form-grid"><div class="field"><label for="brief-product">Product or company</label><input id="brief-product"></div><div class="field"><label for="brief-goal">Business goal</label><textarea id="brief-goal"></textarea></div><div class="field"><label for="brief-users">Users and roles</label><textarea id="brief-users"></textarea></div><div class="field"><label for="brief-scenario">Main scenario</label><textarea id="brief-scenario"></textarea></div><div class="field"><label for="brief-integrations">Integrations and data</label><textarea id="brief-integrations"></textarea></div><div class="field"><label for="brief-risks">Constraints and risks</label><textarea id="brief-risks"></textarea></div><div class="field"><label for="brief-success">Success criteria</label><textarea id="brief-success"></textarea></div><div class="button-row"><button class="btn btn--primary" id="brief-generate" type="button">Generate</button><button class="btn btn--secondary" id="brief-download" type="button">Download .md</button></div><output class="tool-output" id="brief-output" aria-live="polite"></output><div class="tool-actions"><button class="btn btn--secondary btn--small" type="button" data-copy-target="brief-output">Copy</button></div></div></div></section>
+<html lang="en" data-theme="light" data-base="../../">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>System analyst and developer tools — KnowerLife</title><meta name="description" content="17 free local tools for JSON, JWT, CSV, Regex, UUID, hashing, User Stories, cURL, Mermaid and project briefs."><meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#5d4df0">
+  <link rel="canonical" href="https://knowerlife.ru/en/tools/"><link rel="alternate" hreflang="ru" href="https://knowerlife.ru/tools/"><link rel="alternate" hreflang="en" href="https://knowerlife.ru/en/tools/"><link rel="alternate" hreflang="x-default" href="https://knowerlife.ru/tools/">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="KnowerLife"><meta property="og:title" content="System analyst and developer tools — KnowerLife"><meta property="og:description" content="17 free local tools for JSON, JWT, CSV, Regex, UUID, hashing, User Stories, cURL, Mermaid and project briefs."><meta property="og:url" content="https://knowerlife.ru/en/tools/"><meta property="og:image" content="https://knowerlife.ru/assets/og-cover.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="../../assets/icons/icon-192.png"><link rel="manifest" href="../../manifest.webmanifest"><link rel="stylesheet" href="../../assets/css/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"System analyst and developer tools — KnowerLife","url":"https://knowerlife.ru/en/tools/","description":"17 free local tools for JSON, JWT, CSV, Regex, UUID, hashing, User Stories, cURL, Mermaid and project briefs.","isPartOf":{"@type":"WebSite","name":"KnowerLife","url":"https://knowerlife.ru/"},"mainEntity":{"@type":"ItemList","numberOfItems":17,"itemListElement":[{"@type":"ListItem","position":1,"name":"Secure password"},{"@type":"ListItem","position":2,"name":"UUID v4"},{"@type":"ListItem","position":3,"name":"SHA hash"},{"@type":"ListItem","position":4,"name":"JSON formatter"},{"@type":"ListItem","position":5,"name":"JSON diff"},{"@type":"ListItem","position":6,"name":"Base64"},{"@type":"ListItem","position":7,"name":"Caesar cipher"},{"@type":"ListItem","position":8,"name":"URL toolkit"},{"@type":"ListItem","position":9,"name":"JWT decoder"},{"@type":"ListItem","position":10,"name":"Unix timestamp"},{"@type":"ListItem","position":11,"name":"CSV ↔ JSON"},{"@type":"ListItem","position":12,"name":"Regex tester"},{"@type":"ListItem","position":13,"name":"Text and slug"},{"@type":"ListItem","position":14,"name":"User Story + BDD"},{"@type":"ListItem","position":15,"name":"API request → cURL"},{"@type":"ListItem","position":16,"name":"Mermaid sequence"},{"@type":"ListItem","position":17,"name":"Project brief"}]}}</script>
+</head>
+<body class="tools-page">
+<a class="skip-link" href="#main">Skip to content</a><div data-header-sentinel aria-hidden="true"></div>
+<header class="site-header" data-header><div class="container navbar"><a class="brand" href="../index.html" aria-label="KnowerLife — home"><span class="brand-mark" aria-hidden="true">K</span><span class="brand-name">KnowerLife</span></a>
+<ul class="nav-links" id="main-navigation" data-nav aria-label="Primary navigation"><li><a data-section-link href="../index.html#services">Services</a></li><li><a data-section-link href="../index.html#cases">Cases</a></li><li><a data-section-link href="../index.html#portfolio">Portfolio</a></li><li><a data-section-link href="../index.html#process">Process</a></li><li><a href="index.html" aria-current="page">Tools</a></li><li><a data-section-link href="../index.html#contact">Contact</a></li></ul><div class="nav-actions"><a class="icon-button" href="../../tools/index.html" hreflang="ru" lang="ru" aria-label="RU">RU</a><button class="icon-button" type="button" data-theme-toggle aria-label="Toggle theme" title="Toggle theme">☾</button><button class="menu-button" type="button" data-menu-button aria-controls="main-navigation" aria-expanded="false" aria-label="Open menu">☰</button></div></div></header>
+<main id="main"><noscript><div class="container"><p class="note">Enable JavaScript to use the tools. All calculations run locally in the browser.</p></div></noscript>
+<section class="tools-hero section section--compact"><div class="container"><p class="eyebrow">Local toolbox</p><h1>Practical tools for analysis and development</h1><p class="lead">Validate data, assemble artifacts and prepare technical snippets directly in the browser. No account, server upload or external database is required.</p><ul class="tools-badges" aria-label="Features"><li>17 tools</li><li>Works offline after the first visit</li><li>Data stays in your browser</li></ul><p class="tools-privacy-note">All operations run locally. Do not paste real secrets into JWT or API examples on a device you do not own.</p></div></section>
+<section class="section section--compact tools-catalog" aria-labelledby="tools-catalog-title"><div class="container"><h2 class="visually-hidden" id="tools-catalog-title">Tool catalog</h2>
+<div class="tools-toolbar"><div class="tool-search"><label for="tool-search">Find a tool</label><div class="tool-search__control"><input id="tool-search" type="search" placeholder="JSON, API, User Story…" autocomplete="off"><kbd>Ctrl/⌘ + K</kbd><button class="icon-button icon-button--compact" id="tool-search-clear" type="button" aria-label="Clear search">×</button></div></div><div class="filter-group" aria-label="Categories"><button class="filter-chip" type="button" data-tool-filter="all" aria-pressed="true">All</button><button class="filter-chip" type="button" data-tool-filter="analyst" aria-pressed="false">Analysis</button><button class="filter-chip" type="button" data-tool-filter="data" aria-pressed="false">Data</button><button class="filter-chip" type="button" data-tool-filter="dev" aria-pressed="false">Development</button><button class="filter-chip" type="button" data-tool-filter="security" aria-pressed="false">Security</button><button class="filter-chip" type="button" data-tool-filter="text" aria-pressed="false">Text</button></div><div class="tools-toolbar__actions"><span class="tool-count" id="tool-count" aria-live="polite"></span><button class="btn btn--secondary btn--small" id="tools-expand" type="button">Expand matches</button><button class="btn btn--ghost btn--small" id="tools-collapse" type="button">Collapse all</button></div></div>
+<nav class="tool-index" aria-label="Quick access"><strong>Quick access</strong><div class="tool-index__links"><a class="tool-index__link" href="#password" data-tool-link><span aria-hidden="true">PW</span>Secure password</a><a class="tool-index__link" href="#uuid" data-tool-link><span aria-hidden="true">ID</span>UUID v4</a><a class="tool-index__link" href="#hash" data-tool-link><span aria-hidden="true">SHA</span>SHA hash</a><a class="tool-index__link" href="#json" data-tool-link><span aria-hidden="true">{}</span>JSON formatter</a><a class="tool-index__link" href="#json-diff" data-tool-link><span aria-hidden="true">Δ</span>JSON diff</a><a class="tool-index__link" href="#base64" data-tool-link><span aria-hidden="true">64</span>Base64</a><a class="tool-index__link" href="#caesar" data-tool-link><span aria-hidden="true">C</span>Caesar cipher</a><a class="tool-index__link" href="#url" data-tool-link><span aria-hidden="true">URL</span>URL toolkit</a><a class="tool-index__link" href="#jwt" data-tool-link><span aria-hidden="true">JWT</span>JWT decoder</a><a class="tool-index__link" href="#timestamp" data-tool-link><span aria-hidden="true">T</span>Unix timestamp</a><a class="tool-index__link" href="#csv" data-tool-link><span aria-hidden="true">CSV</span>CSV ↔ JSON</a><a class="tool-index__link" href="#regex" data-tool-link><span aria-hidden="true">.*</span>Regex tester</a><a class="tool-index__link" href="#text" data-tool-link><span aria-hidden="true">Aa</span>Text and slug</a><a class="tool-index__link" href="#story" data-tool-link><span aria-hidden="true">US</span>User Story + BDD</a><a class="tool-index__link" href="#curl" data-tool-link><span aria-hidden="true">API</span>API request → cURL</a><a class="tool-index__link" href="#sequence" data-tool-link><span aria-hidden="true">SEQ</span>Mermaid sequence</a><a class="tool-index__link" href="#brief" data-tool-link><span aria-hidden="true">BR</span>Project brief</a></div></nav>
+<div class="tools-list"><details class="tool-card" id="password" data-tool-card data-categories="security dev" data-search="password secure generator entropy symbols пароль генератор безопасность Secure password Cryptographic generator with entropy estimate.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">PW</span><span class="tool-summary__copy"><span class="tool-category">Security</span><span class="tool-title" role="heading" aria-level="2">Secure password</span><span class="tool-description">Cryptographic generator with entropy estimate.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace"><form class="tool-input" data-tool-form><h3>Settings and input</h3>
+        <div class="field"><div class="label-row"><label for="password-range">Length</label><output id="password-length-value" for="password-range password-length">20</output></div>
+          <input id="password-range" type="range" min="8" max="128" value="20"><input class="compact-number" id="password-length" type="number" aria-label="Password length as a number" min="8" max="128" value="20" inputmode="numeric"></div>
+        <fieldset class="choice-group"><legend>Character sets</legend><div class="checkbox-grid">
+          <label><input id="password-lower" type="checkbox" checked> a–z</label><label><input id="password-upper" type="checkbox" checked> A–Z</label>
+          <label><input id="password-numbers" type="checkbox" checked> 0–9</label><label><input id="password-symbols" type="checkbox" checked> Symbols</label>
+          <label class="span-all"><input id="password-ambiguous" type="checkbox" checked> Exclude similar 0/O, 1/l/I</label></div></fieldset>
+        <div class="field"><label for="password-symbol-set">Symbol set</label><input id="password-symbol-set" value="!@#$%^&amp;*()-_=+[]{}" spellcheck="false"></div>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="password-generate" >Generate</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="password-output-title">
+      <div class="tool-result__header"><strong id="password-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="password-output" disabled>Copy</button>
+      </div></div>
+      <p class="tool-result__meta" id="password-meta" data-derived data-default=""></p><output class="tool-output" id="password-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="uuid" data-tool-card data-categories="dev security" data-search="uuid guid identifier идентификатор UUID v4 Create up to 50 random identifiers at once.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">ID</span><span class="tool-summary__copy"><span class="tool-category">Development</span><span class="tool-title" role="heading" aria-level="2">UUID v4</span><span class="tool-description">Create up to 50 random identifiers at once.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="field"><label for="uuid-count">Count</label><input id="uuid-count" type="number" min="1" max="50" value="5" inputmode="numeric"><small>From 1 to 50</small></div>
+        <label class="switch-row"><input id="uuid-uppercase" type="checkbox"> Uppercase</label>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="uuid-generate" >Generate UUIDs</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="uuid-output-title">
+      <div class="tool-result__header"><strong id="uuid-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="uuid-output" disabled>Copy</button><button class="btn btn--secondary btn--small" type="button" data-download-target="uuid-output" data-filename="uuid.txt" disabled>Download</button>
+      </div></div>
+      <output class="tool-output" id="uuid-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="hash" data-tool-card data-categories="security dev data" data-search="hash sha digest checksum хеш контрольная сумма SHA hash SHA-256, SHA-384 and SHA-512 through Web Crypto.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">SHA</span><span class="tool-summary__copy"><span class="tool-category">Security</span><span class="tool-title" role="heading" aria-level="2">SHA hash</span><span class="tool-description">SHA-256, SHA-384 and SHA-512 through Web Crypto.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="field"><label for="hash-input">Text</label><textarea id="hash-input" class="code-input" spellcheck="false" placeholder="KnowerLife"></textarea></div>
+        <div class="field"><label for="hash-algorithm">Algorithm</label><select id="hash-algorithm"><option>SHA-256</option><option>SHA-384</option><option>SHA-512</option></select></div>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="hash-generate" >Calculate hash</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="hash-output-title">
+      <div class="tool-result__header"><strong id="hash-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="hash-output" disabled>Copy</button><button class="btn btn--secondary btn--small" type="button" data-download-target="hash-output" data-filename="hash.txt" disabled>Download</button>
+      </div></div>
+      <output class="tool-output" id="hash-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="json" data-tool-card data-categories="data dev" data-search="json formatter validator minify sort форматирование проверка JSON formatter Validate, format, minify and sort object keys." open>
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">{}</span><span class="tool-summary__copy"><span class="tool-category">Data</span><span class="tool-title" role="heading" aria-level="2">JSON formatter</span><span class="tool-description">Validate, format, minify and sort object keys.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="field"><label for="json-input">JSON</label><textarea id="json-input" class="code-input code-input--large" spellcheck="false" placeholder='{"status":"ok"}'></textarea></div>
+        <label class="switch-row"><input id="json-sort" type="checkbox"> Sort object keys</label>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="json-format" >Format</button><button class="btn btn--secondary" type="button" id="json-minify" >Minify</button><button class="btn btn--ghost" type="button" id="json-example" >Load example</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="json-output-title">
+      <div class="tool-result__header"><strong id="json-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="json-output" disabled>Copy</button><button class="btn btn--secondary btn--small" type="button" data-download-target="json-output" data-filename="data.json" data-mime="application/json;charset=utf-8" disabled>Download</button>
+      </div></div>
+      <output class="tool-output" id="json-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="json-diff" data-tool-card data-categories="data dev analyst" data-search="json diff compare difference сравнение отличие JSON diff Show added, removed and changed paths.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">Δ</span><span class="tool-summary__copy"><span class="tool-category">Data</span><span class="tool-title" role="heading" aria-level="2">JSON diff</span><span class="tool-description">Show added, removed and changed paths.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace tool-workspace--wide"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="split-fields"><div class="field"><label for="json-diff-left">Version A</label><textarea id="json-diff-left" class="code-input" spellcheck="false"></textarea></div>
+        <div class="field"><label for="json-diff-right">Version B</label><textarea id="json-diff-right" class="code-input" spellcheck="false"></textarea></div></div>
+        <p class="field-hint">+ added · − removed · ~ changed</p>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="json-diff-run" >Compare</button><button class="btn btn--ghost" type="button" id="json-diff-example" >Load example</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="json-diff-output-title">
+      <div class="tool-result__header"><strong id="json-diff-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="json-diff-output" disabled>Copy</button><button class="btn btn--secondary btn--small" type="button" data-download-target="json-diff-output" data-filename="json-diff.txt" disabled>Download</button>
+      </div></div>
+      <output class="tool-output" id="json-diff-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="base64" data-tool-card data-categories="data dev" data-search="base64 encode decode url safe кодирование декодирование Base64 UTF-8 encoding, decoding and URL-safe mode.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">64</span><span class="tool-summary__copy"><span class="tool-category">Data</span><span class="tool-title" role="heading" aria-level="2">Base64</span><span class="tool-description">UTF-8 encoding, decoding and URL-safe mode.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="field"><label for="base64-input">Text or Base64</label><textarea id="base64-input" class="code-input" spellcheck="false"></textarea></div>
+        <label class="switch-row"><input id="base64-url-safe" type="checkbox"> URL-safe</label>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="base64-encode" >Encode</button><button class="btn btn--secondary" type="button" id="base64-decode" >Decode</button><button class="btn btn--ghost" type="button" id="base64-swap" >Result → input</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="base64-output-title">
+      <div class="tool-result__header"><strong id="base64-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="base64-output" disabled>Copy</button><button class="btn btn--secondary btn--small" type="button" data-download-target="base64-output" data-filename="base64.txt" disabled>Download</button>
+      </div></div>
+      <output class="tool-output" id="base64-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="caesar" data-tool-card data-categories="text security" data-search="caesar cipher shift шифр цезаря сдвиг Caesar cipher Educational shift for Russian and English text.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">C</span><span class="tool-summary__copy"><span class="tool-category">Text</span><span class="tool-title" role="heading" aria-level="2">Caesar cipher</span><span class="tool-description">Educational shift for Russian and English text.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="field"><label for="caesar-input">Text</label><textarea id="caesar-input"></textarea></div>
+        <div class="field"><label for="caesar-shift">Shift</label><input id="caesar-shift" type="number" min="-1000" max="1000" value="3"></div>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="caesar-run" >Encode</button><button class="btn btn--secondary" type="button" id="caesar-decode" >Decode</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="caesar-output-title">
+      <div class="tool-result__header"><strong id="caesar-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="caesar-output" disabled>Copy</button>
+      </div></div>
+      <output class="tool-output" id="caesar-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="url" data-tool-card data-categories="dev data" data-search="url uri query parse encode decode ссылка параметры URL toolkit Parse URLs and encode query components.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">URL</span><span class="tool-summary__copy"><span class="tool-category">Development</span><span class="tool-title" role="heading" aria-level="2">URL toolkit</span><span class="tool-description">Parse URLs and encode query components.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="field"><label for="url-input">URL / component</label><textarea id="url-input" class="code-input" spellcheck="false" placeholder="https://example.com/path?key=value#section"></textarea></div>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="url-analyze" >Analyze URL</button><button class="btn btn--secondary" type="button" id="url-encode" >Encode component</button><button class="btn btn--secondary" type="button" id="url-decode" >Decode component</button><button class="btn btn--ghost" type="button" id="url-example" >Load example</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="url-output-title">
+      <div class="tool-result__header"><strong id="url-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="url-output" disabled>Copy</button><button class="btn btn--secondary btn--small" type="button" data-download-target="url-output" data-filename="url-result.txt" disabled>Download</button>
+      </div></div>
+      <output class="tool-output" id="url-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="jwt" data-tool-card data-categories="dev security data" data-search="jwt token decode claims exp header payload токен JWT decoder Read header, payload and timestamp claims without signature verification.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">JWT</span><span class="tool-summary__copy"><span class="tool-category">Development</span><span class="tool-title" role="heading" aria-level="2">JWT decoder</span><span class="tool-description">Read header, payload and timestamp claims without signature verification.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="field"><label for="jwt-input">JWT</label><textarea id="jwt-input" class="code-input code-input--large" spellcheck="false" autocomplete="off" placeholder="xxxxx.yyyyy.zzzzz"></textarea><small>This tool does not verify the signature or token authenticity.</small></div>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="jwt-decode" >Decode</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="jwt-output-title">
+      <div class="tool-result__header"><strong id="jwt-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="jwt-output" disabled>Copy</button><button class="btn btn--secondary btn--small" type="button" data-download-target="jwt-output" data-filename="jwt-decoded.txt" disabled>Download</button>
+      </div></div>
+      <output class="tool-output" id="jwt-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="timestamp" data-tool-card data-categories="dev data" data-search="unix timestamp epoch date time дата время Unix timestamp Convert seconds, milliseconds and local date-time.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">T</span><span class="tool-summary__copy"><span class="tool-category">Development</span><span class="tool-title" role="heading" aria-level="2">Unix timestamp</span><span class="tool-description">Convert seconds, milliseconds and local date-time.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="split-fields"><div class="field"><label for="timestamp-input">Unix timestamp</label><input id="timestamp-input" inputmode="numeric" placeholder="1722686400"></div>
+        <div class="field"><label for="datetime-input">Local date and time</label><input id="datetime-input" type="datetime-local"></div></div>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="timestamp-to-date" >Timestamp → date</button><button class="btn btn--secondary" type="button" id="date-to-timestamp" >Date → timestamp</button><button class="btn btn--ghost" type="button" id="timestamp-now" >Now</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="timestamp-output-title">
+      <div class="tool-result__header"><strong id="timestamp-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="timestamp-output" disabled>Copy</button><button class="btn btn--secondary btn--small" type="button" data-download-target="timestamp-output" data-filename="timestamp.txt" disabled>Download</button>
+      </div></div>
+      <output class="tool-output" id="timestamp-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="csv" data-tool-card data-categories="data analyst dev" data-search="csv json convert delimiter table данные таблица CSV ↔ JSON Two-way conversion with quoted fields and delimiter support.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">CSV</span><span class="tool-summary__copy"><span class="tool-category">Data</span><span class="tool-title" role="heading" aria-level="2">CSV ↔ JSON</span><span class="tool-description">Two-way conversion with quoted fields and delimiter support.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="field"><label for="csv-input">CSV / JSON</label><textarea id="csv-input" class="code-input code-input--large" spellcheck="false"></textarea></div>
+        <div class="field"><label for="csv-delimiter">CSV delimiter</label><select id="csv-delimiter"><option value=",">Comma (,)</option><option value=";">Semicolon (;)</option><option value="tab">Tab</option></select></div>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="csv-to-json" >CSV → JSON</button><button class="btn btn--secondary" type="button" id="json-to-csv" >JSON → CSV</button><button class="btn btn--ghost" type="button" id="csv-example" >Load example</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="csv-output-title">
+      <div class="tool-result__header"><strong id="csv-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="csv-output" disabled>Copy</button><button class="btn btn--secondary btn--small" type="button" data-download-target="csv-output" data-filename="converted.txt" disabled>Download</button>
+      </div></div>
+      <output class="tool-output" id="csv-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="regex" data-tool-card data-categories="dev text data" data-search="regex regexp tester replace регулярное выражение замена Regex tester Inspect matches, groups and replacement output.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">.*</span><span class="tool-summary__copy"><span class="tool-category">Development</span><span class="tool-title" role="heading" aria-level="2">Regex tester</span><span class="tool-description">Inspect matches, groups and replacement output.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace tool-workspace--wide"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="split-fields split-fields--compact"><div class="field"><label for="regex-pattern">Expression</label><input id="regex-pattern" class="code-control" spellcheck="false" maxlength="300" placeholder="\d+"></div>
+        <div class="field"><label for="regex-flags">Flags</label><input id="regex-flags" class="code-control" value="gi" maxlength="8"></div></div>
+        <div class="field"><label for="regex-input">Test text</label><textarea id="regex-input" class="code-input" maxlength="20000"></textarea><small>Complex expressions may be slow; input is limited to 20,000 characters.</small></div>
+        <div class="field"><label for="regex-replacement">Replacement, optional</label><input id="regex-replacement" class="code-control" spellcheck="false"></div>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="regex-run" >Test</button><button class="btn btn--ghost" type="button" id="regex-example" >Load example</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="regex-output-title">
+      <div class="tool-result__header"><strong id="regex-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="regex-output" disabled>Copy</button><button class="btn btn--secondary btn--small" type="button" data-download-target="regex-output" data-filename="regex-result.txt" disabled>Download</button>
+      </div></div>
+      <output class="tool-output" id="regex-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="text" data-tool-card data-categories="text analyst" data-search="text stats slug words bytes текст статистика slug транслитерация Text and slug Measure text and create a URL-friendly slug.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">Aa</span><span class="tool-summary__copy"><span class="tool-category">Text</span><span class="tool-title" role="heading" aria-level="2">Text and slug</span><span class="tool-description">Measure text and create a URL-friendly slug.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="field"><div class="label-row"><label for="text-input">Text</label><span class="field-counter" id="text-live-count" data-derived data-default="0 words">0 words</span></div><textarea id="text-input" class="code-input code-input--large"></textarea></div>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="text-analyze" >Analyze</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="text-output-title">
+      <div class="tool-result__header"><strong id="text-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="text-output" disabled>Copy</button><button class="btn btn--secondary btn--small" type="button" data-download-target="text-output" data-filename="text-stats.txt" disabled>Download</button>
+      </div></div>
+      <output class="tool-output" id="text-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="story" data-tool-card data-categories="analyst text" data-search="user story bdd acceptance criteria требования критерии приемки User Story + BDD Build a story, checklist and Given/When/Then scenario.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">US</span><span class="tool-summary__copy"><span class="tool-category">Analysis</span><span class="tool-title" role="heading" aria-level="2">User Story + BDD</span><span class="tool-description">Build a story, checklist and Given/When/Then scenario.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace tool-workspace--wide"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="split-fields"><div class="field"><label for="story-title">Title</label><input id="story-title"></div><div class="field"><label for="story-role">Role</label><input id="story-role" placeholder="customer"></div></div>
+        <div class="field"><label for="story-need">Need</label><input id="story-need"></div><div class="field"><label for="story-value">Value</label><input id="story-value"></div>
+        <div class="field"><label for="story-criteria">Acceptance criteria, one per line</label><textarea id="story-criteria"></textarea></div>
+        <fieldset class="choice-group"><legend>BDD</legend><div class="form-stack"><div class="field"><label for="story-given">Given / context</label><input id="story-given"></div><div class="field"><label for="story-when">When / action</label><input id="story-when"></div><div class="field"><label for="story-then">Then / result</label><input id="story-then"></div></div></fieldset>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="story-generate" >Build story</button><button class="btn btn--ghost" type="button" id="story-example" >Load example</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="story-output-title">
+      <div class="tool-result__header"><strong id="story-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="story-output" disabled>Copy</button><button class="btn btn--secondary btn--small" type="button" data-download-target="story-output" data-filename="user-story.md" data-mime="text/markdown;charset=utf-8" disabled>Download</button>
+      </div></div>
+      <output class="tool-output" id="story-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="curl" data-tool-card data-categories="dev analyst" data-search="api http curl request headers body запрос API request → cURL Build a safely quoted cURL command.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">API</span><span class="tool-summary__copy"><span class="tool-category">Development</span><span class="tool-title" role="heading" aria-level="2">API request → cURL</span><span class="tool-description">Build a safely quoted cURL command.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace tool-workspace--wide"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="split-fields split-fields--compact"><div class="field"><label for="curl-method">HTTP method</label><select id="curl-method"><option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option><option>HEAD</option></select></div>
+        <div class="field"><label for="curl-url">URL</label><input id="curl-url" type="url" placeholder="https://api.example.com/v1/items"></div></div>
+        <div class="field"><label for="curl-headers">Headers, one per line</label><textarea id="curl-headers" class="code-input" placeholder="Content-Type: application/json"></textarea></div>
+        <div class="field"><label for="curl-body">Body</label><textarea id="curl-body" class="code-input" spellcheck="false"></textarea></div>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="curl-generate" >Generate cURL</button><button class="btn btn--ghost" type="button" id="curl-example" >Load example</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="curl-output-title">
+      <div class="tool-result__header"><strong id="curl-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="curl-output" disabled>Copy</button><button class="btn btn--secondary btn--small" type="button" data-download-target="curl-output" data-filename="request.sh" data-mime="text/x-shellscript;charset=utf-8" disabled>Download</button>
+      </div></div>
+      <output class="tool-output" id="curl-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="sequence" data-tool-card data-categories="analyst dev" data-search="mermaid sequence diagram interaction диаграмма последовательности Mermaid sequence Generate sequence diagram source.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">SEQ</span><span class="tool-summary__copy"><span class="tool-category">Analysis</span><span class="tool-title" role="heading" aria-level="2">Mermaid sequence</span><span class="tool-description">Generate sequence diagram source.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace tool-workspace--wide"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="field"><label for="sequence-participants">Participants: Alias: Label</label><textarea id="sequence-participants" class="code-input" placeholder="U: User&#10;A: API"></textarea></div>
+        <div class="field"><label for="sequence-steps">Interactions: A -> B: message</label><textarea id="sequence-steps" class="code-input" placeholder="U -> A: GET /profile"></textarea><small>Supported arrows: ->, -->, ->>, -->>.</small></div>
+        <div class="tool-form-actions"><button class="btn btn--primary" type="button" id="sequence-generate" >Generate Mermaid</button><button class="btn btn--ghost" type="button" id="sequence-example" >Load example</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="sequence-output-title">
+      <div class="tool-result__header"><strong id="sequence-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="sequence-output" disabled>Copy</button><button class="btn btn--secondary btn--small" type="button" data-download-target="sequence-output" data-filename="sequence.mmd" data-mime="text/plain;charset=utf-8" disabled>Download</button>
+      </div></div>
+      <output class="tool-output" id="sequence-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details><details class="tool-card" id="brief" data-tool-card data-categories="analyst text" data-search="project brief discovery requirements бриф проект требования Project brief Generate structured Markdown for discovery.">
+      <summary class="tool-summary"><span class="tool-icon" aria-hidden="true">BR</span><span class="tool-summary__copy"><span class="tool-category">Analysis</span><span class="tool-title" role="heading" aria-level="2">Project brief</span><span class="tool-description">Generate structured Markdown for discovery.</span></span><span class="tool-chevron" aria-hidden="true"></span></summary>
+      <div class="tool-workspace tool-workspace--wide"><form class="tool-input" data-tool-form><h3>Settings and input</h3><div class="brief-fields"><div class="field"><label for="brief-product">Product or company</label><input id="brief-product"></div><div class="field"><label for="brief-goal">Business goal</label><textarea id="brief-goal"></textarea></div><div class="field"><label for="brief-users">Users and roles</label><textarea id="brief-users"></textarea></div><div class="field"><label for="brief-scenario">Main scenario</label><textarea id="brief-scenario"></textarea></div><div class="field"><label for="brief-integrations">Integrations and data</label><textarea id="brief-integrations"></textarea></div><div class="field"><label for="brief-risks">Constraints and risks</label><textarea id="brief-risks"></textarea></div><div class="field"><label for="brief-success">Success criteria</label><textarea id="brief-success"></textarea></div><div class="field"><label for="brief-questions">Open questions</label><textarea id="brief-questions"></textarea></div></div><div class="tool-form-actions"><button class="btn btn--primary" type="button" id="brief-generate" >Generate</button><button class="btn btn--secondary" type="button" id="brief-download" >Download .md</button><button class="btn btn--ghost" type="button" id="brief-example" >Load example</button><button class="btn btn--secondary" type="button" data-tool-reset>Clear</button></div></form><section class="tool-result" aria-labelledby="brief-output-title">
+      <div class="tool-result__header"><strong id="brief-output-title">Result</strong><div class="tool-result__actions">
+        <button class="btn btn--secondary btn--small" type="button" data-copy-target="brief-output" disabled>Copy</button><button class="btn btn--secondary btn--small" type="button" data-download-target="brief-output" data-filename="project-brief.md" data-mime="text/markdown;charset=utf-8" disabled>Download</button>
+      </div></div>
+      <output class="tool-output" id="brief-output" data-empty="Result: —" data-placeholder="true" aria-live="polite"></output>
+    </section></div>
+    </details></div><p class="empty-state" id="tool-empty" hidden>No tools found. Change the query or category.</p></div></section>
 </main>
-      <footer class="site-footer">
-  <div class="container footer-grid">
-    <p class="muted">© <span data-current-year></span> KnowerLife</p>
-    <nav class="footer-links" aria-label="Additional links">
-      <a href="../../privacy/index.html">Privacy</a>
-      <a href="https://github.com/KnowerLife" target="_blank" rel="me noopener">GitHub</a>
-      <a href="https://t.me/knowerlife" target="_blank" rel="me noopener">Telegram</a>
-      <a href="mailto:info@knowerlife.ru">Email</a>
-    </nav>
-  </div>
-</footer>
-<aside class="consent" data-consent hidden aria-label="Analytics settings">
-  <strong>Site analytics</strong>
-  <p>Yandex Metrica loads only after consent. Session replay is disabled.</p>
-  <div class="consent-actions">
-    <button class="btn btn--primary btn--small" type="button" data-consent-accept>Allow</button>
-    <button class="btn btn--secondary btn--small" type="button" data-consent-decline>Not now</button>
-  </div>
-</aside>
-<script type="module" src="../../assets/js/main.js"></script>
-      <script type="module" src="../../assets/js/tools.js"></script>
-    </body>
-    </html>
+<footer class="site-footer"><div class="container footer-grid"><p class="muted">© <span data-current-year></span> KnowerLife</p><nav class="footer-links" aria-label="Additional links"><a href="../../privacy/index.html">Privacy</a><a href="https://github.com/KnowerLife" target="_blank" rel="me noopener">GitHub</a><a href="https://t.me/knowerlife" target="_blank" rel="me noopener">Telegram</a><a href="mailto:info@knowerlife.ru">Email</a></nav></div></footer>
+<aside class="consent" data-consent hidden aria-label="Analytics settings"><strong>Analytics settings</strong><p>Yandex Metrica loads only after consent. Session replay is disabled.</p><div class="consent-actions"><button class="btn btn--primary btn--small" type="button" data-consent-accept>Allow</button><button class="btn btn--secondary btn--small" type="button" data-consent-decline>Not now</button></div></aside>
+<div class="tool-toast" id="tool-toast" role="status" aria-live="polite" aria-label="Notification" hidden></div>
+<script type="module" src="../../assets/js/main.js"></script><script type="module" src="../../assets/js/tools.js"></script>
+</body></html>
