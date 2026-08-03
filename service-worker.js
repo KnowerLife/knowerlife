@@ -1,40 +1,73 @@
-const CACHE_NAME = 'knowerlife-v5';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/script.js',
-  '/manifest.json',
-  '/favicon.ico',
-  '/favicon.svg',
-  '/icons/favicon-96x96.png',
-  '/icons/apple-touch-icon.png',
-  '/icons/web-app-manifest-192x192.png',
-  '/icons/web-app-manifest-512x512.png'
-];
+const CACHE_VERSION = 'knowerlife-v2.0.0';
+const STATIC_CACHE = `${CACHE_VERSION}-static`;
+const PAGE_CACHE = `${CACHE_VERSION}-pages`;
 
-self.addEventListener('install', event => {
+const scopeUrl = new URL(self.registration.scope);
+const fromScope = (path) => new URL(path, scopeUrl).toString();
+
+const APP_SHELL = [
+  '',
+  'index.html',
+  'offline.html',
+  'assets/css/styles.css',
+  'assets/js/main.js',
+  'assets/js/tools.js',
+  'assets/icons/favicon.svg',
+  'assets/icons/icon-192.png',
+  'assets/icons/icon-512.png',
+  'manifest.webmanifest'
+].map(fromScope);
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(caches.open(STATIC_CACHE).then((cache) => cache.addAll(APP_SHELL)));
+});
+
+self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return Promise.allSettled(
-        urlsToCache.map(url => {
-          return cache.add(url).catch(err => {
-            console.warn('Failed to cache:', url, err);
-          });
-        })
-      );
-    })
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((key) => !key.startsWith(CACHE_VERSION)).map((key) => caches.delete(key))))
+      .then(() => self.clients.claim())
   );
 });
 
-self.addEventListener('fetch', event => {
-  // Пропускаем запросы к сторонним доменам без кеширования
-  if (event.request.url.startsWith(self.location.origin)) {
-    event.respondWith(
-      caches.match(event.request).then(response => response || fetch(event.request))
-    );
-  } else {
-    // Для внешних ресурсов просто выполняем сетевой запрос
-    event.respondWith(fetch(event.request));
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
+});
+
+async function networkFirst(request) {
+  const cache = await caches.open(PAGE_CACHE);
+  try {
+    const response = await fetch(request);
+    if (response.ok) await cache.put(request, response.clone());
+    return response;
+  } catch {
+    return (await cache.match(request)) || (await caches.match(fromScope('offline.html')));
+  }
+}
+
+async function staleWhileRevalidate(request) {
+  const cache = await caches.open(STATIC_CACHE);
+  const cached = await cache.match(request);
+  const network = fetch(request)
+    .then((response) => {
+      if (response.ok) cache.put(request, response.clone());
+      return response;
+    })
+    .catch(() => cached);
+  return cached || network;
+}
+
+self.addEventListener('fetch', (event) => {
+  const request = event.request;
+  const url = new URL(request.url);
+  if (request.method !== 'GET' || url.origin !== self.location.origin) return;
+
+  if (request.mode === 'navigate') {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+
+  if (['style', 'script', 'image', 'font'].includes(request.destination)) {
+    event.respondWith(staleWhileRevalidate(request));
   }
 });

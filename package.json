@@ -1,0 +1,10 @@
+{
+  "name": "knowerlife-pages",
+  "private": true,
+  "version": "2.0.0",
+  "description": "Static GitHub Pages portfolio for KnowerLife",
+  "scripts": {
+    "check": "python scripts/check_site.py && node --check assets/js/main.js && node --check assets/js/tools.js && node --check service-worker.js"
+  },
+  "engines": {"node": ">=20"}
+}

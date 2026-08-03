@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Главная страница -->
-  <url>
-    <loc>https://knowerlife.ru/</loc>
-    <lastmod>2026-06-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url><loc>https://knowerlife.ru/</loc><xhtml:link rel="alternate" hreflang="ru" href="https://knowerlife.ru/"/><xhtml:link rel="alternate" hreflang="en" href="https://knowerlife.ru/en/"/></url>
+  <url><loc>https://knowerlife.ru/en/</loc><xhtml:link rel="alternate" hreflang="ru" href="https://knowerlife.ru/"/><xhtml:link rel="alternate" hreflang="en" href="https://knowerlife.ru/en/"/></url>
+  <url><loc>https://knowerlife.ru/tools/</loc></url>
+  <url><loc>https://knowerlife.ru/en/tools/</loc></url>
+  <url><loc>https://knowerlife.ru/cases/roscosmos/</loc></url>
+  <url><loc>https://knowerlife.ru/cases/saunabani/</loc></url>
+  <url><loc>https://knowerlife.ru/cases/integrations/</loc></url>
+  <url><loc>https://knowerlife.ru/privacy/</loc></url>
 </urlset>
