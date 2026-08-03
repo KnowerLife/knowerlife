@@ -2,7 +2,7 @@
   "id": "./",
   "name": "KnowerLife — системный анализ и web-разработка",
   "short_name": "KnowerLife",
-  "description": "Портфолио и локальные инструменты системного аналитика.",
+  "description": "Полное портфолио системного аналитика и разработчика, а также локальные browser-инструменты.",
   "lang": "ru",
   "start_url": "./",
   "scope": "./",
@@ -10,7 +10,45 @@
   "background_color": "#0c0e16",
   "theme_color": "#5d4df0",
   "icons": [
-    {"src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
-    {"src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Портфолио",
+      "short_name": "Портфолио",
+      "description": "Открыть полный каталог проектов",
+      "url": "./#portfolio",
+      "icons": [
+        {
+          "src": "assets/icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Инструменты",
+      "short_name": "Инструменты",
+      "description": "Открыть локальные инструменты",
+      "url": "./tools/",
+      "icons": [
+        {
+          "src": "assets/icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
   ]
 }

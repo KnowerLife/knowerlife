@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'knowerlife-v2.0.0';
+const CACHE_VERSION = 'knowerlife-v3.0.0';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const PAGE_CACHE = `${CACHE_VERSION}-pages`;
 
