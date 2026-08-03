@@ -210,18 +210,44 @@ function loadYandexMetrika() {
 }
 
 const consent = document.querySelector('[data-consent]');
-const consentChoice = localStorage.getItem('knowerlife-analytics-consent');
+const consentStatus = document.querySelector('[data-consent-status]');
+
+function readConsentChoice() {
+  try { return localStorage.getItem('knowerlife-analytics-consent'); }
+  catch { return null; }
+}
+
+function storeConsentChoice(value) {
+  try { localStorage.setItem('knowerlife-analytics-consent', value); }
+  catch { /* The site remains usable when storage is unavailable. */ }
+}
+
+function setConsentVisible(isVisible) {
+  if (!consent) return;
+  consent.hidden = !isVisible;
+  document.body.classList.toggle('has-consent', isVisible);
+}
+
+const consentChoice = readConsentChoice();
 if (consentChoice === 'accepted') loadYandexMetrika();
-if (consent && !consentChoice) consent.hidden = false;
+setConsentVisible(Boolean(consent && !consentChoice));
 
 document.querySelector('[data-consent-accept]')?.addEventListener('click', () => {
-  localStorage.setItem('knowerlife-analytics-consent', 'accepted');
-  consent.hidden = true;
+  storeConsentChoice('accepted');
+  setConsentVisible(false);
   loadYandexMetrika();
+  if (consentStatus) consentStatus.textContent = isEnglish ? 'Analytics enabled.' : 'Аналитика разрешена.';
 });
 document.querySelector('[data-consent-decline]')?.addEventListener('click', () => {
-  localStorage.setItem('knowerlife-analytics-consent', 'declined');
-  consent.hidden = true;
+  storeConsentChoice('declined');
+  setConsentVisible(false);
+  if (consentStatus) consentStatus.textContent = isEnglish ? 'Analytics remains disabled.' : 'Аналитика остаётся отключённой.';
+});
+document.querySelector('[data-consent-reset]')?.addEventListener('click', () => {
+  try { localStorage.removeItem('knowerlife-analytics-consent'); } catch { /* Ignore storage restrictions. */ }
+  if (consentStatus) consentStatus.textContent = isEnglish ? 'Choose an analytics option in the panel below.' : 'Выберите режим аналитики в панели ниже.';
+  setConsentVisible(true);
+  consent?.querySelector('button')?.focus();
 });
 
 document.querySelectorAll('[data-current-year]').forEach((element) => {
