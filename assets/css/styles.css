@@ -48,7 +48,7 @@ body {
   min-width: 20rem;
   background: var(--bg);
   color: var(--text);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 1rem;
   line-height: 1.65;
   text-rendering: optimizeLegibility;
@@ -1331,4 +1331,253 @@ textarea { field-sizing: content; min-height: 10rem; }
 @keyframes fade-in { from { opacity: 0; transform: translateY(.35rem); } }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+
+/* v7 responsive QA and editorial consistency */
+html { overflow-x: clip; }
+body { min-width: 0; }
+:where(h1, h2, h3) { text-wrap: balance; overflow-wrap: break-word; }
+:where(.lead, .privacy-document p, .project-card p) { text-wrap: pretty; }
+:where(.icon-button, .menu-button, .command-trigger) { min-width: 2.75rem; min-height: 2.75rem; }
+.nav-links a { min-height: 2.75rem; display: flex; align-items: center; }
+
+/* Portfolio copy: content-first rather than implementation wording */
+#portfolio > .container > h2 { max-width: 18ch; }
+#portfolio > .container > .lead { max-width: 72ch; }
+
+/* Consent banner: compact, readable and viewport-safe at every width */
+.consent {
+  width: min(58rem, calc(100vw - 1.5rem));
+  max-height: min(70svh, 28rem);
+  box-sizing: border-box;
+  grid-template-columns: minmax(0, 1fr) auto;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.consent > strong { align-self: end; grid-column: 1; grid-row: 1; }
+.consent > p { min-width: 0; margin: 0; grid-column: 1; grid-row: 2; overflow-wrap: anywhere; }
+.consent-actions { display: grid; min-width: 15rem; grid-column: 2; grid-row: 1 / 3; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.consent-actions .btn { min-width: 0; width: 100%; padding-inline: .8rem; white-space: normal; }
+body.has-consent { padding-bottom: 6.5rem; }
+
+/* Case pages: prevent clipped Russian headings and CTA rows */
+.case-hero .container,
+.case-hero__grid,
+.case-hero__grid > *,
+.case-meta-strip,
+.case-blueprint { min-width: 0; }
+.case-hero h1 { max-width: 13ch; font-size: clamp(3rem, 6.2vw, 5.4rem); overflow-wrap: normal; }
+.case-hero .lead { max-width: 62ch; }
+.case-blueprint { width: 100%; }
+.case-meta-strip small { font-size: .68rem; }
+.case-blueprint__bar,
+.case-blueprint__status,
+.bp-node,
+.bp-core,
+.case-sequence__heads span,
+.case-sequence__body b { font-size: max(.62rem, 11px); }
+
+/* Dedicated privacy document */
+.privacy-page main { min-height: 0; padding-top: 0; }
+.privacy-hero {
+  position: relative;
+  padding: clamp(3.75rem, 8vw, 7rem) 0 clamp(3.5rem, 7vw, 6rem);
+  overflow: clip;
+  background:
+    radial-gradient(circle at 82% 22%, color-mix(in srgb, var(--accent) 15%, transparent), transparent 26rem),
+    linear-gradient(color-mix(in srgb, var(--text) 3%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--text) 3%, transparent) 1px, transparent 1px);
+  background-size: auto, 48px 48px, 48px 48px;
+}
+.privacy-hero .breadcrumb { margin-bottom: clamp(2rem, 5vw, 4rem); }
+.privacy-hero__grid { display: grid; align-items: start; gap: clamp(2rem, 7vw, 7rem); grid-template-columns: minmax(0, 1.05fr) minmax(20rem, .75fr); }
+.privacy-hero h1 { max-width: 13ch; margin-bottom: 1.25rem; font-size: clamp(3rem, 7vw, 6.1rem); line-height: .98; overflow-wrap: normal; }
+.privacy-updated { margin: 1.5rem 0 0; color: var(--text-muted); font-size: .88rem; }
+.privacy-summary { display: grid; gap: .75rem; }
+.privacy-summary > div { position: relative; padding: 1.15rem 1.2rem 1.1rem 3.8rem; border: 1px solid var(--border); border-radius: 1rem; background: color-mix(in srgb, var(--surface) 91%, transparent); box-shadow: var(--shadow-sm); backdrop-filter: blur(12px); }
+.privacy-summary span { position: absolute; top: 1.15rem; left: 1.15rem; display: grid; width: 1.85rem; height: 1.85rem; place-items: center; border-radius: .55rem; background: var(--accent-soft); color: var(--accent-strong); font-family: ui-monospace, monospace; font-size: .68rem; font-weight: 900; }
+.privacy-summary strong { display: block; margin-bottom: .25rem; }
+.privacy-summary p { margin: 0; color: var(--text-muted); font-size: .9rem; line-height: 1.55; }
+.privacy-content { padding: clamp(3.5rem, 7vw, 7rem) 0; background: color-mix(in srgb, var(--surface-muted) 62%, var(--bg)); }
+.privacy-layout { display: grid; align-items: start; gap: clamp(2rem, 6vw, 5rem); grid-template-columns: minmax(13rem, .3fr) minmax(0, 1fr); }
+.privacy-toc { position: sticky; top: calc(var(--header-height) + 1.25rem); padding: 1.15rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); box-shadow: var(--shadow-sm); }
+.privacy-toc > strong { display: block; margin-bottom: .75rem; }
+.privacy-toc nav { display: grid; gap: .15rem; margin-bottom: 1rem; }
+.privacy-toc nav a { padding: .5rem .6rem; border-radius: .5rem; color: var(--text-muted); font-size: .88rem; font-weight: 700; text-decoration: none; }
+.privacy-toc nav a:hover,
+.privacy-toc nav a:focus-visible { background: var(--accent-soft); color: var(--accent-strong); }
+.privacy-toc .btn { width: 100%; }
+.privacy-status { min-height: 1.4rem; margin: .6rem 0 0; color: var(--success); font-size: .78rem; line-height: 1.4; }
+.privacy-document { min-width: 0; padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid var(--border); border-radius: 1.5rem; background: var(--surface); box-shadow: var(--shadow-md); }
+.privacy-document section { scroll-margin-top: calc(var(--header-height) + 1.5rem); }
+.privacy-document section + section { margin-top: clamp(3rem, 7vw, 5rem); padding-top: clamp(2.5rem, 6vw, 4rem); border-top: 1px solid var(--border); }
+.privacy-document h2 { max-width: 22ch; margin-bottom: 1rem; font-size: clamp(1.75rem, 4vw, 2.65rem); }
+.privacy-document p,
+.privacy-document li { max-width: 70ch; }
+.privacy-document code { padding: .08em .32em; border-radius: .3rem; background: var(--surface-muted); font-size: .92em; overflow-wrap: anywhere; }
+.privacy-document li + li { margin-top: .45rem; }
+.privacy-section-index { margin-bottom: .65rem; color: var(--accent-strong); font-family: ui-monospace, monospace; font-size: .72rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+.privacy-note { display: grid; gap: .35rem; margin-top: 1.5rem; padding: 1rem 1.1rem; border: 1px solid color-mix(in srgb, var(--warning) 35%, var(--border)); border-radius: .9rem; background: color-mix(in srgb, var(--warning) 7%, var(--surface)); }
+.privacy-note p { margin: 0; color: var(--text-muted); }
+
+/* Mobile refinements discovered during rendered-page QA */
+@media (max-width: 58rem) {
+  .privacy-hero__grid,
+  .privacy-layout { grid-template-columns: 1fr; }
+  .privacy-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .privacy-toc { position: static; }
+}
+@media (max-width: 46rem) {
+  .section { padding-block: clamp(3.75rem, 15vw, 5.5rem); }
+  #portfolio > .container > h2 { max-width: 13ch; font-size: clamp(2.35rem, 11vw, 3.35rem); }
+  #portfolio > .container > .lead { font-size: 1.05rem; }
+  .case-hero { padding-top: 3.25rem; overflow: hidden; }
+  .case-hero h1 { max-width: 100%; font-size: clamp(2.45rem, 11vw, 3.25rem); line-height: 1.02; letter-spacing: -.045em; }
+  .case-hero .lead { font-size: 1.05rem; line-height: 1.55; }
+  .case-hero .button-row { display: grid; width: 100%; grid-template-columns: 1fr; }
+  .case-hero .button-row .btn { width: 100%; min-width: 0; }
+  .case-meta-strip { margin-top: 1.5rem; }
+  .case-blueprint__bar code { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .case-blueprint__status { gap: .5rem; }
+  .case-blueprint__status span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .privacy-hero { padding-top: 3rem; }
+  .privacy-hero h1 { max-width: 11ch; font-size: clamp(2.65rem, 12vw, 3.7rem); }
+  .privacy-hero .lead { font-size: 1.05rem; }
+  .privacy-summary { grid-template-columns: 1fr; }
+  .privacy-content { padding-block: 1rem 4rem; }
+  .privacy-layout { gap: 1rem; }
+  .privacy-toc { padding: 1rem; }
+  .privacy-toc nav { display: flex; margin-inline: -.25rem; padding: .15rem .25rem .55rem; overflow-x: auto; scroll-snap-type: inline proximity; }
+  .privacy-toc nav a { flex: 0 0 auto; border: 1px solid var(--border); background: var(--surface-muted); scroll-snap-align: start; white-space: nowrap; }
+  .privacy-document { padding: 1.35rem; border-radius: 1.15rem; }
+  .privacy-document section + section { margin-top: 2.75rem; padding-top: 2.5rem; }
+  .privacy-document h2 { font-size: clamp(1.7rem, 8vw, 2.2rem); }
+  .consent { bottom: max(.5rem, env(safe-area-inset-bottom)); width: calc(100vw - 1rem); max-height: min(72svh, 24rem); gap: .65rem; padding: .8rem; border-radius: .9rem; grid-template-columns: minmax(0, 1fr); }
+  .consent > strong,
+  .consent > p,
+  .consent-actions { grid-column: 1; grid-row: auto; }
+  .consent > p { font-size: .75rem; line-height: 1.45; }
+  .consent-actions { min-width: 0; width: 100%; gap: .5rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .consent-actions .btn { min-height: 2.75rem; padding: .55rem .35rem; font-size: .83rem; }
+  body.has-consent { padding-bottom: 10rem; }
+  .tools-layout .tool-index__links { scrollbar-width: thin; }
+  .tool-index__link { min-height: 2.75rem; }
+}
+@media (max-width: 22rem) {
+  .consent-actions { grid-template-columns: 1fr; }
+  body.has-consent { padding-bottom: 13rem; }
+  .privacy-document { padding-inline: 1rem; }
+}
+
+/* v7.0.1: contain the mobile privacy table of contents */
+.privacy-layout > *,
+.privacy-toc,
+.privacy-toc nav { min-width: 0; max-width: 100%; }
+@media (max-width: 46rem) {
+  .privacy-toc { width: 100%; overflow: hidden; }
+  .privacy-toc nav { width: 100%; }
+}
+
+
+/* v7.0.2: final rendered-page corrections */
+@media (min-width: 46.001rem) {
+  .consent {
+    right: 1rem;
+    bottom: 1rem;
+    left: auto;
+    width: min(28rem, calc(100vw - 2rem));
+    max-height: min(72svh, 30rem);
+    gap: .55rem;
+    padding: 1rem;
+    grid-template-columns: minmax(0, 1fr);
+    transform: none;
+  }
+  .consent > strong,
+  .consent > p,
+  .consent-actions {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .consent-actions {
+    width: 100%;
+    min-width: 0;
+  }
+  body.has-consent { padding-bottom: 0; }
+}
+
+.privacy-hero__grid {
+  grid-template-columns: minmax(0, 1.2fr) minmax(18rem, .65fr);
+}
+.privacy-hero h1 {
+  max-width: 14ch;
+  font-size: clamp(2.8rem, 5.15vw, 4.75rem);
+  line-height: 1.01;
+  letter-spacing: -.055em;
+}
+@media (max-width: 58rem) {
+  .privacy-hero__grid { grid-template-columns: 1fr; }
+  .privacy-hero h1 { max-width: 17ch; }
+}
+@media (max-width: 46rem) {
+  .privacy-hero h1 {
+    max-width: 100%;
+    font-size: clamp(2.15rem, 9.3vw, 2.72rem);
+    line-height: 1.04;
+    letter-spacing: -.045em;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+  .privacy-toc nav {
+    scrollbar-width: thin;
+    overscroll-behavior-inline: contain;
+  }
+}
+
+/* v7.0.3: consistent pointer and touch targets */
+.brand,
+.icon-button,
+.menu-button,
+.command-button,
+.command-trigger,
+.filter-chip,
+.tool-index__link,
+.privacy-toc nav a,
+.text-link,
+.footer-links a,
+.icon-button--compact {
+  min-height: 44px;
+}
+.icon-button,
+.menu-button,
+.icon-button--compact { min-width: 44px; }
+.brand { padding-block: .4rem; }
+.filter-chip { padding-block: .62rem; }
+.tool-index__link { padding-block: .55rem; }
+.checkbox-grid label,
+.switch-row { min-height: 44px; }
+.checkbox-grid input[type="checkbox"],
+.switch-row input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  min-height: 1.25rem;
+}
+input[type="range"] { min-height: 44px; }
+.footer-links a { display: inline-flex; align-items: center; }
+.tools-toolbar .filter-chip { min-height: 44px; padding-block: .65rem; }
+
+@media (max-width: 46rem) {
+  .consent > strong {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .consent { gap: .45rem; }
+  .consent > p { margin: 0; }
+  body.has-consent { padding-bottom: 8rem; }
 }
