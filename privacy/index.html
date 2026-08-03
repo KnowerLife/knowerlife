@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-
 <html data-base="../" data-theme="light" lang="ru">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Конфиденциальность — KnowerLife</title>
-<meta content="Как сайт KnowerLife обрабатывает данные на GitHub Pages." name="description"/>
+<title>Политика конфиденциальности — KnowerLife</title>
+<meta content="Как KnowerLife обрабатывает данные: локальные инструменты, контактная форма, localStorage и аналитика по согласию." name="description"/>
 <meta content="index,follow,max-image-preview:large" name="robots"/>
 <meta content="#6757f5" name="theme-color"/>
 <link href="https://knowerlife.ru/privacy/" rel="canonical"/>
+<link href="https://knowerlife.ru/privacy/" hreflang="ru" rel="alternate"/>
+<link href="https://knowerlife.ru/en/privacy/" hreflang="en" rel="alternate"/>
+<link href="https://knowerlife.ru/privacy/" hreflang="x-default" rel="alternate"/>
 <meta content="website" property="og:type"/>
 <meta content="KnowerLife" property="og:site_name"/>
-<meta content="Конфиденциальность — KnowerLife" property="og:title"/>
-<meta content="Как сайт KnowerLife обрабатывает данные на GitHub Pages." property="og:description"/>
+<meta content="Политика конфиденциальности — KnowerLife" property="og:title"/>
+<meta content="Локальная обработка данных, контактная форма и аналитика только после согласия." property="og:description"/>
 <meta content="https://knowerlife.ru/privacy/" property="og:url"/>
 <meta content="https://knowerlife.ru/assets/og-cover.png" property="og:image"/>
 <meta content="1200" property="og:image:width"/>
@@ -25,14 +27,12 @@
 <link href="../manifest.webmanifest" rel="manifest"/>
 <link href="../assets/css/styles.css" rel="stylesheet"/>
 </head>
-<body class="content-page">
+<body class="content-page privacy-page">
 <a class="skip-link" href="#main">Перейти к содержимому</a>
 <div aria-hidden="true" data-header-sentinel=""></div>
 <header class="site-header" data-header="">
 <div class="container navbar">
-<a aria-label="KnowerLife — главная" class="brand" href="../index.html">
-<span aria-hidden="true" class="brand-name">&lt;KnowerLife /&gt;</span>
-</a>
+<a aria-label="KnowerLife — главная" class="brand" href="../index.html"><span aria-hidden="true" class="brand-name">&lt;KnowerLife /&gt;</span></a>
 <ul class="nav-links" data-nav="" id="main-navigation">
 <li><a data-section-link="" href="../index.html#services">Услуги</a></li>
 <li><a data-section-link="" href="../index.html#cases">Кейсы</a></li>
@@ -42,18 +42,110 @@
 <li><a data-section-link="" href="../index.html#contact">Контакты</a></li>
 </ul>
 <div class="nav-actions" data-nav-actions="">
-<a aria-label="English version" class="icon-button" href="../en/index.html" hreflang="en" lang="en">EN</a>
+<a aria-label="English version" class="icon-button" href="../en/privacy/index.html" hreflang="en" lang="en">EN</a>
 <button aria-label="Переключить тему" class="icon-button" data-theme-toggle="" title="Переключить тему" type="button">☾</button>
 <button aria-controls="main-navigation" aria-expanded="false" aria-label="Открыть меню" class="menu-button" data-menu-button="" type="button">☰</button>
 </div>
 </div>
 </header>
-<main id="main"><section class="section"><div class="container prose"><p class="eyebrow">Документ</p><h1>Конфиденциальность</h1><p class="lead">Сайт работает на GitHub Pages и не использует собственную серверную базу данных.</p><h2>Контактная форма</h2><p>Форма формирует ссылку <code>mailto:</code> и открывает почтовое приложение пользователя. Данные не отправляются владельцу сайта, пока пользователь самостоятельно не отправит подготовленное письмо.</p><h2>Локальные инструменты</h2><p>Пароли, JSON, тексты и проектные брифы обрабатываются JavaScript-кодом на устройстве пользователя. Сайт не отправляет их на сервер.</p><h2>Локальное хранилище</h2><p>В localStorage сохраняются выбор темы и решение относительно аналитики.</p><h2>Аналитика</h2><p>Яндекс.Метрика загружается только после явного согласия. Webvisor отключён. Отозвать выбор можно, очистив данные сайта в настройках браузера.</p><h2>Контакты</h2><p>По вопросам обработки данных: <a href="mailto:info@knowerlife.ru">info@knowerlife.ru</a>.</p></div></section></main>
+<main id="main">
+<section class="privacy-hero">
+<div class="container">
+<nav aria-label="Хлебные крошки" class="breadcrumb"><a href="../index.html">Главная</a><span aria-hidden="true">/</span><span aria-current="page">Конфиденциальность</span></nav>
+<div class="privacy-hero__grid">
+<div>
+<p class="eyebrow">Документ · без юридического тумана</p>
+<h1>Политика конфиденциальности</h1>
+<p class="lead">Сайт работает на GitHub Pages. Большинство данных обрабатывается локально в браузере, а аналитика загружается только после явного согласия.</p>
+<p class="privacy-updated">Обновлено <time datetime="2026-08-03">3 августа 2026 года</time></p>
+</div>
+<div aria-label="Ключевые принципы" class="privacy-summary">
+<div><span aria-hidden="true">01</span><strong>Без собственной базы</strong><p>На сайте нет серверного хранилища пользовательских форм и инструментов.</p></div>
+<div><span aria-hidden="true">02</span><strong>Локальная обработка</strong><p>Пароли, JSON, JWT, тексты и брифы остаются на устройстве пользователя.</p></div>
+<div><span aria-hidden="true">03</span><strong>Аналитика по согласию</strong><p>Яндекс.Метрика не загружается до выбора пользователя. Webvisor отключён.</p></div>
+</div>
+</div>
+</div>
+</section>
+<section class="privacy-content">
+<div class="container privacy-layout">
+<aside class="privacy-toc">
+<strong>Содержание</strong>
+<nav aria-label="Разделы политики">
+<a href="#principles">Основные принципы</a>
+<a href="#contact-form">Контактная форма</a>
+<a href="#tools-data">Локальные инструменты</a>
+<a href="#local-storage">Хранилище браузера</a>
+<a href="#analytics">Аналитика</a>
+<a href="#external-services">Внешние сервисы</a>
+<a href="#rights">Управление данными</a>
+<a href="#contacts">Контакты</a>
+</nav>
+<button class="btn btn--secondary btn--small" data-consent-reset="" type="button">Настроить аналитику</button>
+<p aria-live="polite" class="privacy-status" data-consent-status=""></p>
+</aside>
+<article class="privacy-document">
+<section id="principles">
+<p class="privacy-section-index">01 / Принципы</p>
+<h2>Какие данные обрабатывает сайт</h2>
+<p>KnowerLife — статический сайт на GitHub Pages. Он не использует собственный backend, учетные записи пользователей или серверную базу данных для сохранения содержимого форм и браузерных инструментов.</p>
+<div class="privacy-note"><strong>Важно</strong><p>Не вставляйте реальные пароли, секретные ключи, персональные JWT или производственные API-токены в примеры, если устройство вам не принадлежит.</p></div>
+</section>
+<section id="contact-form">
+<p class="privacy-section-index">02 / Обращения</p>
+<h2>Контактная форма</h2>
+<p>Форма формирует ссылку <code>mailto:</code> и открывает почтовое приложение пользователя. Данные не отправляются автоматически: письмо уходит только после подтверждения в выбранном почтовом приложении.</p>
+<p>После отправки обработка письма происходит у почтовых провайдеров отправителя и получателя в соответствии с их правилами конфиденциальности.</p>
+</section>
+<section id="tools-data">
+<p class="privacy-section-index">03 / Browser lab</p>
+<h2>Локальные инструменты</h2>
+<p>Генератор паролей, JSON formatter и diff, Base64, JWT decoder, SHA, Regex, CSV-конвертер и проектные генераторы выполняются JavaScript-кодом непосредственно в браузере.</p>
+<ul>
+<li>введённые данные не отправляются на сервер KnowerLife;</li>
+<li>результаты не сохраняются сайтом после закрытия страницы;</li>
+<li>скачивание файлов запускается локально средствами браузера.</li>
+</ul>
+</section>
+<section id="local-storage">
+<p class="privacy-section-index">04 / Browser storage</p>
+<h2>Хранилище браузера</h2>
+<p>В <code>localStorage</code> могут сохраняться выбранная тема, режим отображения портфолио и решение относительно аналитики. Эти данные находятся в браузере пользователя и могут быть удалены через настройки сайта или браузера.</p>
+</section>
+<section id="analytics">
+<p class="privacy-section-index">05 / Analytics</p>
+<h2>Яндекс.Метрика</h2>
+<p>Скрипт Яндекс.Метрики загружается только после нажатия кнопки согласия. Используются отчёты о посещении и переходах. Запись действий пользователя через Webvisor отключена.</p>
+<p>До согласия запрос к сервису аналитики не выполняется. Выбор можно изменить кнопкой «Настроить аналитику» в содержании этой страницы.</p>
+</section>
+<section id="external-services">
+<p class="privacy-section-index">06 / Third parties</p>
+<h2>Внешние ссылки и платформы</h2>
+<p>Сайт содержит ссылки на GitHub, Telegram, VK, email и сайты проектов. При переходе на внешнюю платформу обработка данных регулируется её собственной политикой.</p>
+</section>
+<section id="rights">
+<p class="privacy-section-index">07 / Control</p>
+<h2>Как управлять локальными данными</h2>
+<ol>
+<li>Откройте настройки сайта в браузере.</li>
+<li>Удалите cookies и данные сайта для домена <code>knowerlife.ru</code>.</li>
+<li>При следующем посещении сайт снова предложит выбрать режим аналитики.</li>
+</ol>
+</section>
+<section id="contacts">
+<p class="privacy-section-index">08 / Contact</p>
+<h2>Контакты</h2>
+<p>По вопросам обработки данных и работы сайта: <a href="mailto:info@knowerlife.ru">info@knowerlife.ru</a>.</p>
+</section>
+</article>
+</div>
+</section>
+</main>
 <footer class="site-footer">
 <div class="container footer-grid">
 <p class="muted">© <span data-current-year=""></span> KnowerLife</p>
 <nav aria-label="Дополнительные ссылки" class="footer-links">
-<a href="../privacy/index.html">Конфиденциальность</a>
+<a aria-current="page" href="./index.html">Конфиденциальность</a>
 <a href="https://github.com/KnowerLife" rel="me noopener" target="_blank">GitHub</a>
 <a href="https://t.me/knowerlife" rel="me noopener" target="_blank">Telegram</a>
 <a href="mailto:info@knowerlife.ru">Email</a>
@@ -63,10 +155,7 @@
 <aside aria-label="Настройки аналитики" class="consent" data-consent="" hidden="">
 <strong>Аналитика сайта</strong>
 <p>Яндекс.Метрика загружается только после согласия. Webvisor отключён.</p>
-<div class="consent-actions">
-<button class="btn btn--primary btn--small" data-consent-accept="" type="button">Разрешить</button>
-<button class="btn btn--secondary btn--small" data-consent-decline="" type="button">Не сейчас</button>
-</div>
+<div class="consent-actions"><button class="btn btn--primary btn--small" data-consent-accept="" type="button">Разрешить</button><button class="btn btn--secondary btn--small" data-consent-decline="" type="button">Не сейчас</button></div>
 </aside>
 <script src="../assets/js/main.js" type="module"></script>
 </body>
