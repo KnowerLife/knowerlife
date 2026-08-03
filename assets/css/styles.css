@@ -1581,3 +1581,24 @@ input[type="range"] { min-height: 44px; }
   .consent > p { margin: 0; }
   body.has-consent { padding-bottom: 8rem; }
 }
+
+
+/* v8 performance containment: skip layout and paint work for off-screen content. */
+@supports (content-visibility: auto) {
+  .home-page main > section:not(.hero),
+  .case-page main > section:not(.case-hero),
+  .privacy-document > section,
+  .tools-page .tool-card {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 720px;
+  }
+}
+
+/* Isolate expensive decorative layers from the rest of the page. */
+.system-map,
+.case-visual,
+.trace-board,
+.tools-runtime,
+.hero-grid-bg {
+  contain: layout paint;
+}
