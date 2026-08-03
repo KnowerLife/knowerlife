@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'knowerlife-v5.0.0';
+const CACHE_VERSION = 'knowerlife-v6.0.0';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const PAGE_CACHE = `${CACHE_VERSION}-pages`;
 
@@ -8,6 +8,11 @@ const fromScope = (path) => new URL(path, scopeUrl).toString();
 const APP_SHELL = [
   '',
   'index.html',
+  'en/index.html',
+  'cases/roscosmos/index.html',
+  'cases/integrations/index.html',
+  'cases/saunabani/index.html',
+  'privacy/index.html',
   'offline.html',
   'tools/index.html',
   'en/tools/index.html',

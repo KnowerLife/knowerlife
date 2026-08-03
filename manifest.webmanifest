@@ -2,13 +2,13 @@
   "id": "./",
   "name": "KnowerLife — системный анализ и web-разработка",
   "short_name": "KnowerLife",
-  "description": "Портфолио системного аналитика и разработчика: полный каталог кейсов, процесс работы, результаты и локальные browser-инструменты.",
+  "description": "Технологичное портфолио системного аналитика и разработчика: архитектура решений, полный каталог кейсов и локальные browser-инструменты.",
   "lang": "ru",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0c0e16",
-  "theme_color": "#5d4df0",
+  "theme_color": "#6757f5",
   "icons": [
     {
       "src": "assets/icons/icon-192.png",
@@ -29,6 +29,19 @@
       "short_name": "Портфолио",
       "description": "Открыть полный каталог проектов",
       "url": "./#portfolio",
+      "icons": [
+        {
+          "src": "assets/icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Подобрать формат работы",
+      "short_name": "Формат работы",
+      "description": "Открыть интерактивный навигатор по формату проекта",
+      "url": "./#project-navigator",
       "icons": [
         {
           "src": "assets/icons/icon-192.png",
