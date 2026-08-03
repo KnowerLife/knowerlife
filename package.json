@@ -1,12 +1,15 @@
 {
   "name": "knowerlife-pages",
   "private": true,
-  "version": "3.0.0",
-  "description": "Static GitHub Pages portfolio for KnowerLife",
+  "version": "4.0.0",
+  "description": "Static GitHub Pages portfolio and local browser toolbox for KnowerLife",
   "scripts": {
-    "check": "python scripts/check_site.py && python scripts/check_portfolio.py && python scripts/check_security.py && node --check assets/js/main.js && node --check assets/js/tools.js && node --check service-worker.js"
+    "check": "python -m py_compile scripts/build_tools_pages.py && python scripts/check_site.py && python scripts/check_portfolio.py && python scripts/check_tools.py && python scripts/check_security.py && node --check assets/js/main.js && node --check assets/js/tools-core.js && node --check assets/js/tools.js && node --check service-worker.js && node --test tests/tools-core.test.mjs",
+    "test": "node --test tests/tools-core.test.mjs",
+    "build:tools": "python scripts/build_tools_pages.py"
   },
   "engines": {
     "node": ">=20"
-  }
+  },
+  "type": "module"
 }

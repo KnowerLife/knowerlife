@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'knowerlife-v3.0.0';
+const CACHE_VERSION = 'knowerlife-v4.0.0';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const PAGE_CACHE = `${CACHE_VERSION}-pages`;
 
@@ -9,8 +9,11 @@ const APP_SHELL = [
   '',
   'index.html',
   'offline.html',
+  'tools/index.html',
+  'en/tools/index.html',
   'assets/css/styles.css',
   'assets/js/main.js',
+  'assets/js/tools-core.js',
   'assets/js/tools.js',
   'assets/icons/favicon.svg',
   'assets/icons/icon-192.png',
