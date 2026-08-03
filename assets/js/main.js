@@ -239,3 +239,67 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     }
   });
 }
+
+// v5: restrained motion and progress feedback.
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const progressBar = document.createElement('div');
+progressBar.className = 'scroll-progress';
+progressBar.setAttribute('aria-hidden', 'true');
+document.body.prepend(progressBar);
+
+let progressFrame = 0;
+function updateScrollProgress() {
+  progressFrame = 0;
+  const scrollRange = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = scrollRange > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollRange)) : 0;
+  progressBar.style.transform = `scaleX(${progress})`;
+}
+function requestProgressUpdate() {
+  if (progressFrame) return;
+  progressFrame = window.requestAnimationFrame(updateScrollProgress);
+}
+window.addEventListener('scroll', requestProgressUpdate, { passive: true });
+window.addEventListener('resize', requestProgressUpdate);
+updateScrollProgress();
+
+// Small stagger inside visual groups; capped so content never feels slow.
+document.querySelectorAll('.cards, .portfolio-grid, .steps, .deliverables-grid').forEach((group) => {
+  [...group.children].forEach((child, index) => {
+    if (child.classList.contains('reveal')) {
+      child.style.setProperty('--reveal-delay', `${Math.min(index * 55, 220)}ms`);
+    }
+  });
+});
+
+function animateMetric(element) {
+  const original = element.textContent.trim();
+  const match = original.match(/^(\d+)(.*)$/);
+  if (!match || prefersReducedMotion) return;
+  const target = Number(match[1]);
+  const suffix = match[2];
+  const duration = 900;
+  const start = performance.now();
+  const formatter = new Intl.NumberFormat(root.lang || 'ru');
+
+  function frame(now) {
+    const elapsed = Math.min(1, (now - start) / duration);
+    const eased = 1 - (1 - elapsed) ** 3;
+    element.textContent = `${formatter.format(Math.round(target * eased))}${suffix}`;
+    if (elapsed < 1) window.requestAnimationFrame(frame);
+  }
+  element.textContent = `0${suffix}`;
+  window.requestAnimationFrame(frame);
+}
+
+const metricValues = [...document.querySelectorAll('.metric strong')];
+if (metricValues.length && !prefersReducedMotion) {
+  const metricObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      animateMetric(entry.target);
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.65 });
+  metricValues.forEach((metric) => metricObserver.observe(metric));
+}
