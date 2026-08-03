@@ -1,0 +1,85 @@
+<!doctype html>
+    <html lang="ru" data-theme="light" data-base="../">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Инструменты системного аналитика — KnowerLife</title>
+      <meta name="description" content="Бесплатные локальные инструменты: UUID, безопасные пароли, JSON, Base64, User Story и проектный бриф.">
+      <meta name="robots" content="index,follow,max-image-preview:large">
+      <meta name="theme-color" content="#5d4df0">
+      <link rel="canonical" href="https://knowerlife.ru/tools/">
+      <link rel="alternate" hreflang="ru" href="https://knowerlife.ru/tools/">
+      <link rel="alternate" hreflang="en" href="https://knowerlife.ru/en/tools/">
+      <link rel="alternate" hreflang="x-default" href="https://knowerlife.ru/tools/">
+      <meta property="og:type" content="website">
+      <meta property="og:site_name" content="KnowerLife">
+      <meta property="og:title" content="Инструменты системного аналитика — KnowerLife">
+      <meta property="og:description" content="Бесплатные локальные инструменты: UUID, безопасные пароли, JSON, Base64, User Story и проектный бриф.">
+      <meta property="og:url" content="https://knowerlife.ru/tools/">
+      <meta property="og:image" content="https://knowerlife.ru/assets/og-cover.png">
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="630">
+      <meta name="twitter:card" content="summary_large_image">
+      <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+      <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+      <link rel="manifest" href="../manifest.webmanifest">
+      <link rel="stylesheet" href="../assets/css/styles.css">
+
+    </head>
+    <body>
+      <a class="skip-link" href="#main">Перейти к содержимому</a>
+<div data-header-sentinel aria-hidden="true"></div>
+<header class="site-header" data-header>
+  <div class="container navbar">
+    <a class="brand" href="../index.html" aria-label="KnowerLife — главная">
+      <span class="brand-mark" aria-hidden="true">K</span>
+      <span class="brand-name">KnowerLife</span>
+    </a>
+    <ul class="nav-links" id="main-navigation" data-nav>
+      <li><a data-section-link href="../index.html#services">Услуги</a></li>
+      <li><a data-section-link href="../index.html#cases">Кейсы</a></li>
+      <li><a data-section-link href="../index.html#process">Процесс</a></li>
+      <li><a href="../tools/index.html" aria-current="page">Инструменты</a></li>
+      <li><a data-section-link href="../index.html#contact">Контакты</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a class="icon-button" href="../en/index.html" hreflang="en" lang="en" aria-label="English version">EN</a>
+      <button class="icon-button" type="button" data-theme-toggle aria-label="Переключить тему" title="Переключить тему">☾</button>
+      <button class="menu-button" type="button" data-menu-button aria-controls="main-navigation" aria-expanded="false" aria-label="Открыть меню">☰</button>
+    </div>
+  </div>
+</header>
+      <main id="main">
+  <section class="section"><div class="container"><p class="eyebrow">Локальная лаборатория</p><h1>Инструменты системного аналитика</h1><p class="lead">Все вычисления выполняются в браузере. Введённые данные не уходят на сервер и не требуют регистрации.</p><div class="tools-grid">
+    <article class="tool"><h2>Безопасный пароль</h2><form id="password-form" class="form-grid"><div class="field"><label for="password-length">Длина</label><input id="password-length" type="number" min="8" max="128" value="20"></div><div class="checkbox-row"><label><input id="password-lower" type="checkbox" checked> a–z</label><label><input id="password-upper" type="checkbox" checked> A–Z</label><label><input id="password-numbers" type="checkbox" checked> 0–9</label><label><input id="password-symbols" type="checkbox" checked> Символы</label></div><button class="btn btn--primary" type="submit">Сгенерировать</button></form><output class="tool-output" id="password-output" aria-live="polite"></output><div class="tool-actions"><button class="btn btn--secondary btn--small" type="button" data-copy-target="password-output">Копировать</button></div></article>
+    <article class="tool"><h2>UUID v4</h2><p class="muted">Криптографически случайный идентификатор.</p><button class="btn btn--primary" id="uuid-generate" type="button">Создать UUID</button><output class="tool-output" id="uuid-output" aria-live="polite"></output><div class="tool-actions"><button class="btn btn--secondary btn--small" type="button" data-copy-target="uuid-output">Копировать</button></div></article>
+    <article class="tool"><h2>JSON formatter</h2><div class="field"><label for="json-input">JSON</label><textarea id="json-input" spellcheck="false" placeholder='{"status":"ok"}'></textarea></div><button class="btn btn--primary" id="json-format" type="button">Проверить и форматировать</button><output class="tool-output" id="json-output" aria-live="polite"></output><div class="tool-actions"><button class="btn btn--secondary btn--small" type="button" data-copy-target="json-output">Копировать</button></div></article>
+    <article class="tool"><h2>Base64</h2><div class="field"><label for="base64-input">Текст или Base64</label><textarea id="base64-input"></textarea></div><div class="tool-actions"><button class="btn btn--primary" id="base64-encode" type="button">Кодировать</button><button class="btn btn--secondary" id="base64-decode" type="button">Декодировать</button></div><output class="tool-output" id="base64-output" aria-live="polite"></output><div class="tool-actions"><button class="btn btn--secondary btn--small" type="button" data-copy-target="base64-output">Копировать</button></div></article>
+    <article class="tool"><h2>Шифр Цезаря</h2><div class="field"><label for="caesar-input">Текст</label><textarea id="caesar-input"></textarea></div><div class="field"><label for="caesar-shift">Сдвиг</label><input id="caesar-shift" type="number" value="3"></div><button class="btn btn--primary" id="caesar-run" type="button">Преобразовать</button><output class="tool-output" id="caesar-output" aria-live="polite"></output></article>
+    <article class="tool"><h2>User Story</h2><div class="form-grid"><div class="field"><label for="story-role">Роль</label><input id="story-role" placeholder="покупатель"></div><div class="field"><label for="story-need">Потребность</label><input id="story-need" placeholder="сохранить адрес доставки"></div><div class="field"><label for="story-value">Ценность</label><input id="story-value" placeholder="быстрее оформить следующий заказ"></div><div class="field"><label for="story-criteria">Критерии приёмки, по одному в строке</label><textarea id="story-criteria"></textarea></div><button class="btn btn--primary" id="story-generate" type="button">Собрать историю</button></div><output class="tool-output" id="story-output" aria-live="polite"></output><div class="tool-actions"><button class="btn btn--secondary btn--small" type="button" data-copy-target="story-output">Копировать</button></div></article>
+  </div></div></section>
+  <section class="section section--tinted"><div class="container"><p class="eyebrow">Конструктор</p><h2>Проектный бриф в Markdown</h2><p class="lead">Заполните ключевой контекст и получите файл, с которого удобно начать интервью или discovery.</p><div class="form-card form-grid"><div class="field"><label for="brief-product">Продукт или компания</label><input id="brief-product"></div><div class="field"><label for="brief-goal">Бизнес-цель</label><textarea id="brief-goal"></textarea></div><div class="field"><label for="brief-users">Пользователи и роли</label><textarea id="brief-users"></textarea></div><div class="field"><label for="brief-scenario">Основной сценарий</label><textarea id="brief-scenario"></textarea></div><div class="field"><label for="brief-integrations">Интеграции и данные</label><textarea id="brief-integrations"></textarea></div><div class="field"><label for="brief-risks">Ограничения и риски</label><textarea id="brief-risks"></textarea></div><div class="field"><label for="brief-success">Критерий успеха</label><textarea id="brief-success"></textarea></div><div class="button-row"><button class="btn btn--primary" id="brief-generate" type="button">Сформировать</button><button class="btn btn--secondary" id="brief-download" type="button">Скачать .md</button></div><output class="tool-output" id="brief-output" aria-live="polite"></output><div class="tool-actions"><button class="btn btn--secondary btn--small" type="button" data-copy-target="brief-output">Копировать</button></div></div></div></section>
+</main>
+      <footer class="site-footer">
+  <div class="container footer-grid">
+    <p class="muted">© <span data-current-year></span> KnowerLife</p>
+    <nav class="footer-links" aria-label="Дополнительные ссылки">
+      <a href="../privacy/index.html">Конфиденциальность</a>
+      <a href="https://github.com/KnowerLife" target="_blank" rel="me noopener">GitHub</a>
+      <a href="https://t.me/knowerlife" target="_blank" rel="me noopener">Telegram</a>
+      <a href="mailto:info@knowerlife.ru">Email</a>
+    </nav>
+  </div>
+</footer>
+<aside class="consent" data-consent hidden aria-label="Настройки аналитики">
+  <strong>Аналитика сайта</strong>
+  <p>Яндекс.Метрика загружается только после согласия. Webvisor отключён.</p>
+  <div class="consent-actions">
+    <button class="btn btn--primary btn--small" type="button" data-consent-accept>Разрешить</button>
+    <button class="btn btn--secondary btn--small" type="button" data-consent-decline>Не сейчас</button>
+  </div>
+</aside>
+<script type="module" src="../assets/js/main.js"></script>
+      <script type="module" src="../assets/js/tools.js"></script>
+    </body>
+    </html>
