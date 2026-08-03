@@ -20,8 +20,10 @@
       <meta property="og:image:width" content="1200">
       <meta property="og:image:height" content="630">
       <meta name="twitter:card" content="summary_large_image">
+      <link rel="icon" href="./assets/icons/favicon.ico" sizes="any">
       <link rel="icon" href="./assets/icons/favicon.svg" type="image/svg+xml">
-      <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
+      <link rel="icon" href="./assets/icons/favicon-96.png" type="image/png" sizes="96x96">
+      <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png">
       <link rel="manifest" href="./manifest.webmanifest">
       <link rel="stylesheet" href="./assets/css/styles.css">
       <script type="application/ld+json">{
@@ -41,8 +43,7 @@
 <header class="site-header" data-header>
   <div class="container navbar">
     <a class="brand" href="./index.html" aria-label="KnowerLife — главная">
-      <span class="brand-mark" aria-hidden="true">K</span>
-      <span class="brand-name">KnowerLife</span>
+      <span class="brand-name" aria-hidden="true">&lt;KnowerLife /&gt;</span>
     </a>
     <ul class="nav-links" id="main-navigation" data-nav>
       <li><a data-section-link href="./index.html#services">Услуги</a></li>
@@ -71,6 +72,12 @@
           <a class="btn btn--primary" href="#contact">Обсудить задачу</a>
           <a class="btn btn--secondary" href="#cases">Посмотреть кейсы</a>
         </div>
+        <nav class="hero-paths" aria-label="Быстрый выбор задачи">
+          <span>Быстрый старт:</span>
+          <a href="#services">Разобраться в требованиях</a>
+          <a href="#cases">Спроектировать интеграцию</a>
+          <a href="tools/index.html#brief">Собрать проектный бриф</a>
+        </nav>
       </div>
       <aside class="hero-panel reveal" aria-labelledby="hero-panel-title">
         <p class="eyebrow">Фокус</p>
@@ -356,6 +363,37 @@
         <article class="step reveal"><h3>Модель решения</h3><p class="muted">Описываем сценарии, данные, интеграции и границы системы.</p></article>
         <article class="step reveal"><h3>Спецификация</h3><p class="muted">Готовим понятный команде набор требований и критериев приёмки.</p></article>
         <article class="step reveal"><h3>Сопровождение</h3><p class="muted">Отвечаем на вопросы разработки, проверяем результат и обновляем документацию.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tinted" id="deliverables">
+    <div class="container">
+      <p class="eyebrow reveal">Результат работы</p>
+      <h2 class="reveal">Не просто встречи и документы, а комплект для реализации</h2>
+      <p class="lead reveal">Артефакты подбираются под задачу и остаются полезными после запуска: команде разработки, владельцу продукта и сопровождению.</p>
+      <div class="deliverables-grid">
+        <article class="deliverable reveal"><span class="deliverable-number" aria-hidden="true">01</span><h3>Карта требований</h3><p>Цели, роли, сценарии, ограничения, допущения и границы системы — в одном согласованном контексте.</p></article>
+        <article class="deliverable reveal"><span class="deliverable-number" aria-hidden="true">02</span><h3>Модели процессов и архитектуры</h3><p>BPMN, UML, sequence-диаграммы, контуры интеграций и потоки данных в понятном команде формате.</p></article>
+        <article class="deliverable reveal"><span class="deliverable-number" aria-hidden="true">03</span><h3>Контракты и критерии приёмки</h3><p>API, структуры данных, ошибки, нефункциональные требования и проверяемый Definition of Done.</p></article>
+        <article class="deliverable reveal"><span class="deliverable-number" aria-hidden="true">04</span><h3>Сопровождение реализации</h3><p>Ответы на вопросы команды, актуализация решений, разбор изменений и проверка результата перед запуском.</p></article>
+      </div>
+      <div class="section-cta reveal">
+        <div><strong>Можно начать с короткого структурированного брифа.</strong><p class="muted">Он работает локально в браузере и формирует Markdown-документ.</p></div>
+        <a class="btn btn--secondary" href="tools/index.html#brief">Открыть конструктор брифа</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="container faq-layout">
+      <div class="faq-intro reveal"><p class="eyebrow">Вопросы</p><h2>До начала работы</h2><p class="lead">Коротко о формате, документации и подключении к проекту.</p></div>
+      <div class="faq-list reveal">
+        <details class="faq-item"><summary>С чего начинается работа?</summary><div><p>С короткой встречи или письменного брифа. Фиксируем цель, текущую ситуацию, участников, ограничения и ожидаемый результат, после чего определяем состав работ.</p></div></details>
+        <details class="faq-item"><summary>Можно подключиться только на этап аналитики?</summary><div><p>Да. Можно подготовить требования, модели, API-контракты и критерии приёмки для вашей команды без обязательной разработки с моей стороны.</p></div></details>
+        <details class="faq-item"><summary>Работаете с закрытыми проектами и NDA?</summary><div><p>Да. Публичные кейсы описываются без конфиденциальных данных, а рабочие материалы передаются в согласованном защищённом контуре.</p></div></details>
+        <details class="faq-item"><summary>Можно сопровождать реализацию после подготовки ТЗ?</summary><div><p>Да. Поддерживаю разработчиков, уточняю сценарии, разбираю изменения и участвую в приёмке, чтобы документация не расходилась с продуктом.</p></div></details>
+        <details class="faq-item"><summary>В каком формате передаются результаты?</summary><div><p>Markdown, Confluence, BPMN, UML, Mermaid, OpenAPI, таблицы и схемы данных — формат выбирается под процессы и инструменты вашей команды.</p></div></details>
       </div>
     </div>
   </section>
