@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'knowerlife-v8.0.0';
+const CACHE_VERSION = 'knowerlife-v9.0.0';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const PAGE_CACHE = `${CACHE_VERSION}-pages`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
@@ -10,7 +10,6 @@ const fromScope = (path) => new URL(path, scopeUrl).toString();
 // are cached only after the visitor actually opens them.
 const APP_SHELL = [
   '',
-  'index.html',
   'offline.html',
   'assets/css/styles.css',
   'assets/js/main.js',
