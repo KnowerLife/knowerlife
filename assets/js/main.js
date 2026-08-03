@@ -264,7 +264,7 @@ window.addEventListener('resize', requestProgressUpdate);
 updateScrollProgress();
 
 // Small stagger inside visual groups; capped so content never feels slow.
-document.querySelectorAll('.cards, .portfolio-grid, .steps, .deliverables-grid').forEach((group) => {
+document.querySelectorAll('.cards, .portfolio-grid, .steps, .deliverables-grid, .service-bento, .case-showcase, .process-track, .deliverables-bento').forEach((group) => {
   [...group.children].forEach((child, index) => {
     if (child.classList.contains('reveal')) {
       child.style.setProperty('--reveal-delay', `${Math.min(index * 55, 220)}ms`);
@@ -292,7 +292,7 @@ function animateMetric(element) {
   window.requestAnimationFrame(frame);
 }
 
-const metricValues = [...document.querySelectorAll('.metric strong')];
+const metricValues = [...document.querySelectorAll('.metric strong, .hero-stat strong')];
 if (metricValues.length && !prefersReducedMotion) {
   const metricObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach((entry) => {
@@ -302,4 +302,237 @@ if (metricValues.length && !prefersReducedMotion) {
     });
   }, { threshold: 0.65 });
   metricValues.forEach((metric) => metricObserver.observe(metric));
+}
+
+// v6: contextual project navigator.
+const navigatorRoot = document.querySelector('[data-project-navigator]');
+if (navigatorRoot) {
+  const content = isEnglish ? {
+    idea: {
+      title: 'Discovery session',
+      copy: 'Capture the goal, users and constraints, then define the solution scope.',
+      list: ['Context map', 'System boundaries', 'Analysis roadmap'],
+      cta: 'Discuss discovery'
+    },
+    requirements: {
+      title: 'System analysis sprint',
+      copy: 'Bring conflicting inputs into one model and prepare a team-ready specification.',
+      list: ['Requirements map', 'Process and data models', 'Acceptance criteria'],
+      cta: 'Discuss analysis sprint'
+    },
+    integration: {
+      title: 'Integration design',
+      copy: 'Define contracts, data flow, failure handling and ownership across systems.',
+      list: ['Integration landscape', 'API or event contracts', 'Error and retry scenarios'],
+      cta: 'Discuss integration'
+    },
+    delivery: {
+      title: 'Delivery support',
+      copy: 'Keep engineering decisions aligned with requirements while the product is being built.',
+      list: ['Engineering Q&A', 'Change impact analysis', 'Acceptance support'],
+      cta: 'Discuss delivery support'
+    }
+  } : {
+    idea: {
+      title: 'Discovery-сессия',
+      copy: 'Зафиксируем цель, пользователей, ограничения и определим состав решения.',
+      list: ['Карта контекста', 'Границы системы', 'План дальнейшего анализа'],
+      cta: 'Обсудить discovery'
+    },
+    requirements: {
+      title: 'Спринт системного анализа',
+      copy: 'Сведём противоречивые вводные в одну модель и подготовим пакет для команды.',
+      list: ['Карта требований', 'Модели процессов и данных', 'Критерии приёмки'],
+      cta: 'Обсудить спринт анализа'
+    },
+    integration: {
+      title: 'Проектирование интеграции',
+      copy: 'Опишем контракты, потоки данных, ошибки и ответственность систем.',
+      list: ['Интеграционный контур', 'API или event-контракты', 'Сценарии ошибок и повторов'],
+      cta: 'Обсудить интеграцию'
+    },
+    delivery: {
+      title: 'Сопровождение реализации',
+      copy: 'Сохраним соответствие между требованиями и продуктом во время разработки.',
+      list: ['Ответы команде', 'Анализ изменений', 'Поддержка приёмки'],
+      cta: 'Обсудить сопровождение'
+    }
+  };
+
+  const title = navigatorRoot.querySelector('[data-nav-title]');
+  const copy = navigatorRoot.querySelector('[data-nav-copy]');
+  const list = navigatorRoot.querySelector('[data-nav-list]');
+  const link = navigatorRoot.querySelector('[data-nav-link]');
+  const buttons = [...navigatorRoot.querySelectorAll('[data-nav-option]')];
+
+  function selectNavigatorOption(key) {
+    const item = content[key] || content.idea;
+    buttons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.navOption === key)));
+    if (title) title.textContent = item.title;
+    if (copy) copy.textContent = item.copy;
+    if (list) {
+      list.replaceChildren(...item.list.map((text) => {
+        const entry = document.createElement('li');
+        entry.textContent = text;
+        return entry;
+      }));
+    }
+    if (link) link.textContent = item.cta;
+  }
+
+  buttons.forEach((button) => button.addEventListener('click', () => selectNavigatorOption(button.dataset.navOption)));
+}
+
+// v6: lightweight command palette. It is progressive enhancement and has no external dependency.
+const navActions = document.querySelector('[data-nav-actions]');
+if (navActions && typeof HTMLDialogElement !== 'undefined') {
+  const commandButton = document.createElement('button');
+  commandButton.type = 'button';
+  commandButton.className = 'command-button';
+  commandButton.setAttribute('aria-label', isEnglish ? 'Open quick navigation' : 'Открыть быстрый поиск');
+  commandButton.setAttribute('title', commandButton.getAttribute('aria-label'));
+  const commandIcon = document.createElement('span');
+  commandIcon.textContent = '⌕';
+  commandIcon.setAttribute('aria-hidden', 'true');
+  const commandText = document.createElement('span');
+  commandText.textContent = isEnglish ? 'Navigate' : 'Навигация';
+  const commandKey = document.createElement('kbd');
+  commandKey.textContent = '⌘K';
+  commandButton.append(commandIcon, commandText, commandKey);
+  navActions.prepend(commandButton);
+
+  const dialog = document.createElement('dialog');
+  dialog.className = 'command-dialog';
+  dialog.setAttribute('aria-label', isEnglish ? 'Quick navigation' : 'Быстрая навигация');
+  const searchWrap = document.createElement('div');
+  searchWrap.className = 'command-search';
+  const prompt = document.createElement('span');
+  prompt.textContent = '>';
+  prompt.setAttribute('aria-hidden', 'true');
+  const search = document.createElement('input');
+  search.type = 'search';
+  search.autocomplete = 'off';
+  search.placeholder = isEnglish ? 'Search pages, cases and tools…' : 'Поиск по разделам, кейсам и инструментам…';
+  search.setAttribute('aria-label', search.placeholder);
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'command-close';
+  close.textContent = 'Esc';
+  close.setAttribute('aria-label', isEnglish ? 'Close' : 'Закрыть');
+  searchWrap.append(prompt, search, close);
+  const results = document.createElement('ul');
+  results.className = 'command-results';
+  dialog.append(searchWrap, results);
+  document.body.append(dialog);
+
+  const brandHref = document.querySelector('.brand')?.getAttribute('href') || `${basePath}index.html`;
+  const toolsHref = [...document.querySelectorAll('.nav-links a')].find((item) => /tools/i.test(item.getAttribute('href') || ''))?.getAttribute('href') || `${basePath}tools/index.html`;
+  const baseItems = [
+    { title: isEnglish ? 'Services' : 'Компетенции', description: isEnglish ? 'System analysis, integrations and delivery' : 'Системный анализ, интеграции и реализация', href: `${brandHref}#services` },
+    { title: isEnglish ? 'Selected cases' : 'Избранные кейсы', description: isEnglish ? 'Detailed project stories' : 'Подробные истории проектов', href: `${brandHref}#cases` },
+    { title: isEnglish ? 'Full portfolio' : 'Полное портфолио', description: isEnglish ? 'All 21 projects' : 'Все 21 проекта', href: `${brandHref}#portfolio` },
+    { title: isEnglish ? 'Process' : 'Процесс работы', description: isEnglish ? 'From discovery to delivery' : 'От discovery до сопровождения', href: `${brandHref}#process` },
+    { title: isEnglish ? 'Project navigator' : 'Навигатор по задаче', description: isEnglish ? 'Find the right starting format' : 'Подобрать формат старта', href: `${brandHref}#navigator` },
+    { title: isEnglish ? 'Browser tools' : 'Инструменты', description: isEnglish ? '17 local utilities' : '17 локальных утилит', href: toolsHref },
+    { title: isEnglish ? 'Project brief builder' : 'Конструктор брифа', description: isEnglish ? 'Create a structured Markdown brief' : 'Собрать структурированный Markdown', href: `${toolsHref}#brief` },
+    { title: isEnglish ? 'Contact' : 'Контакты', description: isEnglish ? 'Discuss a challenge' : 'Обсудить задачу', href: `${brandHref}#contact` }
+  ];
+
+  document.querySelectorAll('.case-feature, #cases a.card').forEach((item) => {
+    const heading = item.querySelector('h3');
+    if (!heading) return;
+    baseItems.push({
+      title: heading.textContent.trim(),
+      description: isEnglish ? 'Case study' : 'Подробный кейс',
+      href: item.getAttribute('href')
+    });
+  });
+
+  let visibleItems = [];
+  let selectedIndex = 0;
+
+  function renderCommandResults() {
+    const query = search.value.trim().toLocaleLowerCase(root.lang);
+    visibleItems = baseItems.filter((item) => `${item.title} ${item.description}`.toLocaleLowerCase(root.lang).includes(query));
+    selectedIndex = Math.min(selectedIndex, Math.max(0, visibleItems.length - 1));
+    results.replaceChildren();
+    if (!visibleItems.length) {
+      const empty = document.createElement('li');
+      empty.className = 'command-empty';
+      empty.textContent = isEnglish ? 'Nothing found' : 'Ничего не найдено';
+      results.append(empty);
+      return;
+    }
+    visibleItems.forEach((item, index) => {
+      const row = document.createElement('li');
+      const anchor = document.createElement('a');
+      anchor.href = item.href;
+      anchor.setAttribute('aria-selected', String(index === selectedIndex));
+      const titleElement = document.createElement('strong');
+      titleElement.textContent = item.title;
+      const descriptionElement = document.createElement('small');
+      descriptionElement.textContent = item.description;
+      anchor.append(titleElement, descriptionElement);
+      anchor.addEventListener('click', () => dialog.close());
+      anchor.addEventListener('mousemove', () => {
+        selectedIndex = index;
+        [...results.querySelectorAll('a')].forEach((linkElement, linkIndex) => linkElement.setAttribute('aria-selected', String(linkIndex === selectedIndex)));
+      });
+      row.append(anchor);
+      results.append(row);
+    });
+  }
+
+  function openCommand() {
+    renderCommandResults();
+    dialog.showModal();
+    window.requestAnimationFrame(() => search.focus());
+  }
+
+  commandButton.addEventListener('click', openCommand);
+  close.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+  search.addEventListener('input', () => {
+    selectedIndex = 0;
+    renderCommandResults();
+  });
+  search.addEventListener('keydown', (event) => {
+    if (!visibleItems.length) return;
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      selectedIndex = (selectedIndex + (event.key === 'ArrowDown' ? 1 : -1) + visibleItems.length) % visibleItems.length;
+      renderCommandResults();
+      results.querySelector('a[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' });
+    }
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      const selected = visibleItems[selectedIndex];
+      if (selected) window.location.href = selected.href;
+    }
+  });
+  document.addEventListener('keydown', (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLocaleLowerCase() === 'k') {
+      event.preventDefault();
+      if (dialog.open) dialog.close(); else openCommand();
+    }
+  });
+}
+
+// v6: compact/grid portfolio view, persisted locally.
+const portfolioView = document.querySelector('[data-portfolio-view]');
+const portfolioGrid = document.querySelector('#portfolio .portfolio-grid');
+if (portfolioView && portfolioGrid) {
+  const viewButtons = [...portfolioView.querySelectorAll('[data-portfolio-view-option]')];
+  const storedView = localStorage.getItem('knowerlife-portfolio-view');
+  let currentView = storedView === 'list' ? 'list' : 'grid';
+  function applyPortfolioView(view) {
+    currentView = view === 'list' ? 'list' : 'grid';
+    portfolioGrid.dataset.view = currentView;
+    viewButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.portfolioViewOption === currentView)));
+    localStorage.setItem('knowerlife-portfolio-view', currentView);
+  }
+  viewButtons.forEach((button) => button.addEventListener('click', () => applyPortfolioView(button.dataset.portfolioViewOption)));
+  applyPortfolioView(currentView);
 }
