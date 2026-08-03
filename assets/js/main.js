@@ -91,6 +91,53 @@ if (sectionLinks.length && sections.length) {
   sections.forEach((section) => activeObserver.observe(section));
 }
 
+
+const projectCards = [...document.querySelectorAll('[data-project-card]')];
+const projectFilters = [...document.querySelectorAll('[data-project-filter]')];
+const projectSearch = document.querySelector('[data-project-search]');
+const projectCount = document.querySelector('[data-project-count]');
+const projectEmpty = document.querySelector('[data-project-empty]');
+let activeProjectFilter = 'all';
+
+function getProjectCountLabel(count) {
+  if (isEnglish) return `${count} ${count === 1 ? 'project' : 'projects'}`;
+  const lastTwo = count % 100;
+  const last = count % 10;
+  if (lastTwo >= 11 && lastTwo <= 14) return `${count} проектов`;
+  if (last === 1) return `${count} проект`;
+  if (last >= 2 && last <= 4) return `${count} проекта`;
+  return `${count} проектов`;
+}
+
+function applyProjectFilters() {
+  if (!projectCards.length) return;
+  const query = String(projectSearch?.value || '').trim().toLocaleLowerCase(root.lang);
+  let visibleCount = 0;
+
+  projectCards.forEach((card) => {
+    const categories = String(card.dataset.categories || '').split(/\s+/);
+    const searchable = String(card.dataset.search || card.textContent || '').toLocaleLowerCase(root.lang);
+    const categoryMatches = activeProjectFilter === 'all' || categories.includes(activeProjectFilter);
+    const queryMatches = !query || searchable.includes(query);
+    const visible = categoryMatches && queryMatches;
+    card.hidden = !visible;
+    if (visible) visibleCount += 1;
+  });
+
+  if (projectCount) projectCount.textContent = getProjectCountLabel(visibleCount);
+  if (projectEmpty) projectEmpty.hidden = visibleCount !== 0;
+}
+
+projectFilters.forEach((button) => {
+  button.addEventListener('click', () => {
+    activeProjectFilter = button.dataset.projectFilter || 'all';
+    projectFilters.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+    applyProjectFilters();
+  });
+});
+projectSearch?.addEventListener('input', applyProjectFilters);
+applyProjectFilters();
+
 function getContactText(form) {
   const data = new FormData(form);
   const name = String(data.get('name') || '').trim();
