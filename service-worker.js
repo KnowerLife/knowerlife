@@ -1,32 +1,22 @@
-const CACHE_VERSION = 'knowerlife-v7.0.0';
+const CACHE_VERSION = 'knowerlife-v8.0.0';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const PAGE_CACHE = `${CACHE_VERSION}-pages`;
+const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
 const scopeUrl = new URL(self.registration.scope);
 const fromScope = (path) => new URL(path, scopeUrl).toString();
 
+// Keep the install payload intentionally small. Other pages and tool modules
+// are cached only after the visitor actually opens them.
 const APP_SHELL = [
   '',
   'index.html',
-  'en/index.html',
-  'cases/roscosmos/index.html',
-  'cases/integrations/index.html',
-  'cases/saunabani/index.html',
-  'privacy/index.html',
-  'en/privacy/index.html',
   'offline.html',
-  'tools/index.html',
-  'en/tools/index.html',
   'assets/css/styles.css',
   'assets/js/main.js',
-  'assets/js/tools-core.js',
-  'assets/js/tools.js',
-  'assets/icons/favicon.ico',
+  'assets/js/home.js',
   'assets/icons/favicon.svg',
   'assets/icons/favicon-96.png',
-  'assets/icons/apple-touch-icon.png',
-  'assets/icons/icon-192.png',
-  'assets/icons/icon-512.png',
   'manifest.webmanifest'
 ].map(fromScope);
 
@@ -46,19 +36,23 @@ self.addEventListener('message', (event) => {
   if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
-async function networkFirst(request) {
+async function networkFirst(request, timeoutMs = 3500) {
   const cache = await caches.open(PAGE_CACHE);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(request);
+    const response = await fetch(request, { signal: controller.signal });
+    clearTimeout(timeout);
     if (response.ok) await cache.put(request, response.clone());
     return response;
   } catch {
+    clearTimeout(timeout);
     return (await cache.match(request)) || (await caches.match(fromScope('offline.html')));
   }
 }
 
 async function staleWhileRevalidate(request) {
-  const cache = await caches.open(STATIC_CACHE);
+  const cache = await caches.open(RUNTIME_CACHE);
   const cached = await cache.match(request);
   const network = fetch(request)
     .then((response) => {
@@ -67,6 +61,15 @@ async function staleWhileRevalidate(request) {
     })
     .catch(() => cached);
   return cached || network;
+}
+
+async function cacheFirst(request) {
+  const cache = await caches.open(STATIC_CACHE);
+  const cached = await cache.match(request);
+  if (cached) return cached;
+  const response = await fetch(request);
+  if (response.ok) await cache.put(request, response.clone());
+  return response;
 }
 
 self.addEventListener('fetch', (event) => {
@@ -79,7 +82,12 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  if (['style', 'script', 'image', 'font'].includes(request.destination)) {
+  if (request.destination === 'style' || request.destination === 'script') {
     event.respondWith(staleWhileRevalidate(request));
+    return;
+  }
+
+  if (request.destination === 'image' || request.destination === 'font') {
+    event.respondWith(cacheFirst(request));
   }
 });

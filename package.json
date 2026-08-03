@@ -1,10 +1,10 @@
 {
   "name": "knowerlife-pages",
   "private": true,
-  "version": "7.0.0",
+  "version": "8.0.0",
   "description": "Static GitHub Pages portfolio with a modern systems-design UX, full case catalog and local browser toolbox",
   "scripts": {
-    "check": "python -m py_compile scripts/build_tools_pages.py && python scripts/check_site.py && python scripts/check_portfolio.py && python scripts/check_tools.py && python scripts/check_identity.py && python scripts/check_layout.py && python scripts/check_accessibility.py && python scripts/check_security.py && node --check assets/js/main.js && node --check assets/js/tools-core.js && node --check assets/js/tools.js && node --check service-worker.js && node --test tests/tools-core.test.mjs",
+    "check": "python -m py_compile scripts/build_tools_pages.py && python scripts/check_site.py && python scripts/check_portfolio.py && python scripts/check_tools.py && python scripts/check_identity.py && python scripts/check_layout.py && python scripts/check_accessibility.py && python scripts/check_security.py && python scripts/check_performance.py && node --check assets/js/main.js && node --check assets/js/home.js && node --check assets/js/tools-loader.js && node --check assets/js/tools-core.js && node --check assets/js/tools.js && node --check service-worker.js && node --test tests/tools-core.test.mjs",
     "test": "node --test tests/tools-core.test.mjs",
     "build:tools": "python scripts/build_tools_pages.py"
   },
