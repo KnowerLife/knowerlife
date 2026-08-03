@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'knowerlife-v6.0.0';
+const CACHE_VERSION = 'knowerlife-v7.0.0';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const PAGE_CACHE = `${CACHE_VERSION}-pages`;
 
@@ -13,6 +13,7 @@ const APP_SHELL = [
   'cases/integrations/index.html',
   'cases/saunabani/index.html',
   'privacy/index.html',
+  'en/privacy/index.html',
   'offline.html',
   'tools/index.html',
   'en/tools/index.html',

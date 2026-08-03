@@ -7,5 +7,6 @@
   <url><loc>https://knowerlife.ru/cases/roscosmos/</loc><lastmod>2026-08-03</lastmod></url>
   <url><loc>https://knowerlife.ru/cases/saunabani/</loc><lastmod>2026-08-03</lastmod></url>
   <url><loc>https://knowerlife.ru/cases/integrations/</loc><lastmod>2026-08-03</lastmod></url>
-  <url><loc>https://knowerlife.ru/privacy/</loc><lastmod>2026-08-03</lastmod></url>
+  <url><loc>https://knowerlife.ru/privacy/</loc><lastmod>2026-08-03</lastmod><xhtml:link rel="alternate" hreflang="ru" href="https://knowerlife.ru/privacy/"/><xhtml:link rel="alternate" hreflang="en" href="https://knowerlife.ru/en/privacy/"/></url>
+  <url><loc>https://knowerlife.ru/en/privacy/</loc><lastmod>2026-08-03</lastmod><xhtml:link rel="alternate" hreflang="ru" href="https://knowerlife.ru/privacy/"/><xhtml:link rel="alternate" hreflang="en" href="https://knowerlife.ru/en/privacy/"/></url>
 </urlset>
