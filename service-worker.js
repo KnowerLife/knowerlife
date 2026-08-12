@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'knowerlife-v10.0.0';
+const CACHE_VERSION = 'knowerlife-v10.1.0';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const PAGE_CACHE = `${CACHE_VERSION}-pages`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
@@ -16,7 +16,11 @@ const APP_SHELL = [
   'assets/js/home.js',
   'assets/icons/favicon.svg',
   'assets/icons/favicon-96.png',
-  'manifest.webmanifest'
+  'assets/icons/apple-touch-icon.png',
+  'assets/icons/icon-192.png',
+  'assets/icons/icon-maskable-192.png',
+  'manifest.webmanifest',
+  'browserconfig.xml'
 ].map(fromScope);
 
 self.addEventListener('install', (event) => {
