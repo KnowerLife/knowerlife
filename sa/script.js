@@ -740,3 +740,32 @@
     initFooter();
   });
 })();
+
+/* KnowerLife v11.1 — unified ecosystem shell bootstrap. */
+(() => {
+  if (!window.__knowerlifeInstallCapture) {
+    window.__knowerlifeInstallCapture = true;
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      window.__knowerlifeInstallPrompt = event;
+      window.dispatchEvent(new CustomEvent('knowerlife:installprompt', { detail: event }));
+    });
+    window.addEventListener('appinstalled', () => {
+      window.__knowerlifeInstallPrompt = null;
+    });
+  }
+  const boot = () => {
+    if (window.__knowerlifeEcosystemShellBooted) return;
+    window.__knowerlifeEcosystemShellBooted = true;
+    const base = document.documentElement.dataset.base || './';
+    const src = new URL(`${base}assets/js/ecosystem-shell.js`, location.href).href;
+    const script = document.createElement('script');
+    script.src = src;
+    script.async = false;
+    script.dataset.ecosystemShellLoader = '';
+    document.body.append(script);
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+  else window.setTimeout(boot, 0);
+})();
+
