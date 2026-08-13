@@ -10,3 +10,32 @@ function sla(){const calc=()=>{const a=Math.min(100,Math.max(0,Number($('#slaAva
 function pert(){const calc=()=>{const o=Number($('#pertO').value),m=Number($('#pertM').value),p=Number($('#pertP').value);if([o,m,p].some(Number.isNaN)){return}const e=(o+4*m+p)/6,s=(p-o)/6;$('#pertOutput').textContent=`Expected ≈ ${e.toFixed(2)} · σ ≈ ${s.toFixed(2)} · rough 95% range ≈ ${(e-2*s).toFixed(2)}–${(e+2*s).toFixed(2)}`};$('#pertCalcBtn').addEventListener('click',calc);calc()}
 function pwa(){let ev=null,b=$('#installAppBtn');window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();ev=e;b.hidden=false});b.addEventListener('click',async()=>{if(!ev)return;ev.prompt();try{await ev.userChoice}catch{}ev=null;b.hidden=true});if('serviceWorker'in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js',{scope:'../../'}).catch(()=>{}),{once:true})}
 document.addEventListener('DOMContentLoaded',()=>{theme();access();mobile();search();checker();acceptance();sla();pert();pwa()});
+
+/* KnowerLife v11.1 — unified ecosystem shell bootstrap. */
+(() => {
+  if (!window.__knowerlifeInstallCapture) {
+    window.__knowerlifeInstallCapture = true;
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      window.__knowerlifeInstallPrompt = event;
+      window.dispatchEvent(new CustomEvent('knowerlife:installprompt', { detail: event }));
+    });
+    window.addEventListener('appinstalled', () => {
+      window.__knowerlifeInstallPrompt = null;
+    });
+  }
+  const boot = () => {
+    if (window.__knowerlifeEcosystemShellBooted) return;
+    window.__knowerlifeEcosystemShellBooted = true;
+    const base = document.documentElement.dataset.base || './';
+    const src = new URL(`${base}assets/js/ecosystem-shell.js`, location.href).href;
+    const script = document.createElement('script');
+    script.src = src;
+    script.async = false;
+    script.dataset.ecosystemShellLoader = '';
+    document.body.append(script);
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+  else window.setTimeout(boot, 0);
+})();
+
