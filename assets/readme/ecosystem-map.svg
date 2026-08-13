@@ -1,1 +1,25 @@
-
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="560" viewBox="0 0 1400 560" role="img" aria-labelledby="title desc">
+<title id="title">KnowerLife unified ecosystem</title>
+<desc id="desc">KnowerLife connects the main portfolio, SA Guide, Browser Tools and Creative Corner through one PWA, bilingual navigation and shared accessibility settings.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0c0e16"/><stop offset="1" stop-color="#121628"/></linearGradient>
+  <linearGradient id="brand" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5cc8ff"/><stop offset=".52" stop-color="#6757f5"/><stop offset="1" stop-color="#ff7dda"/></linearGradient>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="1400" height="560" rx="30" fill="url(#bg)"/><rect x="1" y="1" width="1398" height="558" rx="29" fill="none" stroke="#303648"/>
+<text x="700" y="68" fill="url(#brand)" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="34" font-weight="800" text-anchor="middle">&lt;KnowerLife /&gt; Unified Ecosystem</text>
+<text x="700" y="104" fill="#b8bfd1" font-family="system-ui, sans-serif" font-size="18" text-anchor="middle">One domain · one PWA · RU/EN · shared accessibility · shared design system</text>
+<g stroke="#6757f5" stroke-width="3" opacity=".7"><path d="M700 176 L235 250"/><path d="M700 176 L545 250"/><path d="M700 176 L855 250"/><path d="M700 176 L1165 250"/></g>
+<circle cx="700" cy="176" r="54" fill="#171a28" stroke="url(#brand)" stroke-width="4" filter="url(#glow)"/><text x="700" y="187" fill="#f5f6fb" font-family="ui-monospace, monospace" font-size="31" font-weight="800" text-anchor="middle">K</text>
+<g font-family="system-ui, sans-serif">
+<rect x="80" y="250" width="310" height="186" rx="22" fill="#141722" stroke="#4c57a8"/><text x="110" y="294" fill="#f5f6fb" font-size="24" font-weight="800">KnowerLife</text><text x="110" y="326" fill="#9c91ff" font-size="16">Portfolio · Cases · Services</text><text x="110" y="360" fill="#b8bfd1" font-size="15">21 projects</text><text x="110" y="386" fill="#b8bfd1" font-size="15">3 detailed cases</text><text x="110" y="412" fill="#b8bfd1" font-size="15">Project navigator</text>
+<rect x="390" y="250" width="310" height="186" rx="22" fill="#141722" stroke="#6757f5"/><text x="420" y="294" fill="#f5f6fb" font-size="24" font-weight="800">SA Guide</text><text x="420" y="326" fill="#9c91ff" font-size="16">System Analysis Workbench</text><text x="420" y="360" fill="#b8bfd1" font-size="15">64 knowledge sections</text><text x="420" y="386" fill="#b8bfd1" font-size="15">Requirements · API · Data</text><text x="420" y="412" fill="#b8bfd1" font-size="15">Risk · Traceability · ADR</text>
+<rect x="700" y="250" width="310" height="186" rx="22" fill="#141722" stroke="#27b9e8"/><text x="730" y="294" fill="#f5f6fb" font-size="24" font-weight="800">Browser Tools</text><text x="730" y="326" fill="#5cc8ff" font-size="16">Local-first utility lab</text><text x="730" y="360" fill="#b8bfd1" font-size="15">17 browser tools</text><text x="730" y="386" fill="#b8bfd1" font-size="15">JSON · JWT · Regex · CSV</text><text x="730" y="412" fill="#b8bfd1" font-size="15">cURL · Mermaid · BDD</text>
+<rect x="1010" y="250" width="310" height="186" rx="22" fill="#141722" stroke="#d052b8"/><text x="1040" y="294" fill="#f5f6fb" font-size="24" font-weight="800">Creative Corner</text><text x="1040" y="326" fill="#ff7dda" font-size="16">Music · AI · Suno</text><text x="1040" y="360" fill="#b8bfd1" font-size="15">4 original tracks</text><text x="1040" y="386" fill="#b8bfd1" font-size="15">Persistent audio player</text><text x="1040" y="412" fill="#b8bfd1" font-size="15">Web Audio visualization</text>
+</g>
+<g font-family="system-ui, sans-serif" font-size="15" font-weight="700">
+<rect x="334" y="474" width="168" height="42" rx="21" fill="#1d2133" stroke="#303648"/><text x="418" y="501" fill="#f5f6fb" text-anchor="middle">PWA + Offline</text>
+<rect x="518" y="474" width="142" height="42" rx="21" fill="#1d2133" stroke="#303648"/><text x="589" y="501" fill="#f5f6fb" text-anchor="middle">RU / EN</text>
+<rect x="676" y="474" width="210" height="42" rx="21" fill="#1d2133" stroke="#303648"/><text x="781" y="501" fill="#f5f6fb" text-anchor="middle">Accessibility A+</text>
+<rect x="902" y="474" width="164" height="42" rx="21" fill="#1d2133" stroke="#303648"/><text x="984" y="501" fill="#f5f6fb" text-anchor="middle">Mobile-first</text>
+</g></svg>
