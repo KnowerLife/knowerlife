@@ -14,7 +14,7 @@
   </a>
 </p>
 
-**KnowerLife v11.2** — единая технологическая экосистема, объединяющая профессиональное портфолио, системный анализ, локальные browser-инструменты и музыкальное AI-творчество.
+**KnowerLife** — единая технологическая экосистема, объединяющая профессиональное портфолио, системный анализ, локальные browser-инструменты и музыкальное AI-творчество.
 
 Один домен. Один дизайн-язык. Один root-PWA. Полноценные **RU/EN версии**, общий режим повышенной доступности **A+**, offline-возможности и единая навигация между всеми направлениями.
 
@@ -367,12 +367,6 @@ KnowerLife PWA
 
 Корневой `manifest.webmanifest` содержит отдельные `purpose:any`, `purpose:maskable` и `purpose:monochrome` и shortcuts на SA Guide, Browser Tools, Creative Corner и Portfolio.
 
-Текущий cache namespace:
-
-```text
-knowerlife-v11.2.0
-```
-
 Стратегии:
 
 ```text
@@ -595,14 +589,6 @@ knowerlife/
 │   ├── readme/
 │   └── seo/
 │
-├── scripts/
-│   ├── check_ecosystem_shell.py
-│   ├── check_creative_contrast.py
-│   └── …
-
-├── tests/
-├── .github/workflows/
-│
 ├── manifest.webmanifest
 ├── service-worker.js
 ├── browserconfig.xml
@@ -644,7 +630,7 @@ GitHub Actions используются для Pages deployment, quality checks,
 
 # English summary
 
-**KnowerLife v11.2** is a unified static ecosystem for system analysis, developer utilities, professional case studies and AI-assisted music.
+**KnowerLife** is a unified static ecosystem for system analysis, developer utilities, professional case studies and AI-assisted music.
 
 It combines:
 
