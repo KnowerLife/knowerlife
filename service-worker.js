@@ -1,7 +1,7 @@
-const CACHE_VERSION='knowerlife-v11.0.0';
+const CACHE_VERSION='knowerlife-v11.1.0';
 const STATIC_CACHE=`${CACHE_VERSION}-static`,PAGE_CACHE=`${CACHE_VERSION}-pages`,RUNTIME_CACHE=`${CACHE_VERSION}-runtime`;
 const scopeUrl=new URL(self.registration.scope);const fromScope=path=>new URL(path,scopeUrl).toString();
-const APP_SHELL=['','offline.html','assets/css/styles.css','assets/js/main.js','assets/icons/favicon.svg','assets/icons/favicon-96.png','manifest.webmanifest','sa/index.html','sa/styles.css','sa/script.js','creative/index.html','creative/assets/css/styles.css','creative/assets/js/app.js','creative/assets/js/music-core.js','creative/data/tracks.json'].map(fromScope);
+const APP_SHELL=['','offline.html','assets/css/styles.css','assets/css/ecosystem-shell.css','assets/js/main.js','assets/js/ecosystem-shell.js','assets/icons/favicon.svg','assets/icons/favicon-96.png','manifest.webmanifest','sa/index.html','sa/styles.css','sa/script.js','creative/index.html','creative/assets/css/styles.css','creative/assets/js/app.js','creative/assets/js/music-core.js','creative/data/tracks.json'].map(fromScope);
 self.addEventListener('install',e=>e.waitUntil(caches.open(STATIC_CACHE).then(c=>c.addAll(APP_SHELL))));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>!k.startsWith(CACHE_VERSION)).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('message',e=>{if(e.data?.type==='SKIP_WAITING')self.skipWaiting()});
