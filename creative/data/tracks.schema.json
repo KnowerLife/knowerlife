@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://knowerlife.github.io/creative-corner/data/tracks.schema.json",
+  "title": "KnowerLife Creative Corner track catalog",
+  "type": "object",
+  "required": [
+    "version",
+    "artist",
+    "tracks"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "artist": {
+      "type": "string",
+      "minLength": 1
+    },
+    "updated": {
+      "type": "string",
+      "format": "date"
+    },
+    "tracks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "audio"
+        ],
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "artist": {
+            "type": "string"
+          },
+          "audio": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cover": {
+            "type": "string"
+          },
+          "genre": {
+            "type": "string"
+          },
+          "mood": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "releaseDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "duration": {
+            "type": "string"
+          },
+          "featured": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "story": {
+            "type": "string"
+          },
+          "lyrics": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sunoUrl": {
+            "type": "string"
+          },
+          "downloadable": {
+            "type": "boolean"
+          },
+          "credits": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "sunoId": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}
