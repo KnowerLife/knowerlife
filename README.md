@@ -1,7 +1,7 @@
 # `<KnowerLife />`
 
 [![Website](https://img.shields.io/badge/website-knowerlife.ru-6757f5?style=for-the-badge&logo=google-chrome&logoColor=white)](https://knowerlife.ru/)
-[![Version](https://img.shields.io/badge/version-v11.0.0-9c91ff?style=for-the-badge)](https://github.com/KnowerLife/knowerlife)
+[![Version](https://img.shields.io/badge/version-v11.2.0-9c91ff?style=for-the-badge)](https://github.com/KnowerLife/knowerlife)
 [![PWA](https://img.shields.io/badge/PWA-installable-5cc8ff?style=for-the-badge&logo=pwa&logoColor=0c0e16)](https://knowerlife.ru/)
 [![Languages](https://img.shields.io/badge/languages-RU%20%7C%20EN-1f6feb?style=for-the-badge)](https://knowerlife.ru/en/)
 [![Accessibility](https://img.shields.io/badge/accessibility-A%2B-39d98a?style=for-the-badge)](https://knowerlife.ru/)
@@ -10,11 +10,11 @@
 
 <p align="center">
   <a href="https://knowerlife.ru/">
-    <img src="assets/readme/knowerlife-unified-v11-hero.jpg" alt="KnowerLife v11 — единая экосистема системного анализа, browser tools и Creative Corner" width="100%">
+    <img src="assets/readme/knowerlife-unified-v11-hero.jpg" alt="KnowerLife v11.2 — единая экосистема системного анализа, browser tools и Creative Corner" width="100%">
   </a>
 </p>
 
-**KnowerLife v11** — единая технологическая экосистема, объединяющая профессиональное портфолио, системный анализ, локальные browser-инструменты и музыкальное AI-творчество.
+**KnowerLife v11.2** — единая технологическая экосистема, объединяющая профессиональное портфолио, системный анализ, локальные browser-инструменты и музыкальное AI-творчество.
 
 Один домен. Один дизайн-язык. Один root-PWA. Полноценные **RU/EN версии**, общий режим повышенной доступности **A+**, offline-возможности и единая навигация между всеми направлениями.
 
@@ -50,7 +50,7 @@
 
 KnowerLife больше не является только портфолио.
 
-В версии **v11** три самостоятельных проекта были объединены в один основной репозиторий и в одну систему:
+В версии **v11.2** три самостоятельных проекта были объединены в один основной репозиторий и в одну систему:
 
 ```text
 KnowerLife
@@ -72,7 +72,7 @@ KnowerLife
 | **Browser Tools** | [`/tools/`](https://knowerlife.ru/tools/) | [`/en/tools/`](https://knowerlife.ru/en/tools/) | 17 локальных инструментов аналитика и разработчика |
 | **Creative Corner** | [`/creative/`](https://knowerlife.ru/creative/) | [`/en/creative/`](https://knowerlife.ru/en/creative/) | Музыкальное портфолио, Suno, AI Music и web-player |
 
-Вся экосистема использует один основной домен, одну PWA-конфигурацию, один root Service Worker, общий набор favicon/PWA icons, единое состояние темы и доступности, общую визуальную систему и согласованную RU/EN-навигацию.
+Вся экосистема использует один основной домен, одну PWA-конфигурацию, один root Service Worker, общий набор favicon/PWA icons, единое состояние темы и доступности, общую визуальную систему и согласованную RU/EN-навигацию. В v11.2 поверх модулей работает единая **Ecosystem Shell**: общий header, footer, переключатель продуктов, mobile-dialog и единые controls RU/EN · A+ · Install · Light/Dark.
 
 ---
 
@@ -241,6 +241,22 @@ Creative Corner включает persistent player, previous/next, seek, volume,
 
 Аудио не входит в основной PWA app shell, а Service Worker не перехватывает `Range`-запросы к MP3 — это сохраняет корректную перемотку и потоковое воспроизведение.
 
+### Light / Dark readability
+
+Creative Corner использует отдельные semantic colors для светлых поверхностей и для тёмного фотографического hero. Это позволяет сохранить фирменный cyan / violet / magenta, но не жертвовать читаемостью.
+
+| Состояние | Контраст |
+|---|---:|
+| Muted text на белом | **7.11:1** |
+| Cyan accent на белом | **5.93:1** |
+| Pink accent на белом | **7.02:1** |
+| Violet accent на белом | **7.92:1** |
+| Hero text на тёмном фоне | **18.99:1** |
+| Hero cyan на тёмном фоне | **12.20:1** |
+| Hero pink на тёмном фоне | **9.52:1** |
+
+Контраст проверяется автоматически скриптом `scripts/check_creative_contrast.py`.
+
 [Открыть Creative Corner →](https://knowerlife.ru/creative/)
 
 ---
@@ -276,6 +292,19 @@ Technical diagrams
 Mono typography accents
 System sans-serif UI
 ```
+
+### Unified Ecosystem Shell
+
+Все 17 HTML-страниц получают одну общую оболочку поверх собственной модульной логики:
+
+- `<KnowerLife />` + название текущего продукта;
+- переключатель **Ecosystem** между Main / SA Guide / Browser Tools / Creative Corner;
+- контекстная навигация «на этой странице» отдельно от глобальной;
+- единые RU/EN, A+, Install и Light/Dark controls;
+- единый mobile `dialog`;
+- общий footer с продуктами, service links и контактами.
+
+Так SA Guide и Creative Corner сохраняют собственные интерфейсные особенности, но перестают ощущаться отдельными сайтами.
 
 Общие UX-принципы:
 
@@ -319,6 +348,8 @@ knowerlife-accessibility
 
 Дополнительно используются semantic HTML, skip links, accessible names, `aria-*`, native `dialog`, `prefers-reduced-motion` и touch-friendly controls.
 
+Для Creative Corner A+ работает вместе с отдельными high-contrast light-theme tokens: мелкие подписи, фильтры, теги, favorite-state и player metadata остаются различимыми и в светлой, и в тёмной схеме.
+
 ---
 
 # PWA и offline
@@ -339,7 +370,7 @@ KnowerLife PWA
 Текущий cache namespace:
 
 ```text
-knowerlife-v11.0.0
+knowerlife-v11.2.0
 ```
 
 Стратегии:
@@ -502,7 +533,7 @@ Browser Tools обрабатывают данные непосредственн
 npm run check
 ```
 
-Он включает HTML integrity, portfolio integrity, Browser Tools, identity, responsive layout, accessibility, security, performance budgets, SEO, JavaScript syntax, unified ecosystem integrity, SA module integrity, Creative Corner integrity и unit tests.
+Он включает HTML integrity, portfolio integrity, Browser Tools, identity, responsive layout, accessibility, security, performance budgets, SEO, JavaScript syntax, **17-page Ecosystem Shell coverage**, unified ecosystem integrity, SA module integrity, Creative Corner integrity, **Creative light/dark contrast regression** и unit tests.
 
 Текущее покрытие:
 
@@ -522,7 +553,8 @@ Creative Core tests:       5 passed
 Финальный Chromium smoke для объединённой версии:
 
 ```text
-20 / 20 checks passed
+20 / 20 ecosystem checks passed
+Creative light-theme fixture: desktop + mobile, horizontal overflow = 0
 ```
 
 Проверялись Home RU/EN, SA RU/EN, Creative RU/EN, desktop/mobile, search, filters, A+, dialogs, player-related UI states и responsive overflow.
@@ -554,10 +586,22 @@ knowerlife/
 │
 ├── assets/
 │   ├── css/
+│   │   ├── styles.css
+│   │   └── ecosystem-shell.css
 │   ├── js/
+│   │   ├── main.js
+│   │   └── ecosystem-shell.js
 │   ├── icons/
 │   ├── readme/
 │   └── seo/
+│
+├── scripts/
+│   ├── check_ecosystem_shell.py
+│   ├── check_creative_contrast.py
+│   └── …
+
+├── tests/
+├── .github/workflows/
 │
 ├── manifest.webmanifest
 ├── service-worker.js
@@ -600,7 +644,7 @@ GitHub Actions используются для Pages deployment, quality checks,
 
 # English summary
 
-**KnowerLife v11** is a unified static ecosystem for system analysis, developer utilities, professional case studies and AI-assisted music.
+**KnowerLife v11.2** is a unified static ecosystem for system analysis, developer utilities, professional case studies and AI-assisted music.
 
 It combines:
 
@@ -609,7 +653,7 @@ It combines:
 - **Browser Tools** — 17 local-first utilities;
 - **Creative Corner** — an AI-assisted music portfolio with a persistent web audio player.
 
-The platform provides Russian and English versions, one installable PWA, offline fallback, shared accessibility mode, light/dark themes, responsive desktop/tablet/mobile UI, local-first browser processing, SEO-friendly static pages and automated quality checks.
+The platform provides Russian and English versions, one installable PWA, offline fallback, shared accessibility mode, light/dark themes, responsive desktop/tablet/mobile UI, local-first browser processing, SEO-friendly static pages and automated quality checks. Version 11.2 also introduces a shared ecosystem header/footer/navigation shell and dedicated high-contrast semantic colors for Creative Corner in light mode.
 
 ### Quick links
 
