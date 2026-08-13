@@ -1,96 +1,11 @@
-const CACHE_VERSION = 'knowerlife-v10.1.0';
-const STATIC_CACHE = `${CACHE_VERSION}-static`;
-const PAGE_CACHE = `${CACHE_VERSION}-pages`;
-const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
-
-const scopeUrl = new URL(self.registration.scope);
-const fromScope = (path) => new URL(path, scopeUrl).toString();
-
-// Keep the install payload intentionally small. Other pages and tool modules
-// are cached only after the visitor actually opens them.
-const APP_SHELL = [
-  '',
-  'offline.html',
-  'assets/css/styles.css',
-  'assets/js/main.js',
-  'assets/js/home.js',
-  'assets/icons/favicon.svg',
-  'assets/icons/favicon-96.png',
-  'assets/icons/apple-touch-icon.png',
-  'assets/icons/icon-192.png',
-  'assets/icons/icon-maskable-192.png',
-  'manifest.webmanifest',
-  'browserconfig.xml'
-].map(fromScope);
-
-self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(STATIC_CACHE).then((cache) => cache.addAll(APP_SHELL)));
-});
-
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(keys.filter((key) => !key.startsWith(CACHE_VERSION)).map((key) => caches.delete(key))))
-      .then(() => self.clients.claim())
-  );
-});
-
-self.addEventListener('message', (event) => {
-  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
-});
-
-async function networkFirst(request, timeoutMs = 3500) {
-  const cache = await caches.open(PAGE_CACHE);
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const response = await fetch(request, { signal: controller.signal });
-    clearTimeout(timeout);
-    if (response.ok) await cache.put(request, response.clone());
-    return response;
-  } catch {
-    clearTimeout(timeout);
-    return (await cache.match(request)) || (await caches.match(fromScope('offline.html')));
-  }
-}
-
-async function staleWhileRevalidate(request) {
-  const cache = await caches.open(RUNTIME_CACHE);
-  const cached = await cache.match(request);
-  const network = fetch(request)
-    .then((response) => {
-      if (response.ok) cache.put(request, response.clone());
-      return response;
-    })
-    .catch(() => cached);
-  return cached || network;
-}
-
-async function cacheFirst(request) {
-  const cache = await caches.open(STATIC_CACHE);
-  const cached = await cache.match(request);
-  if (cached) return cached;
-  const response = await fetch(request);
-  if (response.ok) await cache.put(request, response.clone());
-  return response;
-}
-
-self.addEventListener('fetch', (event) => {
-  const request = event.request;
-  const url = new URL(request.url);
-  if (request.method !== 'GET' || url.origin !== self.location.origin) return;
-
-  if (request.mode === 'navigate') {
-    event.respondWith(networkFirst(request));
-    return;
-  }
-
-  if (request.destination === 'style' || request.destination === 'script') {
-    event.respondWith(staleWhileRevalidate(request));
-    return;
-  }
-
-  if (request.destination === 'image' || request.destination === 'font') {
-    event.respondWith(cacheFirst(request));
-  }
-});
+const CACHE_VERSION='knowerlife-v11.0.0';
+const STATIC_CACHE=`${CACHE_VERSION}-static`,PAGE_CACHE=`${CACHE_VERSION}-pages`,RUNTIME_CACHE=`${CACHE_VERSION}-runtime`;
+const scopeUrl=new URL(self.registration.scope);const fromScope=path=>new URL(path,scopeUrl).toString();
+const APP_SHELL=['','offline.html','assets/css/styles.css','assets/js/main.js','assets/icons/favicon.svg','assets/icons/favicon-96.png','manifest.webmanifest','sa/index.html','sa/styles.css','sa/script.js','creative/index.html','creative/assets/css/styles.css','creative/assets/js/app.js','creative/assets/js/music-core.js','creative/data/tracks.json'].map(fromScope);
+self.addEventListener('install',e=>e.waitUntil(caches.open(STATIC_CACHE).then(c=>c.addAll(APP_SHELL))));
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>!k.startsWith(CACHE_VERSION)).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener('message',e=>{if(e.data?.type==='SKIP_WAITING')self.skipWaiting()});
+async function networkFirst(req,timeoutMs=3500){const c=await caches.open(PAGE_CACHE),ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),timeoutMs);try{const r=await fetch(req,{signal:ctl.signal});clearTimeout(timer);if(r.ok)await c.put(req,r.clone());return r}catch{clearTimeout(timer);return(await c.match(req))||(await caches.match(fromScope('offline.html')))}}
+async function stale(req){const c=await caches.open(RUNTIME_CACHE),hit=await c.match(req),net=fetch(req).then(r=>{if(r.ok)c.put(req,r.clone());return r}).catch(()=>hit);return hit||net}
+async function first(req){const c=await caches.open(STATIC_CACHE),hit=await c.match(req);if(hit)return hit;const r=await fetch(req);if(r.ok)await c.put(req,r.clone());return r}
+self.addEventListener('fetch',e=>{const req=e.request,url=new URL(req.url);if(req.method!=='GET'||url.origin!==self.location.origin)return;if(req.headers.has('range')||req.destination==='audio'||/\.(mp3|m4a|ogg|wav)$/i.test(url.pathname))return;if(req.mode==='navigate'){e.respondWith(networkFirst(req));return}if(req.destination==='style'||req.destination==='script'||url.pathname.endsWith('.json')){e.respondWith(stale(req));return}if(req.destination==='image'||req.destination==='font'){e.respondWith(first(req))}});

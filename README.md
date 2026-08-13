@@ -1,18 +1,22 @@
 # `<KnowerLife />`
 
 [![Website](https://img.shields.io/badge/website-knowerlife.ru-6757f5?style=for-the-badge&logo=google-chrome&logoColor=white)](https://knowerlife.ru/)
-[![GitHub Pages](https://img.shields.io/badge/hosting-GitHub%20Pages-181717?style=for-the-badge&logo=github&logoColor=white)](https://pages.github.com/)
-[![PWA](https://img.shields.io/badge/PWA-installable-5a48e8?style=for-the-badge&logo=pwa&logoColor=white)](https://knowerlife.ru/)
+[![Version](https://img.shields.io/badge/version-v11.0.0-9c91ff?style=for-the-badge)](https://github.com/KnowerLife/knowerlife)
+[![PWA](https://img.shields.io/badge/PWA-installable-5cc8ff?style=for-the-badge&logo=pwa&logoColor=0c0e16)](https://knowerlife.ru/)
 [![Languages](https://img.shields.io/badge/languages-RU%20%7C%20EN-1f6feb?style=for-the-badge)](https://knowerlife.ru/en/)
+[![Accessibility](https://img.shields.io/badge/accessibility-A%2B-39d98a?style=for-the-badge)](https://knowerlife.ru/)
+[![Vanilla JS](https://img.shields.io/badge/JavaScript-Vanilla-f7df1e?style=for-the-badge&logo=javascript&logoColor=111)](https://github.com/KnowerLife/knowerlife)
+[![GitHub Pages](https://img.shields.io/badge/hosting-GitHub%20Pages-181717?style=for-the-badge&logo=github&logoColor=white)](https://pages.github.com/)
 
 <p align="center">
   <a href="https://knowerlife.ru/">
-    <img src="assets/seo/og-home-ru.png" alt="KnowerLife — системный анализ, API, интеграции и цифровые продукты" width="100%">
+    <img src="assets/readme/knowerlife-unified-v11-hero.jpg" alt="KnowerLife v11 — единая экосистема системного анализа, browser tools и Creative Corner" width="100%">
   </a>
 </p>
 
-**KnowerLife** — технологичное портфолио системного аналитика и разработчика.
-Проект объединяет услуги, подробные кейсы, полный каталог работ и набор локальных browser-инструментов для аналитики, проектирования API и повседневной разработки.
+**KnowerLife v11** — единая технологическая экосистема, объединяющая профессиональное портфолио, системный анализ, локальные browser-инструменты и музыкальное AI-творчество.
+
+Один домен. Один дизайн-язык. Один root-PWA. Полноценные **RU/EN версии**, общий режим повышенной доступности **A+**, offline-возможности и единая навигация между всеми направлениями.
 
 🌐 **Production:** [https://knowerlife.ru/](https://knowerlife.ru/)
 
@@ -20,206 +24,380 @@
 
 ## Содержание
 
-- [О проекте](#о-проекте)
-- [Ключевые возможности](#ключевые-возможности)
-- [Структура сайта](#структура-сайта)
-- [Подробные кейсы](#подробные-кейсы)
-- [Browser Lab: 17 инструментов](#browser-lab-17-инструментов)
+- [Экосистема KnowerLife](#экосистема-knowerlife)
+- [Основной KnowerLife](#основной-knowerlife)
+- [SA Guide](#sa-guide)
+- [Browser Tools](#browser-tools)
+- [Creative Corner](#creative-corner)
+- [RU / EN](#ru--en)
+- [UX/UI](#uxui)
+- [Доступность A+](#доступность-a)
+- [PWA и offline](#pwa-и-offline)
 - [Технологии](#технологии)
-- [Архитектура проекта](#архитектура-проекта)
-- [PWA и offline-режим](#pwa-и-offline-режим)
+- [Архитектура](#архитектура)
 - [SEO](#seo)
 - [Производительность](#производительность)
-- [Доступность](#доступность)
 - [Приватность и безопасность](#приватность-и-безопасность)
+- [Quality & Testing](#quality--testing)
+- [Структура репозитория](#структура-репозитория)
+- [GitHub Pages и автоматизация](#github-pages-и-автоматизация)
 - [Контакты](#контакты)
 - [English summary](#english-summary)
 
 ---
 
-## О проекте
+# Экосистема KnowerLife
 
-Сайт показывает работу на стыке:
+KnowerLife больше не является только портфолио.
 
-- системного и бизнес-анализа;
-- проектирования API и интеграционных контрактов;
-- моделирования процессов и данных;
-- сопровождения реализации;
-- разработки web-интерфейсов и автоматизации;
-- SEO, e-commerce и цифровых коммуникаций.
-
-Главная идея проекта — не просто перечислить технологии, а показать полный путь от бизнес-задачи до проверяемого инженерного решения:
+В версии **v11** три самостоятельных проекта были объединены в один основной репозиторий и в одну систему:
 
 ```text
-Business goal
-     ↓
-User scenario
-     ↓
-System behavior
-     ↓
-API / Data / Integration
-     ↓
-Acceptance and delivery
+KnowerLife
+│
+├── Portfolio / Cases / Services
+├── SA Guide
+├── Browser Tools
+└── Creative Corner
 ```
 
-Проект работает как полностью статический сайт и не требует собственного backend или базы данных.
+<p align="center">
+  <img src="assets/readme/ecosystem-map.svg" alt="Схема единой экосистемы KnowerLife" width="100%">
+</p>
+
+| Направление | RU | EN | Что внутри |
+|---|---|---|---|
+| **KnowerLife** | [`/`](https://knowerlife.ru/) | [`/en/`](https://knowerlife.ru/en/) | Портфолио, услуги, кейсы, компетенции, процесс работы |
+| **SA Guide** | [`/sa/`](https://knowerlife.ru/sa/) | [`/en/sa/`](https://knowerlife.ru/en/sa/) | 64 раздела системного анализа и Analyst Workbench |
+| **Browser Tools** | [`/tools/`](https://knowerlife.ru/tools/) | [`/en/tools/`](https://knowerlife.ru/en/tools/) | 17 локальных инструментов аналитика и разработчика |
+| **Creative Corner** | [`/creative/`](https://knowerlife.ru/creative/) | [`/en/creative/`](https://knowerlife.ru/en/creative/) | Музыкальное портфолио, Suno, AI Music и web-player |
+
+Вся экосистема использует один основной домен, одну PWA-конфигурацию, один root Service Worker, общий набор favicon/PWA icons, единое состояние темы и доступности, общую визуальную систему и согласованную RU/EN-навигацию.
 
 ---
 
-## Ключевые возможности
-
-### Профессиональное портфолио
-
-- 21 коммерческий, корпоративный, web-, SEO-, e-commerce- и SMM-проект;
-- три подробных кейса с задачей, ролью, решением и результатом;
-- фильтрация и полнотекстовый поиск по проектам;
-- режимы отображения «сетка» и «компактный список»;
-- отдельный блок open-source проектов;
-- интерактивный навигатор по формату сотрудничества.
-
-### Современный UX/UI
-
-- адаптивная верстка для desktop, tablet и mobile;
-- светлая и темная темы;
-- bento-композиция компетенций;
-- технологичные схемы процессов и интеграций;
-- командная палитра `Ctrl/⌘ + K`;
-- микроанимации без тяжелых UI-фреймворков;
-- поддержка `prefers-reduced-motion`;
-- нативные `dialog`, `details`, CSS Grid и container queries.
-
-### Два языка
-
-- русская версия: [`/`](https://knowerlife.ru/);
-- английская версия: [`/en/`](https://knowerlife.ru/en/);
-- взаимные `hreflang`;
-- локализованные title, description, Open Graph и structured data.
-
-### PWA
-
-- установка сайта как приложения;
-- standalone-режим;
-- offline fallback;
-- кэширование посещенных страниц и ресурсов;
-- shortcuts к портфолио, навигатору проекта и инструментам;
-- автоматическое удаление старых версий кэша.
-
----
-
-## Структура сайта
-
-| Раздел | URL | Назначение |
-|---|---|---|
-| Главная | [`/`](https://knowerlife.ru/) | Услуги, компетенции, кейсы, портфолио и контакты |
-| English | [`/en/`](https://knowerlife.ru/en/) | Английская версия главной |
-| Инструменты | [`/tools/`](https://knowerlife.ru/tools/) | 17 локальных browser-инструментов |
-| Tools EN | [`/en/tools/`](https://knowerlife.ru/en/tools/) | Английская версия инструментов |
-| Корпоративный кейс | [`/cases/roscosmos/`](https://knowerlife.ru/cases/roscosmos/) | Системный анализ и документооборот |
-| Saunabani | [`/cases/saunabani/`](https://knowerlife.ru/cases/saunabani/) | Запуск сайта и SEO |
-| Интеграции | [`/cases/integrations/`](https://knowerlife.ru/cases/integrations/) | E-commerce, 1С и логистика |
-| Конфиденциальность | [`/privacy/`](https://knowerlife.ru/privacy/) | Обработка данных и аналитика |
-| Privacy EN | [`/en/privacy/`](https://knowerlife.ru/en/privacy/) | English privacy policy |
-| Карта сайта | [`/site-map/`](https://knowerlife.ru/site-map/) | Человекочитаемая навигация |
-| Sitemap XML | [`/sitemap.xml`](https://knowerlife.ru/sitemap.xml) | Карта сайта для поисковых систем |
-
----
-
-## Подробные кейсы
-
-### Корпоративные системы и документооборот
-
-**Фокус:** системный анализ, интеграции, BPMN, REST, 1С, безопасность.
-
-Кейс показывает:
-
-- анализ сложного корпоративного контура;
-- проектирование взаимодействий интернет-магазина, 1С и логистики;
-- моделирование маршрутов согласования документов;
-- требования к ролям, доступам, ошибкам и аудиту;
-- связь требований с критериями приемки.
-
-[Открыть кейс →](https://knowerlife.ru/cases/roscosmos/)
-
-### Saunabani: сайт и SEO
-
-**Фокус:** web-разработка, структура контента, поисковая оптимизация и развитие продукта.
-
-Кейс раскрывает:
-
-- запуск сайта с нуля;
-- проектирование структуры страниц;
-- техническую и контентную SEO-оптимизацию;
-- развитие органического трафика;
-- сопровождение после публикации.
-
-[Открыть кейс →](https://knowerlife.ru/cases/saunabani/)
-
-### Интеграционный контур e-commerce
-
-**Фокус:** API, события, модели данных, обработка ошибок и повторные попытки.
-
-Кейс показывает:
-
-- обмен между e-commerce платформой, 1С и службой доставки;
-- контракты запросов и ответов;
-- синхронизацию статусов заказа;
-- обработку ошибок и идемпотентность;
-- трассировку интеграционных сценариев.
-
-[Открыть кейс →](https://knowerlife.ru/cases/integrations/)
-
----
-
-## Browser Lab: 17 инструментов
-
-Все вычисления выполняются локально в браузере. Введенные данные не отправляются на сервер KnowerLife.
+# Основной KnowerLife
 
 <p align="center">
-  <a href="https://knowerlife.ru/tools/">
-    <img src="assets/seo/og-tools-ru.png" alt="17 browser-инструментов KnowerLife" width="100%">
+  <a href="https://knowerlife.ru/">
+    <img src="assets/seo/og-home-ru.png" alt="Главная KnowerLife" width="100%">
   </a>
 </p>
 
-| № | Инструмент | Возможности |
-|---:|---|---|
-| 1 | Безопасный пароль | Генерация через Web Crypto и оценка энтропии |
-| 2 | UUID v4 | Создание до 50 идентификаторов |
-| 3 | SHA-хеш | SHA-256, SHA-384 и SHA-512 |
-| 4 | JSON formatter | Проверка, форматирование, минификация и сортировка |
-| 5 | JSON diff | Added, removed и changed paths |
-| 6 | Base64 | UTF-8 encode/decode и URL-safe режим |
-| 7 | Шифр Цезаря | Учебное преобразование RU/EN текста |
-| 8 | URL toolkit | Разбор URL и query-параметров |
-| 9 | JWT decoder | Header, payload и временные claims |
-| 10 | Unix timestamp | Секунды, миллисекунды и локальная дата |
-| 11 | CSV ↔ JSON | Двусторонняя конвертация |
-| 12 | Regex tester | Совпадения, группы и replace preview |
-| 13 | Текст и slug | Статистика текста и транслитерация |
-| 14 | User Story + BDD | История, checklist и Given/When/Then |
-| 15 | API request → cURL | Подготовка безопасно экранированной команды |
-| 16 | Mermaid sequence | Генерация диаграммы последовательности |
-| 17 | Проектный бриф | Структурированный Markdown для discovery |
+Основная часть KnowerLife показывает работу на стыке системного анализа, интеграций, web-разработки и цифровых продуктов.
 
-[Открыть Browser Lab →](https://knowerlife.ru/tools/)
+### Портфолио
+
+- **21 проект**;
+- системный анализ;
+- корпоративные системы;
+- web-разработка;
+- SEO;
+- e-commerce;
+- SMM;
+- автоматизация;
+- Telegram-боты;
+- open-source проекты;
+- фильтрация;
+- полнотекстовый поиск;
+- grid / compact view.
+
+### Подробные кейсы
+
+**Корпоративные системы и документооборот** — системный анализ, BPMN, REST, 1С, роли, доступы, аудит и acceptance criteria.  
+[Открыть кейс →](https://knowerlife.ru/cases/roscosmos/)
+
+**Saunabani** — web development, information architecture, SEO, content и product growth.  
+[Открыть кейс →](https://knowerlife.ru/cases/saunabani/)
+
+**Интеграционный контур e-commerce** — API, события, 1С, доставка, retries, idempotency и integration contracts.  
+[Открыть кейс →](https://knowerlife.ru/cases/integrations/)
+
+### Project Navigator
+
+Интерактивный навигатор связывает бизнес-задачу, контекст проекта и требуемую экспертизу с подходящим форматом работы.
 
 ---
 
-## Технологии
+# SA Guide
+
+<p align="center">
+  <a href="https://knowerlife.ru/sa/">
+    <img src="sa/assets/og-sa.png" alt="SA Guide — системный анализ и Analyst Workbench" width="100%">
+  </a>
+</p>
+
+**SA Guide** — база знаний системного аналитика и рабочая среда внутри KnowerLife. В актуальной версии — **64 раздела**.
+
+Основные направления:
+
+- Discovery, Problem Statement, Business Goals, Impact Mapping, Story Mapping;
+- функциональные и нефункциональные требования;
+- baseline, Change Request, Impact Analysis, scope management;
+- Acceptance Criteria, Given/When/Then, traceability;
+- BPMN, Use Cases, User Stories, UML, Sequence, State, Component, Deployment, C4, DMN;
+- REST, SOAP, GraphQL, OpenAPI, HTTP, pagination, filtering, sorting, versioning;
+- webhooks, polling, CDC, Kafka, RabbitMQ, DLQ;
+- timeout, retry, backoff, jitter, idempotency, Circuit Breaker, Outbox, Saga;
+- SQL, normalization, ACID, isolation, locking, consistency, caching;
+- OAuth 2, OIDC, JWT, RBAC, ABAC, STRIDE, OWASP;
+- testing, migration, rollback, feature flags, Logs, Metrics, Traces, Alerts, SLO.
+
+### Analyst Workbench
+
+Внутри доступны:
+
+- Requirement Quality Checker;
+- Acceptance Criteria Builder;
+- SLA Calculator;
+- PERT Calculator;
+- HTTP Status Reference;
+- Risk Matrix;
+- Traceability Matrix;
+- ADR / Decision Log;
+- API Tester;
+- SQL modeler;
+- Notes;
+- Meeting Timer;
+- Requirements Checklist;
+- Security Checklist;
+- Competency Map;
+- шаблоны SRS / API Specification / Test Case.
+
+[Открыть SA Guide →](https://knowerlife.ru/sa/)
+
+---
+
+# Browser Tools
+
+<p align="center">
+  <a href="https://knowerlife.ru/tools/">
+    <img src="assets/seo/og-tools-ru.png" alt="Browser Tools KnowerLife — 17 локальных инструментов" width="100%">
+  </a>
+</p>
+
+Browser Tools — **17 локальных утилит**, работающих непосредственно в браузере.
+
+| № | Инструмент | Назначение |
+|---:|---|---|
+| 1 | Безопасный пароль | Web Crypto + оценка энтропии |
+| 2 | UUID v4 | Генерация идентификаторов |
+| 3 | SHA-хеш | SHA-256 / SHA-384 / SHA-512 |
+| 4 | JSON Formatter | Проверка, format, minify, sort |
+| 5 | JSON Diff | Added / removed / changed paths |
+| 6 | Base64 | UTF-8 encode / decode / URL-safe |
+| 7 | Шифр Цезаря | Учебное преобразование RU/EN |
+| 8 | URL Toolkit | Разбор URL и query params |
+| 9 | JWT Decoder | Header, payload, time claims |
+| 10 | Unix Timestamp | Seconds / milliseconds / local time |
+| 11 | CSV ↔ JSON | Двусторонняя конвертация |
+| 12 | Regex Tester | Match, groups, replacement preview |
+| 13 | Text & Slug | Статистика текста и slug |
+| 14 | User Story + BDD | Story + checklist + Given/When/Then |
+| 15 | API Request → cURL | Подготовка команды cURL |
+| 16 | Mermaid Sequence | Генерация sequence diagram source |
+| 17 | Project Brief | Structured Markdown для discovery |
+
+[Открыть Browser Tools →](https://knowerlife.ru/tools/)
+
+---
+
+# Creative Corner
+
+<p align="center">
+  <a href="https://knowerlife.ru/creative/">
+    <img src="creative/assets/images/og-creative-corner.jpg" alt="Creative Corner — музыкальное портфолио KnowerLife" width="100%">
+  </a>
+</p>
+
+**Creative Corner** — творческая часть KnowerLife, где код, AI и музыка существуют в одном пространстве.
+
+```text
+Idea
+  ↓
+Lyrics / Mood / Concept
+  ↓
+AI-assisted production
+  ↓
+Suno
+  ↓
+Track
+  ↓
+Web experience
+```
+
+### Текущая коллекция
+
+| Композиция | Suno |
+|---|---|
+| **Кованое сердце** | [Открыть](https://suno.com/song/6809f5c2-4070-4e22-af7e-70f58c477a7d) |
+| **Сердце дома** | [Открыть](https://suno.com/song/8df8adc7-d80d-4257-b8a1-3a679b2cec14) |
+| **Simulation Hacker** | [Открыть](https://suno.com/song/a3bf799e-6cb0-4b1f-84cd-706ffa7cbdb4) |
+| **Хакер Симуляции** | [Открыть](https://suno.com/song/1463f85b-b2d9-4d5f-83bc-5ba69ad51101) |
+
+Creative Corner включает persistent player, previous/next, seek, volume, shuffle, repeat, favorites, share, deep links, Media Session API и Web Audio visualization.
+
+Музыкальный каталог хранится в `creative/data/tracks.json` и валидируется через `creative/data/tracks.schema.json`.
+
+Аудио не входит в основной PWA app shell, а Service Worker не перехватывает `Range`-запросы к MP3 — это сохраняет корректную перемотку и потоковое воспроизведение.
+
+[Открыть Creative Corner →](https://knowerlife.ru/creative/)
+
+---
+
+# RU / EN
+
+KnowerLife имеет полноценную двуязычную структуру.
+
+| RU | EN |
+|---|---|
+| `/` | `/en/` |
+| `/tools/` | `/en/tools/` |
+| `/sa/` | `/en/sa/` |
+| `/creative/` | `/en/creative/` |
+| `/privacy/` | `/en/privacy/` |
+| `/site-map/` | `/en/site-map/` |
+
+Используются локализованные title/description, canonical, `hreflang`, Open Graph, Twitter Cards и structured data.
+
+---
+
+# UX/UI
+
+Все части проекта используют один визуальный язык:
+
+```text
+Dark navy / near black
+#6757f5 violet
+Blue / cyan accents
+Restrained magenta accents
+Glass-like surfaces
+Technical diagrams
+Mono typography accents
+System sans-serif UI
+```
+
+Общие UX-принципы:
+
+- mobile-first;
+- desktop / tablet / mobile;
+- единая навигация между продуктами;
+- sticky header;
+- native dialogs;
+- крупные touch targets;
+- clear focus states;
+- light / dark theme;
+- responsive typography;
+- no horizontal overflow;
+- `prefers-reduced-motion`;
+- progressive enhancement;
+- читаемые текстовые подложки поверх графических фонов.
+
+---
+
+# Доступность A+
+
+В KnowerLife есть общий режим повышенной доступности. Его состояние сохраняется под единым ключом:
+
+```text
+knowerlife-accessibility
+```
+
+Поэтому настройка переносится между Home, SA Guide, Tools и Creative Corner.
+
+Режим A+ усиливает:
+
+- размер текста;
+- line-height;
+- контраст;
+- заметность borders;
+- размеры controls;
+- keyboard navigation;
+- focus visibility;
+- снижение интенсивности анимаций;
+- читаемость текста на сложных фонах.
+
+Дополнительно используются semantic HTML, skip links, accessible names, `aria-*`, native `dialog`, `prefers-reduced-motion` и touch-friendly controls.
+
+---
+
+# PWA и offline
+
+Вся экосистема работает как **одно устанавливаемое приложение KnowerLife**.
+
+```text
+KnowerLife PWA
+│
+├── Main
+├── SA Guide
+├── Browser Tools
+└── Creative Corner
+```
+
+Корневой `manifest.webmanifest` содержит отдельные `purpose:any`, `purpose:maskable` и `purpose:monochrome` и shortcuts на SA Guide, Browser Tools, Creative Corner и Portfolio.
+
+Текущий cache namespace:
+
+```text
+knowerlife-v11.0.0
+```
+
+Стратегии:
+
+```text
+Navigation        → network-first
+CSS / JavaScript  → stale-while-revalidate
+Images            → cache-first
+Audio / Range     → native network handling
+```
+
+Это даёт установку на desktop/mobile, standalone mode, offline fallback, app shortcuts, быстрый повторный запуск и единое обновление кэша.
+
+---
+
+# Технологии
 
 ### Frontend
 
-- semantic HTML5;
-- modern CSS;
-- CSS Grid и Flexbox;
-- container queries;
+- Semantic HTML5;
+- CSS3;
+- CSS Grid;
+- Flexbox;
+- CSS Custom Properties;
 - fluid typography;
-- CSS custom properties;
-- `color-mix()`;
+- responsive layout;
+- Vanilla JavaScript;
 - ES Modules;
-- Web Crypto API;
+- DOM API;
+- Fetch API;
+- AbortController;
+- Clipboard API;
 - Local Storage;
 - Intersection Observer;
-- View Transitions как progressive enhancement.
+- Dialog API.
+
+### Analysis & Tools
+
+- Web Crypto API;
+- JSON;
+- JWT;
+- Regex;
+- CSV;
+- UUID;
+- Base64;
+- Mermaid source generation;
+- BDD helpers.
+
+### Music
+
+- HTML Audio API;
+- Web Audio API;
+- AudioContext;
+- AnalyserNode;
+- Canvas;
+- Media Session API;
+- Web Share API;
+- JSON music catalog.
 
 ### PWA
 
@@ -227,228 +405,227 @@ Acceptance and delivery
 - Service Worker;
 - Cache Storage API;
 - offline fallback;
-- network-first для навигации;
-- stale-while-revalidate для CSS и JavaScript;
-- cache-first для изображений и шрифтов.
+- maskable / monochrome icons.
 
-### SEO
+### Platform
 
-- canonical URL;
-- `hreflang` RU/EN;
-- Open Graph;
-- Twitter Cards;
-- JSON-LD;
-- `WebSite`, `Organization`, `WebPage`, `Article`, `BreadcrumbList`, `ItemList` и `WebApplication`;
-- XML sitemap;
-- human-readable site map;
-- robots.txt;
-- отдельные social-preview изображения.
-
-### Инфраструктура
-
+- GitHub;
 - GitHub Pages;
-- custom domain `knowerlife.ru`;
+- GitHub Actions;
+- custom domain;
 - HTTPS;
-- статическая публикация без backend;
-- Яндекс.Метрика только после явного согласия пользователя.
+- static architecture.
 
 ---
 
-## Архитектура проекта
+# Архитектура
+
+KnowerLife остаётся статическим проектом без обязательного собственного backend.
 
 ```text
-.
-├── index.html                     # Русская главная
+                     GitHub Pages
+                          │
+                    knowerlife.ru
+                          │
+                   Root Service Worker
+                          │
+      ┌───────────────────┼───────────────────┐
+      │                   │                   │
+  Main / Cases         SA Guide          Creative Corner
+      │                   │                   │
+ Browser Tools        Workbench          Audio / Suno
+      │                   │                   │
+      └──────────── shared UI / PWA / A+ ─────┘
+```
+
+Функциональные модули остаются независимыми внутри своих каталогов, но пользователь воспринимает их как одну платформу.
+
+---
+
+# SEO
+
+Проект использует отдельные индексируемые HTML-страницы, а не SPA-router.
+
+Используются:
+
+- semantic page structure;
+- unique titles/descriptions;
+- canonical;
+- RU/EN `hreflang`;
+- Open Graph;
+- Twitter Cards;
+- JSON-LD;
+- sitemap.xml;
+- robots.txt;
+- human-readable site map;
+- social previews.
+
+Structured data применяется для `WebSite`, `Organization`, `WebPage`, `Article`, `BreadcrumbList`, `ItemList` и `WebApplication`.
+
+---
+
+# Производительность
+
+KnowerLife сознательно не использует тяжёлый UI-framework.
+
+Основные решения:
+
+- Vanilla JavaScript;
+- static hosting;
+- small app shell;
+- local assets;
+- runtime/lazy loading;
+- большие MP3 вне initial PWA cache;
+- оптимизированные preview images;
+- системные шрифты;
+- минимум внешних runtime-зависимостей.
+
+---
+
+# Приватность и безопасность
+
+Большая часть функций выполняется локально.
+
+В `localStorage` могут сохраняться theme, accessibility mode, bookmarks, last position, SA notes/checklists, Risk Matrix, Traceability Matrix, ADR и Creative Corner favorites.
+
+Browser Tools обрабатывают данные непосредственно в браузере.
+
+Проект контролирует отсутствие `eval()`, `document.write()`, inline `onclick` и небезопасных `innerHTML` assignments.
+
+---
+
+# Quality & Testing
+
+Основной check-suite запускается через:
+
+```text
+npm run check
+```
+
+Он включает HTML integrity, portfolio integrity, Browser Tools, identity, responsive layout, accessibility, security, performance budgets, SEO, JavaScript syntax, unified ecosystem integrity, SA module integrity, Creative Corner integrity и unit tests.
+
+Текущее покрытие:
+
+```text
+Portfolio projects:       21
+Detailed cases:            3
+Browser Tools RU:         17
+Browser Tools EN:         17
+SA sections RU:           64
+SA sections EN:           64
+Creative tracks:           4
+
+Browser Tools tests:      16 passed
+Creative Core tests:       5 passed
+```
+
+Финальный Chromium smoke для объединённой версии:
+
+```text
+20 / 20 checks passed
+```
+
+Проверялись Home RU/EN, SA RU/EN, Creative RU/EN, desktop/mobile, search, filters, A+, dialogs, player-related UI states и responsive overflow.
+
+---
+
+# Структура репозитория
+
+```text
+knowerlife/
+├── index.html
+├── 404.html
+├── offline.html
+│
 ├── en/
-│   ├── index.html                 # English home
+│   ├── index.html
 │   ├── tools/
+│   ├── sa/
+│   ├── creative/
 │   ├── privacy/
 │   └── site-map/
-├── cases/
-│   ├── roscosmos/
-│   ├── saunabani/
-│   └── integrations/
+│
 ├── tools/
-│   └── index.html                 # Browser Lab
+├── sa/
+├── creative/
+├── cases/
 ├── privacy/
-│   └── index.html
 ├── site-map/
-│   └── index.html
+│
 ├── assets/
 │   ├── css/
-│   │   └── styles.css
 │   ├── js/
-│   │   ├── main.js               # Общий UI и PWA-регистрация
-│   │   ├── home.js               # Логика главной страницы
-│   │   ├── tools-loader.js       # Lazy loading Browser Lab
-│   │   ├── tools.js              # UI инструментов
-│   │   └── tools-core.js         # Чистые функции преобразований
 │   ├── icons/
-│   │   ├── favicon.svg
-│   │   ├── favicon.ico
-│   │   ├── apple-touch-icon.png
-│   │   ├── icon-192.png
-│   │   └── icon-512.png
+│   ├── readme/
 │   └── seo/
-│       └── og-*.png               # Social-preview изображения
+│
+├── scripts/
+├── tests/
+├── .github/workflows/
+│
 ├── manifest.webmanifest
 ├── service-worker.js
-├── offline.html
-├── 404.html
-├── robots.txt
+├── browserconfig.xml
 ├── sitemap.xml
+├── robots.txt
 ├── CNAME
+├── package.json
 └── README.md
 ```
 
 ---
 
-## PWA и offline-режим
+# GitHub Pages и автоматизация
 
-PWA-конфигурация находится в:
+GitHub Actions используются для Pages deployment, quality checks, IndexNow и миграции музыкальных MP3 при необходимости.
 
-```text
-manifest.webmanifest
-service-worker.js
-```
-
-Manifest определяет:
-
-- название приложения;
-- `start_url`;
-- `scope`;
-- standalone-режим;
-- theme и background colors;
-- иконки 192×192 и 512×512;
-- shortcuts.
-
-Service Worker использует несколько кэшей:
-
-```text
-knowerlife-v10.0.0-static
-knowerlife-v10.0.0-pages
-knowerlife-v10.0.0-runtime
-```
-
-Стратегии:
-
-| Ресурс | Стратегия |
-|---|---|
-| HTML-навигация | Network First |
-| CSS и JavaScript | Stale While Revalidate |
-| Изображения и шрифты | Cache First |
-| Недоступная страница | `offline.html` |
-
-## SEO
-
-SEO-конфигурация индексируемых страниц включает:
-
-- уникальные `<title>` и `meta description`;
-- canonical URL;
-- Open Graph metadata;
-- Twitter Card metadata;
-- корректный атрибут `lang`;
-- structured data;
-- включение canonical URL в `sitemap.xml`.
-
-## Производительность
-
-В проекте применяются:
-
-- раздельная загрузка общего кода, главной и инструментов;
-- lazy loading модулей Browser Lab;
-- загрузка дополнительных скриптов после взаимодействия или в idle-период;
-- небольшой PWA app shell;
-- runtime caching только после посещения ресурса;
-- `content-visibility` для длинных секций;
-- системный стек шрифтов без внешней загрузки;
-- отсутствие тяжелого frontend-фреймворка;
-- отсутствие внешних UI- и animation-библиотек;
-- отложенная загрузка аналитики.
+Перед публикацией unified-версии выполняются проверки основной платформы и отдельных модулей.
 
 ---
 
-## Доступность
+# Полная визуальная карта
 
-Проект использует:
-
-- semantic HTML;
-- skip-link;
-- видимый `:focus-visible`;
-- клавиатурную навигацию;
-- ARIA labels и live regions;
-- нативные `button`, `dialog`, `details` и `summary`;
-- touch targets около 44 px;
-- поддержку `prefers-reduced-motion`;
-- поддержку повышенного контраста;
-- адаптивную типографику;
-- корректное поведение на ширине 390 px.
+<p align="center">
+  <img src="assets/readme/knowerlife-unified-v11-poster.jpg" alt="Визуальная карта KnowerLife Unified v11" width="780">
+</p>
 
 ---
 
-## Приватность и безопасность
+# Контакты
 
-### Локальные инструменты
-
-Browser Lab работает на устройстве пользователя:
-
-- данные не отправляются на backend KnowerLife;
-- результаты не сохраняются сервером;
-- генерация файлов выполняется средствами браузера;
-- пароль и UUID создаются через криптографический API.
-
-### Контактная форма
-
-Форма подготавливает `mailto:`-ссылку и открывает почтовое приложение.
-Сообщение не отправляется автоматически без действия пользователя.
-
-### Аналитика
-
-Яндекс.Метрика загружается только после явного согласия.
-Webvisor отключен.
-
-### Важные ограничения
-
-- JWT decoder не проверяет цифровую подпись;
-- шифр Цезаря не является средством защиты данных;
-- не вставляйте производственные секреты и реальные токены на чужом устройстве;
-- SHA через Web Crypto требует безопасного контекста HTTPS или localhost.
-
-Подробнее: [Политика конфиденциальности](https://knowerlife.ru/privacy/).
+- 🌐 [knowerlife.ru](https://knowerlife.ru/)
+- 🐙 [github.com/KnowerLife](https://github.com/KnowerLife)
+- ✈️ [Telegram](https://t.me/knowerlife)
+- 📘 [VK](https://vk.com/knowerlife)
+- 🎵 [Suno](https://suno.com/@knowerlife)
+- 📧 [info@knowerlife.ru](mailto:info@knowerlife.ru)
 
 ---
 
-## Контакты
+# English summary
 
-- 🌐 **Website:** [knowerlife.ru](https://knowerlife.ru/)
-- 📧 **Email:** [info@knowerlife.ru](mailto:info@knowerlife.ru)
-- 🐙 **GitHub:** [github.com/KnowerLife](https://github.com/KnowerLife)
-- ✈️ **Telegram:** [@knowerlife](https://t.me/knowerlife)
-- 📘 **VK:** [vk.com/knowerlife](https://vk.com/knowerlife)
+**KnowerLife v11** is a unified static ecosystem for system analysis, developer utilities, professional case studies and AI-assisted music.
 
----
+It combines:
 
-## English summary
+- **KnowerLife** — portfolio, services and detailed cases;
+- **SA Guide** — 64 system-analysis sections and an interactive analyst workbench;
+- **Browser Tools** — 17 local-first utilities;
+- **Creative Corner** — an AI-assisted music portfolio with a persistent web audio player.
 
-**KnowerLife** is a static, bilingual portfolio for a system analyst and developer.
+The platform provides Russian and English versions, one installable PWA, offline fallback, shared accessibility mode, light/dark themes, responsive desktop/tablet/mobile UI, local-first browser processing, SEO-friendly static pages and automated quality checks.
 
-The project includes:
+### Quick links
 
-- system analysis and integration services;
-- 21 commercial and corporate projects;
-- three detailed case studies;
-- 17 privacy-friendly browser tools;
-- RU and EN versions;
-- installable PWA and offline fallback;
-- dark and light themes;
-- responsive and accessible UI;
-- structured data, Open Graph, hreflang and XML sitemap;
-- GitHub Pages deployment with the custom domain `knowerlife.ru`.
-
-### Production
-
-[https://knowerlife.ru/](https://knowerlife.ru/)
+- [Main website](https://knowerlife.ru/)
+- [SA Guide](https://knowerlife.ru/sa/)
+- [Browser Tools](https://knowerlife.ru/tools/)
+- [Creative Corner](https://knowerlife.ru/creative/)
+- [English version](https://knowerlife.ru/en/)
 
 ---
 
-© 2026 KnowerLife. System analysis, integrations and digital product development.
+<p align="center">
+  <strong>&lt;KnowerLife /&gt;</strong><br>
+  System Analysis · Tools · Integrations · Creative Technology
+</p>

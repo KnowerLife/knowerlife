@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "KnowerLife — системный анализ и web-разработка",
+  "name": "KnowerLife — System Analysis, Tools & Creative Corner",
   "short_name": "KnowerLife",
-  "description": "Технологичное портфолио системного аналитика и разработчика: архитектура решений, полный каталог кейсов и локальные browser-инструменты.",
+  "description": "Единая экосистема KnowerLife: системный анализ, кейсы, browser tools, SA Guide и Creative Corner.",
   "lang": "ru",
   "start_url": "./",
   "scope": "./",
@@ -43,10 +43,10 @@
   ],
   "shortcuts": [
     {
-      "name": "Портфолио",
-      "short_name": "Портфолио",
-      "description": "Открыть полный каталог проектов",
-      "url": "./#portfolio",
+      "name": "SA Guide",
+      "short_name": "SA Guide",
+      "description": "Открыть базу системного анализа",
+      "url": "./sa/",
       "icons": [
         {
           "src": "assets/icons/icon-192.png",
@@ -56,23 +56,36 @@
       ]
     },
     {
-      "name": "Подобрать формат работы",
-      "short_name": "Формат работы",
-      "description": "Открыть интерактивный навигатор по формату проекта",
-      "url": "./#project-navigator",
-      "icons": [
-        {
-          "src": "assets/icons/icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Инструменты",
-      "short_name": "Инструменты",
-      "description": "Открыть 17 локальных инструментов для анализа и разработки",
+      "name": "Browser Tools",
+      "short_name": "Tools",
+      "description": "Открыть локальные инструменты",
       "url": "./tools/",
+      "icons": [
+        {
+          "src": "assets/icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Creative Corner",
+      "short_name": "Music",
+      "description": "Открыть музыкальное портфолио",
+      "url": "./creative/",
+      "icons": [
+        {
+          "src": "assets/icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Portfolio",
+      "short_name": "Portfolio",
+      "description": "Открыть каталог проектов",
+      "url": "./#portfolio",
       "icons": [
         {
           "src": "assets/icons/icon-192.png",
