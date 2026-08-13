@@ -405,3 +405,4 @@ if (document.body.classList.contains('home-page')) {
   homeIntentEvents.forEach((eventName) => document.addEventListener(eventName, loadHomeOnIntent, { capture: true, once: true, passive: eventName !== 'keydown' }));
   window.addEventListener('load', () => scheduleIdle(loadHomeEnhancements, 1200), { once: true });
 }
+;(()=>{addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.__knowerlifeInstallPrompt=e;dispatchEvent(new CustomEvent('knowerlife:installprompt',{detail:e}))});const b=()=>{if(window.__knowerlifeEcosystemShellBooted)return;window.__knowerlifeEcosystemShellBooted=1;const p=document.documentElement.dataset.base||'./',s=document.createElement('script');s.src=new URL(`${p}assets/js/ecosystem-shell.js`,location.href);document.body.append(s)};document.readyState==='loading'?addEventListener('DOMContentLoaded',b,{once:true}):setTimeout(b)})();
