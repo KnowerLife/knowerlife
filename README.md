@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://knowerlife.ru/">
-    <img src="assets/readme/knowerlife-unified-v11-hero.jpg" alt="KnowerLife v11.2 — единая экосистема системного анализа, browser tools и Creative Corner" width="100%">
+    <img src="assets/readme/knowerlife-unified-v11-hero.jpg" alt="KnowerLife — единая экосистема системного анализа, browser tools и Creative Corner" width="780">
   </a>
 </p>
 
@@ -612,7 +612,7 @@ GitHub Actions используются для Pages deployment, quality checks,
 # Полная визуальная карта
 
 <p align="center">
-  <img src="assets/readme/knowerlife-unified-v11-poster.jpg" alt="Визуальная карта KnowerLife Unified v11" width="780">
+  <img src="assets/readme/knowerlife-unified-v11-poster.jpg" alt="Визуальная карта KnowerLife" width="780">
 </p>
 
 ---
