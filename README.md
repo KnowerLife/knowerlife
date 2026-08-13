@@ -559,10 +559,6 @@ knowerlife/
 │   ├── readme/
 │   └── seo/
 │
-├── scripts/
-├── tests/
-├── .github/workflows/
-│
 ├── manifest.webmanifest
 ├── service-worker.js
 ├── browserconfig.xml
