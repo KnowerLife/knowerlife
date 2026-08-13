@@ -1,7 +1,6 @@
 # `<KnowerLife />`
 
 [![Website](https://img.shields.io/badge/website-knowerlife.ru-6757f5?style=for-the-badge&logo=google-chrome&logoColor=white)](https://knowerlife.ru/)
-[![Version](https://img.shields.io/badge/version-v11.2.0-9c91ff?style=for-the-badge)](https://github.com/KnowerLife/knowerlife)
 [![PWA](https://img.shields.io/badge/PWA-installable-5cc8ff?style=for-the-badge&logo=pwa&logoColor=0c0e16)](https://knowerlife.ru/)
 [![Languages](https://img.shields.io/badge/languages-RU%20%7C%20EN-1f6feb?style=for-the-badge)](https://knowerlife.ru/en/)
 [![Accessibility](https://img.shields.io/badge/accessibility-A%2B-39d98a?style=for-the-badge)](https://knowerlife.ru/)
