@@ -1,0 +1,112 @@
+{
+  "$schema": "./tracks.schema.json",
+  "version": 3,
+  "artist": "KnowerLife",
+  "updated": "2026-08-13",
+  "tracks": [
+    {
+      "enabled": true,
+      "id": "kovanoe-serdce",
+      "sunoId": "6809f5c2-4070-4e22-af7e-70f58c477a7d",
+      "title": "Кованое сердце",
+      "artist": "KnowerLife",
+      "audio": "assets/music/1.mp3",
+      "cover": "assets/covers/default-cover.jpg",
+      "genre": "AI Music",
+      "mood": [],
+      "featured": true,
+      "description": "Авторская музыкальная работа KnowerLife, созданная с использованием Suno и AI-инструментов.",
+      "story": "",
+      "lyrics": "",
+      "tags": [
+        "KnowerLife",
+        "Suno",
+        "AI Music"
+      ],
+      "sunoUrl": "https://suno.com/song/6809f5c2-4070-4e22-af7e-70f58c477a7d",
+      "downloadable": false,
+      "credits": {
+        "concept": "KnowerLife",
+        "production": "AI-assisted / Suno"
+      }
+    },
+    {
+      "enabled": true,
+      "id": "serdce-doma",
+      "sunoId": "8df8adc7-d80d-4257-b8a1-3a679b2cec14",
+      "title": "Сердце дома",
+      "artist": "KnowerLife",
+      "audio": "assets/music/3.mp3",
+      "cover": "assets/covers/default-cover.jpg",
+      "genre": "AI Music",
+      "mood": [],
+      "featured": true,
+      "description": "Авторская музыкальная работа KnowerLife, созданная с использованием Suno и AI-инструментов.",
+      "story": "",
+      "lyrics": "",
+      "tags": [
+        "KnowerLife",
+        "Suno",
+        "AI Music"
+      ],
+      "sunoUrl": "https://suno.com/song/8df8adc7-d80d-4257-b8a1-3a679b2cec14",
+      "downloadable": false,
+      "credits": {
+        "concept": "KnowerLife",
+        "production": "AI-assisted / Suno"
+      }
+    },
+    {
+      "enabled": true,
+      "id": "simulation-hacker",
+      "sunoId": "a3bf799e-6cb0-4b1f-84cd-706ffa7cbdb4",
+      "title": "Simulation Hacker",
+      "artist": "KnowerLife",
+      "audio": "assets/music/4.mp3",
+      "cover": "assets/covers/default-cover.jpg",
+      "genre": "AI Music",
+      "mood": [],
+      "featured": true,
+      "description": "Авторская музыкальная работа KnowerLife, созданная с использованием Suno и AI-инструментов.",
+      "story": "",
+      "lyrics": "",
+      "tags": [
+        "KnowerLife",
+        "Suno",
+        "AI Music"
+      ],
+      "sunoUrl": "https://suno.com/song/a3bf799e-6cb0-4b1f-84cd-706ffa7cbdb4",
+      "downloadable": false,
+      "credits": {
+        "concept": "KnowerLife",
+        "production": "AI-assisted / Suno"
+      }
+    },
+    {
+      "enabled": true,
+      "id": "haker-simulyacii",
+      "sunoId": "1463f85b-b2d9-4d5f-83bc-5ba69ad51101",
+      "title": "Хакер Симуляции",
+      "artist": "KnowerLife",
+      "audio": "assets/music/2.mp3",
+      "cover": "assets/covers/default-cover.jpg",
+      "genre": "AI Music",
+      "mood": [],
+      "featured": false,
+      "description": "Авторская музыкальная работа KnowerLife, созданная с использованием Suno и AI-инструментов.",
+      "story": "",
+      "lyrics": "",
+      "tags": [
+        "KnowerLife",
+        "Suno",
+        "AI Music"
+      ],
+      "sunoUrl": "https://suno.com/song/1463f85b-b2d9-4d5f-83bc-5ba69ad51101",
+      "downloadable": false,
+      "credits": {
+        "concept": "KnowerLife",
+        "production": "AI-assisted / Suno"
+      }
+    }
+  ]
+}
