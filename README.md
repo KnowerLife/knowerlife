@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://knowerlife.ru/">
-    <img src="assets/readme/knowerlife-unified-v11-hero.jpg" alt="KnowerLife — единая экосистема системного анализа, browser tools и Creative Corner" width="780">
+    <img src="assets/readme/knowerlife-unified-v11-hero.jpg" alt="KnowerLife — единая экосистема системного анализа, browser tools и Creative Corner" width="100%">
   </a>
 </p>
 
