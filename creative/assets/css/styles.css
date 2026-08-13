@@ -12,6 +12,10 @@
   --accent-strong: #8a7fff;
   --cyan: #5cc8ff;
   --pink: #ff7dda;
+  --cyan-bright: #78d7ff;
+  --pink-bright: #ff8dde;
+  --on-dark-text: #f7f8ff;
+  --on-dark-muted: #c9d2e6;
   --success: #64ddb4;
   --danger: #ff8e86;
   --shadow-lg: 0 28px 90px rgb(0 0 0 / .42);
@@ -30,10 +34,12 @@ html[data-theme="light"] {
   --surface-glass: rgb(255 255 255 / .82);
   --surface-muted: #eef0f8;
   --text: #151827;
-  --text-muted: #60697d;
-  --border: #d9deea;
+  --text-muted: #4f586e;
+  --border: #cbd2e1;
   --accent: #6757f5;
   --accent-strong: #4433d2;
+  --cyan: #006c8f;
+  --pink: #a61b6b;
   --shadow-lg: 0 24px 70px rgb(33 38 66 / .15);
 }
 *,*::before,*::after{box-sizing:border-box}
@@ -207,6 +213,18 @@ p{margin-top:0}
   html{scroll-behavior:auto}.hero__visualizer span,.reactive-dot{animation:none}.btn,.track-card,.track-card__media img{transition:none}
 }
 
+
+.hero{color:var(--on-dark-text)}
+.hero h1,.hero h2,.hero h3,.hero__panel{color:var(--on-dark-text)}
+.hero .eyebrow,.hero__panel-label{color:var(--cyan-bright)}
+.hero .gradient-text{background:linear-gradient(110deg,var(--cyan-bright),#9f92ff 52%,var(--pink-bright));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .lead{color:#eef2ff}
+.hero__badge{border-color:rgb(255 255 255 / .18);background:rgb(8 10 18 / .62);color:var(--on-dark-muted)}
+.hero .btn--secondary{border-color:rgb(255 255 255 / .22);background:rgb(9 12 24 / .72);color:var(--on-dark-text)}
+.hero__visualizer span{background:linear-gradient(var(--cyan-bright),#8d7fff,var(--pink-bright))}
+.reactive-dot{background:var(--pink-bright);box-shadow:0 0 0 .35rem rgb(255 141 222 / .14),0 0 1.6rem var(--pink-bright)}
+html[data-theme="light"] .hero .eyebrow{color:var(--cyan-bright)}
+html[data-theme="light"] .search-field input::placeholder{color:#596278;opacity:1}
 
 /* v11 — readability and shared accessibility */
 .hero__copy{padding:clamp(1rem,2.5vw,1.5rem);border-radius:1.25rem;background:linear-gradient(90deg,rgb(5 7 15 / .76),rgb(5 7 15 / .5) 72%,transparent);backdrop-filter:blur(3px)}
