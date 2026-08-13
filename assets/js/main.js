@@ -34,6 +34,52 @@ document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
   applyTheme(next);
 });
 
+
+function readAccessibilityMode() {
+  try { return localStorage.getItem('knowerlife-accessibility') === 'enhanced'; }
+  catch { return false; }
+}
+function applyAccessibility(enabled) {
+  if (enabled) root.dataset.accessibility = 'enhanced';
+  else delete root.dataset.accessibility;
+  document.querySelectorAll('[data-accessibility-toggle]').forEach((button) => {
+    button.setAttribute('aria-pressed', String(enabled));
+    const label = isEnglish
+      ? (enabled ? 'Use standard accessibility mode' : 'Enhanced accessibility')
+      : (enabled ? 'Обычный режим отображения' : 'Версия для слабовидящих');
+    button.setAttribute('aria-label', label);
+    button.setAttribute('title', label);
+    button.textContent = enabled ? 'A' : 'A+';
+  });
+}
+applyAccessibility(readAccessibilityMode());
+document.querySelectorAll('[data-accessibility-toggle]').forEach((button) => {
+  button.addEventListener('click', () => {
+    const enabled = root.dataset.accessibility !== 'enhanced';
+    try { localStorage.setItem('knowerlife-accessibility', enabled ? 'enhanced' : 'standard'); } catch {}
+    applyAccessibility(enabled);
+  });
+});
+
+let installPromptEvent = null;
+const installButtons = [...document.querySelectorAll('[data-install-app]')];
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  installPromptEvent = event;
+  installButtons.forEach((button) => { button.hidden = false; });
+});
+installButtons.forEach((button) => button.addEventListener('click', async () => {
+  if (!installPromptEvent) return;
+  installPromptEvent.prompt();
+  try { await installPromptEvent.userChoice; } catch {}
+  installPromptEvent = null;
+  installButtons.forEach((item) => { item.hidden = true; });
+}));
+window.addEventListener('appinstalled', () => {
+  installPromptEvent = null;
+  installButtons.forEach((button) => { button.hidden = true; });
+});
+
 const header = document.querySelector('[data-header]');
 const menuButton = document.querySelector('[data-menu-button]');
 const nav = document.querySelector('[data-nav]');
