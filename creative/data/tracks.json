@@ -108,5 +108,31 @@
         "production": "AI-assisted / Suno"
       }
     }
+        {
+      "enabled": true,
+      "id": "Vykhod-iz-matritsy",
+      "sunoId": "b20aba69-8fe1-485c-99db-ec4f26663c88",
+      "title": "Выход из матрицы",
+      "artist": "KnowerLife",
+      "audio": "assets/music/5.mp3",
+      "cover": "assets/covers/default-cover.jpg",
+      "genre": "AI Music",
+      "mood": [],
+      "featured": false,
+      "description": "Авторская музыкальная работа KnowerLife, созданная с использованием Suno и AI-инструментов.",
+      "story": "",
+      "lyrics": "",
+      "tags": [
+        "KnowerLife",
+        "Suno",
+        "AI Music"
+      ],
+      "sunoUrl": "https://suno.com//song/b20aba69-8fe1-485c-99db-ec4f26663c88",
+      "downloadable": false,
+      "credits": {
+        "concept": "KnowerLife",
+        "production": "AI-assisted / Suno"
+      }
+    }
   ]
 }
