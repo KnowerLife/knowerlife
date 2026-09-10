@@ -1,6 +1,6 @@
 {
   "$schema": "./tracks.schema.json",
-  "version": 3,
+  "version": 4,
   "artist": "KnowerLife",
   "updated": "2026-08-13",
   "tracks": [
