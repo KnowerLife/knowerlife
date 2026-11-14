@@ -27,6 +27,7 @@ import {
   describeIsoDuration,
   formatJson,
   hashText,
+  hmacText,
   inferJsonSchema,
   jsonToCsv,
   makePassword,
@@ -738,6 +739,33 @@ byId('ndjson-example')?.addEventListener('click', () => {
   if (input) input.value = '{"id":1,"event":"created"}\n{"id":2,"event":"updated"}\n{"id":3,"event":"deleted"}';
   byId('ndjson-to-json')?.click();
 });
+
+
+const hmacOutput = () => byId('hmac-output');
+byId('hmac-generate')?.addEventListener('click', async () => {
+  const out = hmacOutput(); if (!out) return;
+  const btn = byId('hmac-generate');
+  try {
+    if (btn) btn.disabled = true;
+    setOutput(out, t('Вычисление…', 'Computing…'));
+    const value = byId('hmac-input')?.value || '';
+    const secret = byId('hmac-secret')?.value || '';
+    const alg = byId('hmac-alg')?.value || 'SHA-256';
+    const fmt = byId('hmac-format')?.value || 'hex';
+    const sig = await hmacText(value, secret, alg, fmt);
+    setOutput(out, [`${t('Алгоритм', 'Algorithm')}: HMAC-${alg}`, `${t('Формат', 'Format')}: ${fmt}`, '', sig].join('\n'));
+  } catch (error) {
+    setOutput(out, error, true);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+});
+byId('hmac-example')?.addEventListener('click', () => {
+  const input = byId('hmac-input'); if (input) input.value = '{"id":"order-42","amount":1500}';
+  const secret = byId('hmac-secret'); if (secret) secret.value = 'top-secret-key';
+  byId('hmac-generate')?.click();
+});
+
 
 
 byId('headers-parse')?.addEventListener('click', () => {

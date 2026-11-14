@@ -21,6 +21,7 @@ import {
   formatHttpHeaders,
   ndjsonToJson,
   jsonToNdjson,
+  hmacText,
   jsonToCsv,
   makePassword,
   shiftText,
@@ -209,4 +210,15 @@ test('ndjsonToJson and jsonToNdjson convert between formats', () => {
   assert.equal(back, '{"a":1}\n{"b":2}\n{"c":3}');
   assert.throws(() => jsonToNdjson({a:1}), /JSON array/);
   assert.throws(() => ndjsonToJson('{"a":1}\n{bad}'), /line 2/);
+});
+
+
+test('hmacText computes deterministic HMAC signatures', async () => {
+  const hex = await hmacText('hello', 'secret', 'SHA-256', 'hex');
+  assert.match(hex, /^[0-9a-f]{64}$/);
+  assert.equal(hex, await hmacText('hello', 'secret', 'SHA-256', 'hex'));
+  assert.notEqual(hex, await hmacText('hello', 'other', 'SHA-256', 'hex'));
+  const b64url = await hmacText('hello', 'secret', 'SHA-256', 'base64url');
+  assert.match(b64url, /^[A-Za-z0-9_-]+$/);
+  await assert.rejects(() => hmacText('a', 'b', 'MD5', 'hex'), /Unsupported/);
 });

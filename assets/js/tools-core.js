@@ -815,3 +815,25 @@ export function jsonToNdjson(input) {
   if (!Array.isArray(value)) throw new Error('Provide a JSON array to convert to NDJSON.');
   return value.map((item) => JSON.stringify(item)).join('\n');
 }
+
+
+export async function hmacText(value, secret, algorithm = 'SHA-256', format = 'hex') {
+  const text = String(value ?? '');
+  const keyText = String(secret ?? '');
+  const alg = String(algorithm || 'SHA-256').toUpperCase();
+  if (!['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'].includes(alg)) throw new Error('Unsupported HMAC algorithm.');
+  const out = String(format || 'hex').toLowerCase();
+  if (!['hex', 'base64', 'base64url'].includes(out)) throw new Error('Unsupported output format.');
+  const cryptoObj = globalThis.crypto;
+  if (!cryptoObj?.subtle) throw new Error('Web Crypto API is not available.');
+  const enc = new TextEncoder();
+  const key = await cryptoObj.subtle.importKey('raw', enc.encode(keyText), { name: 'HMAC', hash: { name: alg } }, false, ['sign']);
+  const signature = await cryptoObj.subtle.sign('HMAC', key, enc.encode(text));
+  const bytes = new Uint8Array(signature);
+  if (out === 'hex') return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  const b64 = typeof btoa === 'function' ? btoa(binary) : Buffer.from(bytes).toString('base64');
+  if (out === 'base64url') return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+  return b64;
+}
