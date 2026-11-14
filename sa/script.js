@@ -421,12 +421,64 @@
   }
 
   const quizBank = {
-    requirements:[{q:'Что относится к нефункциональным требованиям?',o:['Создание заказа','Время ответа API','Редактирование профиля'],a:1},{q:'Что делает требование тестируемым?',o:['Большой объем текста','Критерии приемки','Ссылка на макет'],a:1}],
-    api:[{q:'Какой метод обычно используется для чтения ресурса?',o:['GET','POST','DELETE'],a:0},{q:'Какой код означает, что ресурс не найден?',o:['201','404','503'],a:1}],
-    db:[{q:'Что означает атомарность значений в таблице?',o:['1NF','2NF','3NF'],a:0},{q:'Какой оператор связывает строки нескольких таблиц?',o:['JOIN','ORDER BY','TRUNCATE'],a:0}],
-    bpmn:[{q:'Какой элемент BPMN используется для ветвления?',o:['Task','Gateway','Pool'],a:1},{q:'Что обычно разделяет ответственность участников?',o:['Lane','Timer','Message'],a:0}],
-    security:[{q:'Что должно быть описано для авторизации?',o:['Только пароль','Роли и права','Только HTTPS'],a:1},{q:'Что помогает анализировать угрозы?',o:['STRIDE','CRUD','INVEST'],a:0}],
-    ddd:[{q:'Что задает границу применимости модели?',o:['Bounded Context','HTTP endpoint','Sprint Goal'],a:0},{q:'Что такое Ubiquitous Language?',o:['Единый язык домена','Язык SQL','Язык интерфейса'],a:0}]
+    requirements:[
+      {q:'Что относится к нефункциональным требованиям?',o:['Создание заказа','Время ответа API','Редактирование профиля'],a:1},
+      {q:'Что делает требование тестируемым?',o:['Большой объем текста','Критерии приемки','Ссылка на макет'],a:1},
+      {q:'Что лучше описывает хорошее требование?',o:['Однозначное, проверяемое и согласованное','Максимально подробное техническое решение','Только пожелание бизнеса без ограничений'],a:0},
+      {q:'Когда полезнее Use Case, чем короткая User Story?',o:['Когда важна последовательность шагов, акторы и альтернативные потоки','Когда нужна только оценка в story points','Когда описывается цвет кнопки'],a:0}
+    ],
+    api:[
+      {q:'Какой метод обычно используется для чтения ресурса?',o:['GET','POST','DELETE'],a:0},
+      {q:'Какой код означает, что ресурс не найден?',o:['201','404','503'],a:1},
+      {q:'Что важно явно описать в API-контракте?',o:['Только happy path','Запрос/ответ, ошибки, коды, auth и ограничения','Только название endpoint'],a:1},
+      {q:'Какой подход помогает безопасно повторять запрос создания при сетевых сбоях?',o:['Идемпотентность / idempotency key','Увеличить таймаут до бесконечности','Игнорировать дубликаты на клиенте'],a:0}
+    ],
+    db:[
+      {q:'Что означает атомарность значений в таблице?',o:['1NF','2NF','3NF'],a:0},
+      {q:'Какой оператор связывает строки нескольких таблиц?',o:['JOIN','ORDER BY','TRUNCATE'],a:0},
+      {q:'Что обычно означает внешний ключ (FK)?',o:['Ссылочную целостность между таблицами','Уникальный индекс на все столбцы','Тип данных JSON'],a:0},
+      {q:'Зачем аналитик уточняет источник истины для данных?',o:['Чтобы понять, какая система владеет актуальным значением','Чтобы заменить документацию кодом','Чтобы убрать все интеграции'],a:0}
+    ],
+    bpmn:[
+      {q:'Какой элемент BPMN используется для ветвления?',o:['Task','Gateway','Pool'],a:1},
+      {q:'Что обычно разделяет ответственность участников?',o:['Lane','Timer','Message'],a:0},
+      {q:'С чего лучше начинать моделирование процесса в BPMN?',o:['С цели, участников, триггера и основного потока','С выбора цвета фигур','С детальной реализации в коде'],a:0},
+      {q:'Что важно добавить после happy path?',o:['Ключевые альтернативы, ошибки и таймеры/исключения','Только дополнительные задачи для красоты','Удалить все gateways'],a:0}
+    ],
+    security:[
+      {q:'Что должно быть описано для авторизации?',o:['Только пароль','Роли и права','Только HTTPS'],a:1},
+      {q:'Что помогает анализировать угрозы?',o:['STRIDE','CRUD','INVEST'],a:0},
+      {q:'Что из перечисленного относится к безопасной работе с данными?',o:['Минимизация доступа и защита чувствительных данных','Хранить токены в открытых логах','Передавать секреты в URL без необходимости'],a:0},
+      {q:'Что важно зафиксировать в требованиях к интеграции с точки зрения безопасности?',o:['Аутентификацию, авторизацию, аудит и обработку секретов','Только формат JSON','Только время ответа'],a:0}
+    ],
+    ddd:[
+      {q:'Что задает границу применимости модели?',o:['Bounded Context','HTTP endpoint','Sprint Goal'],a:0},
+      {q:'Что такое Ubiquitous Language?',o:['Единый язык домена','Язык SQL','Язык интерфейса'],a:0},
+      {q:'Зачем выделять bounded context?',o:['Чтобы снизить неоднозначность модели и терминов в разных доменных областях','Чтобы увеличить количество микросервисов','Чтобы убрать согласование с бизнесом'],a:0},
+      {q:'Что такое агрегат (aggregate) на практике?',o:['Граница согласованности связанных сущностей','Любая таблица в БД','HTTP-контроллер'],a:0}
+    ],
+    hr:[
+      {q:'Как лучше отвечать на вопрос «Расскажите о себе» на интервью системного аналитика?',o:['Кратко: опыт/роль, ключевые компетенции, релевантные достижения и интерес к позиции','Подробно рассказать всю биографию с детства','Сразу назвать желаемую зарплату без контекста'],a:0},
+      {q:'Что ожидает HR услышать в вопросе о конфликте со стейкхолдером?',o:['Конкретный пример, ваши действия, коммуникацию и результат (STAR)','Что виноваты другие участники','Что конфликтов никогда не бывает'],a:0},
+      {q:'Как корректно отвечать о слабой стороне?',o:['Назвать реальную зону роста и шаги, которые вы делаете для улучшения','Сказать «у меня нет слабых сторон»','Назвать критичную для роли слабость без плана развития'],a:0},
+      {q:'Что делать, если на вопросе не хватает данных для ответа?',o:['Уточнить контекст, обозначить допущения и предложить структурированный подход','Придумать цифры и детали','Отказаться отвечать'],a:0},
+      {q:'Как показать мотивацию на HR-интервью?',o:['Связать интерес с задачами роли, продуктом/доменом и развитием компетенций','Сказать, что важна только удалёнка','Обсуждать только недостатки текущего места'],a:0},
+      {q:'Какие вопросы кандидата работодателю обычно воспринимаются хорошо?',o:['О задачах роли, процессах, ожиданиях на 3–6 месяцев и команде','Только о скорейшем повышении без контекста','Вопросы, на которые ответы легко найти на сайте за минуту'],a:0},
+      {q:'Как обсуждать ошибку в прошлой работе?',o:['Описать ситуацию, вклад, исправление и выводы/улучшения процесса','Переложить ответственность на коллег','Скрыть, что ошибки возможны'],a:0},
+      {q:'Что важно при рассказе о достижениях?',o:['Факты, ваша роль, артефакты/решения и результат без нарушения NDA','Только общие слова «много работал»','Преувеличить вклад без подтверждений'],a:0}
+    ],
+    technical:[
+      {q:'Чем функциональные требования отличаются от нефункциональных?',o:['FR описывают поведение/функции, NFR — качества системы (производительность, доступность, безопасность и т.д.)','FR всегда про UI, NFR всегда про БД','Разницы нет, это синонимы'],a:0},
+      {q:'Что нужно уточнить при проектировании REST API для создания ресурса?',o:['Метод, контракт запроса/ответа, валидацию, коды ошибок, auth и идемпотентность при необходимости','Только URL','Только цвет кнопки в интерфейсе'],a:0},
+      {q:'Когда стоит рассмотреть асинхронное взаимодействие (очередь/события)?',o:['При длительных операциях, развязке сервисов, пиках нагрузки или ненужности мгновенного ответа','Всегда, даже для простого чтения справочника','Никогда, синхронный вызов всегда лучше'],a:0},
+      {q:'Что важно описать аналитиком для интеграции с внешней системой?',o:['Контракт, формат/маппинг данных, ошибки и ретраи, таймауты, безопасность, мониторинг','Только счастливый сценарий','Только имя системы-партнёра'],a:0},
+      {q:'Какой артефакт лучше показывает жизненный цикл сущности (например, заказа)?',o:['State diagram (диаграмма состояний)','ER-диаграмма без статусов','Только текстовый чат'],a:0},
+      {q:'Что такое трассировка требований (traceability)?',o:['Связь цели → требования → реализации/тесты → приёмка','Копирование требований в несколько документов','Удаление старых требований без анализа'],a:0},
+      {q:'Как подойти к кейсу «сервис медленно отвечает» на собеседовании?',o:['Уточнить симптомы/метрики и NFR, локализовать узкое место, выдвинуть гипотезы и шаги проверки','Сразу переписать систему на микросервисы','Игнорировать метрики и менять случайные параметры'],a:0},
+      {q:'Что важно при добавлении нового поля/статуса в существующий процесс?',o:['Совместимость, миграция данных, влияние на API/интеграции/отчёты, правила переходов и тесты','Изменить только UI','Не учитывать существующие данные'],a:0},
+      {q:'Какую диаграмму уместно выбрать для показа взаимодействия сервисов во времени?',o:['Sequence diagram','Pie chart','Только mind map'],a:0},
+      {q:'Что обязательно учитывать при конкурентном изменении одной сущности?',o:['Стратегию конкурентности (блокировки/версии), обработку конфликтов и ожидаемое поведение для пользователя','Считать, что конфликты невозможны','Разрешать тихо перезаписывать данные без правил'],a:0}
+    ]
   };
 
   function initQuiz() {
@@ -447,6 +499,192 @@
     const finish=()=>{if(!area)return;const correct=questions.reduce((sum,q,i)=>sum+(answers[i]===q.a?1:0),0);const percent=Math.round(correct/questions.length*100);area.replaceChildren();const result=document.createElement('div');result.className='decision-result';const label=document.createElement('span');label.textContent='Результат';const score=document.createElement('strong');score.textContent=`${correct}/${questions.length} · ${percent}%`;const text=document.createElement('p');text.textContent=percent>=80?'Хороший результат. Можно переходить к следующему разделу.':'Есть смысл повторить теорию и пройти тест еще раз.';const restart=document.createElement('button');restart.type='button';restart.className='btn btn--secondary btn--small';restart.textContent='Пройти заново';restart.addEventListener('click',start);result.append(label,score,text,restart);area.append(result);};
     const start=()=>{questions=[...(quizBank[select?.value]||[])];index=0;answers=new Array(questions.length).fill(null);render();};
     $('#startTestBtn')?.addEventListener('click',start);
+  }
+
+
+  function initDiagramTool() {
+    const codeEl = document.getElementById('diagramCode');
+    const preview = document.getElementById('diagramPreview');
+    const status = document.getElementById('diagramStatus');
+    const templateSel = document.getElementById('diagramTemplate');
+    if (!codeEl || !preview) return;
+
+    const templates = {
+      flowchart: `flowchart TD
+    A([Старт: заявка получена]) --> B[Проверить данные]
+    B --> C{Данные корректны?}
+    C -->|Да| D[Создать заказ]
+    D --> E[Отправить уведомление]
+    E --> F([Конец: успех])
+    C -->|Нет| G[Вернуть ошибки валидации]
+    G --> H([Конец: доработка])`,
+      sequence: `sequenceDiagram
+    autonumber
+    actor User as Пользователь
+    participant Web as Web/App
+    participant API as API
+    participant DB as БД
+
+    User->>Web: Создать заказ
+    Web->>API: POST /orders
+    API->>DB: INSERT order
+    DB-->>API: order_id
+    API-->>Web: 201 Created
+    Web-->>User: Показать номер заказа`,
+      class: `classDiagram
+    class Order {
+      +UUID id
+      +String status
+      +Decimal total
+      +create()
+      +pay()
+      +cancel()
+    }
+    class OrderItem {
+      +UUID id
+      +UUID productId
+      +int qty
+      +Decimal price
+    }
+    class Customer {
+      +UUID id
+      +String name
+      +String email
+    }
+    Customer "1" --> "*" Order
+    Order "1" --> "1..*" OrderItem`,
+      state: `stateDiagram-v2
+    [*] --> Draft
+    Draft --> PendingPayment: submit
+    PendingPayment --> Paid: payment_success
+    PendingPayment --> Cancelled: timeout/cancel
+    Paid --> Shipped: ship
+    Shipped --> Delivered: confirm
+    Delivered --> [*]
+    Cancelled --> [*]`,
+      er: `erDiagram
+    CUSTOMER ||--o{ ORDER : places
+    ORDER ||--|{ ORDER_ITEM : contains
+    PRODUCT ||--o{ ORDER_ITEM : included_in
+
+    CUSTOMER {
+      uuid id PK
+      string email
+      string name
+    }
+    ORDER {
+      uuid id PK
+      uuid customer_id FK
+      string status
+      datetime created_at
+    }
+    PRODUCT {
+      uuid id PK
+      string title
+      decimal price
+    }
+    ORDER_ITEM {
+      uuid id PK
+      uuid order_id FK
+      uuid product_id FK
+      int qty
+    }`,
+      journey: `journey
+    title Путь пользователя: оформление заказа
+    section Выбор
+      Открыть каталог: 5: Пользователь
+      Найти товар: 4: Пользователь
+    section Покупка
+      Добавить в корзину: 5: Пользователь
+      Оплатить: 3: Пользователь, Платёжный шлюз
+    section Результат
+      Получить подтверждение: 5: Пользователь, Система`,
+      c4: `flowchart TB
+    user([Пользователь])
+    admin([Администратор])
+
+    subgraph System[Система заказов]
+      web[Web/Mobile UI]
+      api[Backend API]
+      db[(Database)]
+    end
+
+    pay[Платёжный провайдер]
+    notify[Сервис уведомлений]
+
+    user --> web
+    admin --> web
+    web --> api
+    api --> db
+    api --> pay
+    api --> notify`
+    };
+
+    if (!codeEl.value.trim()) codeEl.value = templates.flowchart;
+
+    let mermaidReady = null;
+    const loadMermaid = () => {
+      if (window.mermaid) return Promise.resolve(window.mermaid);
+      if (mermaidReady) return mermaidReady;
+      mermaidReady = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+        script.async = true;
+        script.onload = () => {
+          try {
+            window.mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default' });
+          } catch {}
+          resolve(window.mermaid);
+        };
+        script.onerror = () => reject(new Error('Не удалось загрузить Mermaid'));
+        document.head.appendChild(script);
+      });
+      return mermaidReady;
+    };
+
+    const setStatus = (msg) => { if (status) status.textContent = msg || ''; };
+
+    const renderDiagram = async () => {
+      const code = (codeEl.value || '').trim();
+      if (!code) { preview.innerHTML = '<p class="muted">Введите код диаграммы.</p>'; return; }
+      setStatus('Отрисовка диаграммы…');
+      try {
+        const mermaid = await loadMermaid();
+        try { mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default' }); } catch {}
+        const id = 'mermaid-' + Date.now();
+        const { svg } = await mermaid.render(id, code);
+        preview.innerHTML = svg;
+        setStatus('Диаграмма обновлена.');
+      } catch (e) {
+        preview.innerHTML = '';
+        const pre = document.createElement('pre');
+        pre.className = 'code-output';
+        pre.textContent = 'Ошибка рендера: ' + (e && e.message ? e.message : String(e));
+        preview.appendChild(pre);
+        setStatus('Проверьте синтаксис Mermaid.');
+      }
+    };
+
+    document.getElementById('insertDiagramTemplateBtn')?.addEventListener('click', () => {
+      const key = templateSel ? templateSel.value : 'flowchart';
+      codeEl.value = templates[key] || templates.flowchart;
+      renderDiagram();
+    });
+
+    document.getElementById('renderDiagramBtn')?.addEventListener('click', renderDiagram);
+    document.getElementById('copyDiagramCodeBtn')?.addEventListener('click', async () => {
+      await copyText(codeEl.value || '');
+      showToast('Код диаграммы скопирован');
+    });
+    document.getElementById('downloadDiagramSvgBtn')?.addEventListener('click', () => {
+      const svgEl = preview.querySelector('svg');
+      if (!svgEl) { showToast('Сначала отрисуйте диаграмму'); return; }
+      const serializer = new XMLSerializer();
+      let svgText = serializer.serializeToString(svgEl);
+      if (!svgText.match(/^<\?xml/)) svgText = '<?xml version="1.0" encoding="UTF-8"?>\n' + svgText;
+      downloadText('diagram.svg', svgText, 'image/svg+xml;charset=utf-8');
+      showToast('SVG скачан');
+    });
   }
 
   const docTemplates = {
@@ -755,6 +993,7 @@
     initDecisionTree();
     initDataModeler();
     initQuiz();
+    initDiagramTool();
     initDocuments();
     initMessages();
     initConverter();
