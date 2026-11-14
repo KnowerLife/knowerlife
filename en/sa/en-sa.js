@@ -42,6 +42,40 @@ document.addEventListener('DOMContentLoaded',()=>{theme();access();mobile();sear
 
 
 
+
+
+function showToast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.append(t)}t.textContent=msg;t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>{t.hidden=true},2200)}
+function readJson(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch{return f}}function writeJson(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+const STORAGE={notes:'sa_notes_v2',requirements:'sa_requirements_v2'};
+
+const HTTP_STATUSES=[
+  [200,'OK','Successful read or processing'],[201,'Created','Resource created'],[202,'Accepted','Request accepted for async processing'],[204,'No Content','Success without response body'],
+  [304,'Not Modified','Use cached version'],[400,'Bad Request','Malformed request'],[401,'Unauthorized','Authentication required'],[403,'Forbidden','Authenticated but not allowed'],[404,'Not Found','Resource not found'],[409,'Conflict','State/version conflict'],[412,'Precondition Failed','Request precondition not met'],[415,'Unsupported Media Type','Unsupported Content-Type'],[422,'Unprocessable Content','Syntax valid but business validation failed'],[429,'Too Many Requests','Rate limit exceeded'],
+  [500,'Internal Server Error','Unhandled server error'],[502,'Bad Gateway','Upstream error'],[503,'Service Unavailable','Service temporarily unavailable'],[504,'Gateway Timeout','Upstream timeout']
+];
+function initHttpReference(){
+  const input=document.getElementById('httpSearch'), list=document.getElementById('httpStatusList'); if(!list) return;
+  const render=()=>{const term=(input?.value||'').trim().toLowerCase();list.replaceChildren();HTTP_STATUSES.filter(([code,name,desc])=>!term||`${code} ${name} ${desc}`.toLowerCase().includes(term)).forEach(([code,name,desc])=>{const row=document.createElement('div');row.className='http-status-row';const c=document.createElement('code');c.textContent=String(code);const body=document.createElement('div');const st=document.createElement('strong');st.textContent=name;const sp=document.createElement('span');sp.textContent=desc;body.append(st,sp);row.append(c,body);list.append(row);});if(!list.children.length){const p=document.createElement('p');p.className='muted';p.textContent='No matches.';list.append(p);}};
+  input?.addEventListener('input',render);render();
+}
+function initConverter(){
+  const factors={kb:1,mb:1024,gb:1024*1024};
+  const run=()=>{const value=Number(document.getElementById('conv-input')?.value);const from=document.getElementById('conv-from')?.value;const to=document.getElementById('conv-to')?.value;const out=document.getElementById('conv-output');if(!out)return;if(!Number.isFinite(value)){out.value='Enter a number';return;}const result=value*factors[from]/factors[to];out.value=`${Number(result.toFixed(6))} ${String(to||'').toUpperCase()}`;};
+  document.getElementById('convertBtn')?.addEventListener('click',run);['conv-input','conv-from','conv-to'].forEach(id=>document.getElementById(id)?.addEventListener('change',run));run();
+}
+function initNotes(){
+  let notes=readJson(STORAGE.notes,[]);if(!Array.isArray(notes))notes=[];
+  const list=document.getElementById('notesList'); if(!list) return;
+  const render=()=>{list.replaceChildren();if(!notes.length){const p=document.createElement('p');p.className='muted';p.textContent='No notes yet.';list.append(p);return;}notes.forEach(note=>{const card=document.createElement('article');card.className='note-card';const head=document.createElement('div');head.className='note-card-head';const title=document.createElement('strong');title.textContent=note.title;const del=document.createElement('button');del.type='button';del.className='note-delete';del.textContent='Delete';del.addEventListener('click',()=>{notes=notes.filter(item=>item.id!==note.id);writeJson(STORAGE.notes,notes);render();});head.append(title,del);const time=document.createElement('time');time.dateTime=note.iso||'';time.textContent=note.date||'';const body=document.createElement('p');body.textContent=note.content||'';card.append(head,time,body);list.append(card);});};
+  document.getElementById('addNoteBtn')?.addEventListener('click',()=>{const title=document.getElementById('noteTitle')?.value.trim();const content=document.getElementById('noteContent')?.value.trim();if(!title){showToast('Enter a title');document.getElementById('noteTitle')?.focus();return;}const now=new Date();notes.unshift({id:Date.now(),title,content,date:now.toLocaleString('en-GB'),iso:now.toISOString()});notes=notes.slice(0,50);writeJson(STORAGE.notes,notes);const ti=document.getElementById('noteTitle'),tc=document.getElementById('noteContent');if(ti)ti.value='';if(tc)tc.value='';render();showToast('Note saved locally');});render();
+}
+function initPersistentChecklist(ids,key,fillSelector,percentSelector,resetSelector){
+  if(!ids.some(id=>document.getElementById(id))) return;
+  const saved=readJson(key,{});ids.forEach(id=>{const input=document.getElementById(id);if(input&&saved[id])input.checked=true;});
+  const update=()=>{const state={};let checked=0;ids.forEach(id=>{const input=document.getElementById(id);state[id]=Boolean(input?.checked);if(state[id])checked++;});writeJson(key,state);const percent=Math.round(checked/ids.length*100);const fill=document.querySelector(fillSelector);if(fill)fill.style.width=`${percent}%`;const label=document.querySelector(percentSelector);if(label)label.textContent=`${percent}%`;};
+  ids.forEach(id=>document.getElementById(id)?.addEventListener('change',update));document.querySelector(resetSelector)?.addEventListener('click',()=>{ids.forEach(id=>{const input=document.getElementById(id);if(input)input.checked=false;});update();});update();
+}
+
 function exportVisibleMd(){
   const btn=document.getElementById('exportVisibleMdBtn'); if(!btn) return;
   btn.addEventListener('click', async ()=>{
@@ -90,4 +124,4 @@ function saBackup(){
 }
 
 const _domReady = document.addEventListener;
-document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}});
+document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}});
