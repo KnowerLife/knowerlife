@@ -14,6 +14,9 @@ import {
   describeIsoDuration,
   convertCase,
   convertNumberBase,
+  diffDateTime,
+  parseQueryString,
+  buildQueryString,
   jsonToCsv,
   makePassword,
   shiftText,
@@ -150,4 +153,32 @@ test('convertNumberBase converts between common bases', () => {
   assert.equal(convertNumberBase('1010', 2, 10).result, '10');
   assert.equal(convertNumberBase('-10', 10, 2).result, '-1010');
   assert.throws(() => convertNumberBase('2', 2, 10), /Invalid digit/);
+});
+
+
+test('diffDateTime returns signed interval and ISO parts', () => {
+  const diff = diffDateTime('2026-01-01T00:00:00Z', '2026-01-02T03:04:05Z');
+  assert.equal(diff.absolute.days, 1);
+  assert.equal(diff.absolute.hours, 3);
+  assert.equal(diff.absolute.minutes, 4);
+  assert.equal(diff.absolute.seconds, 5);
+  assert.equal(diff.iso, 'P1DT3H4M5S');
+  assert.equal(diff.direction, 'forward');
+  const back = diffDateTime('2026-01-02T00:00:00Z', '2026-01-01T00:00:00Z');
+  assert.equal(back.direction, 'backward');
+  assert.equal(back.iso, '-P1D');
+});
+
+test('parseQueryString and buildQueryString round-trip common cases', () => {
+  const parsed = parseQueryString('https://example.com?a=1&b=hello%20world&tag=x&tag=y');
+  assert.equal(parsed.params.a, '1');
+  assert.equal(parsed.params.b, 'hello world');
+  assert.deepEqual(parsed.params.tag, ['x', 'y']);
+  assert.equal(parsed.count, 4);
+  const qs = buildQueryString({ q: 'test value', page: 2, tags: ['a', 'b'] });
+  assert.ok(qs.includes('q=test%20value'));
+  assert.ok(qs.includes('tags=a') && qs.includes('tags=b'));
+  const fromRaw = parseQueryString('?empty=&flag');
+  assert.equal(fromRaw.params.empty, '');
+  assert.equal(fromRaw.params.flag, '');
 });

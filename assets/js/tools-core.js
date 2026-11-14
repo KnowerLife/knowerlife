@@ -691,3 +691,68 @@ export function convertNumberBase(value, fromBase = 10, toBase = 10) {
   }
   return { decimal: n.toString(), result: (neg ? '-' : '') + out, fromBase: fb, toBase: tb };
 }
+
+
+export function diffDateTime(from, to = Date.now()) {
+  const a = from instanceof Date ? from : new Date(from);
+  const b = to instanceof Date ? to : new Date(to);
+  if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime())) throw new Error('Enter valid start and end date/time values.');
+  const ms = b.getTime() - a.getTime();
+  const sign = ms < 0 ? -1 : 1;
+  const abs = Math.abs(ms);
+  const totalSeconds = Math.floor(abs / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  const iso = formatIsoDuration({ days, hours, minutes, seconds });
+  return {
+    from: a.toISOString(),
+    to: b.toISOString(),
+    milliseconds: ms,
+    signed: { days: sign * days, hours: sign * hours, minutes: sign * minutes, seconds: sign * seconds },
+    absolute: { days, hours, minutes, seconds, totalSeconds, totalMinutes: abs / 60000, totalHours: abs / 3600000, totalDays: abs / 86400000 },
+    iso: sign < 0 ? `-${iso}` : iso,
+    direction: ms === 0 ? 'same' : (ms > 0 ? 'forward' : 'backward')
+  };
+}
+
+export function parseQueryString(input) {
+  let source = String(input ?? '').trim();
+  if (!source) return { params: {}, entries: [], count: 0 };
+  if (/^[a-z][a-z0-9+.-]*:/i.test(source)) {
+    try { source = new URL(source).search.replace(/^\?/, ''); } catch { /* treat as raw query */ }
+  } else {
+    source = source.replace(/^\?/, '');
+  }
+  const params = Object.create(null);
+  const entries = [];
+  if (!source) return { params, entries, count: 0 };
+  for (const part of source.split('&')) {
+    if (!part) continue;
+    const idx = part.indexOf('=');
+    const rawKey = idx === -1 ? part : part.slice(0, idx);
+    const rawVal = idx === -1 ? '' : part.slice(idx + 1);
+    let key, value;
+    try { key = decodeURIComponent(rawKey.replace(/\+/g, ' ')); } catch { key = rawKey; }
+    try { value = decodeURIComponent(rawVal.replace(/\+/g, ' ')); } catch { value = rawVal; }
+    entries.push({ key, value });
+    if (Object.hasOwn(params, key)) params[key] = Array.isArray(params[key]) ? [...params[key], value] : [params[key], value];
+    else params[key] = value;
+  }
+  return { params, entries, count: entries.length };
+}
+
+export function buildQueryString(input) {
+  let obj = input;
+  if (typeof input === 'string') {
+    try { obj = JSON.parse(input); } catch { throw new Error('Provide valid JSON object to build a query string.'); }
+  }
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) throw new Error('Provide an object to build a query string.');
+  const parts = [];
+  for (const [key, value] of Object.entries(obj)) {
+    const values = Array.isArray(value) ? value : [value];
+    for (const v of values) parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(v == null ? '' : String(v))}`);
+  }
+  return parts.join('&');
+}

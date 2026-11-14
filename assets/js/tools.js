@@ -15,6 +15,9 @@ import {
   explainCron,
   convertCase,
   convertNumberBase,
+  diffDateTime,
+  parseQueryString,
+  buildQueryString,
   parseIsoDuration,
   formatIsoDuration,
   describeIsoDuration,
@@ -685,6 +688,51 @@ byId('base-example')?.addEventListener('click', () => {
   const from = byId('base-from'); if (from) from.value = '10';
   const to = byId('base-to'); if (to) to.value = '16';
   byId('base-convert')?.click();
+});
+
+
+byId('dt-diff-run')?.addEventListener('click', () => {
+  runAction(() => {
+    const from = byId('dt-diff-from')?.value || '';
+    const to = byId('dt-diff-to')?.value || '';
+    const d = diffDateTime(from, to);
+    return [
+      `${t('От', 'From')}: ${d.from}`,
+      `${t('До', 'To')}: ${d.to}`,
+      `${t('Интервал', 'Interval')}: ${d.iso}`,
+      `${t('Направление', 'Direction')}: ${d.direction}`,
+      `${t('Всего', 'Total')}: ${d.absolute.totalSeconds} s · ${(d.absolute.totalMinutes).toFixed(2)} min · ${(d.absolute.totalHours).toFixed(4)} h · ${(d.absolute.totalDays).toFixed(4)} d`,
+      `${t('Разбивка', 'Breakdown')}: ${d.absolute.days}d ${d.absolute.hours}h ${d.absolute.minutes}m ${d.absolute.seconds}s`
+    ].join('\n');
+  }, 'dt-diff-output');
+});
+byId('dt-diff-swap')?.addEventListener('click', () => {
+  const a = byId('dt-diff-from'), b = byId('dt-diff-to');
+  if (!a || !b) return; const v = a.value; a.value = b.value; b.value = v;
+});
+byId('dt-diff-now-to')?.addEventListener('click', () => {
+  const b = byId('dt-diff-to'); if (b) b.value = new Date().toISOString().slice(0,16);
+});
+byId('dt-diff-example')?.addEventListener('click', () => {
+  const a = byId('dt-diff-from'), b = byId('dt-diff-to');
+  if (a) a.value = '2026-01-01T09:00';
+  if (b) b.value = '2026-01-02T12:30';
+  byId('dt-diff-run')?.click();
+});
+
+byId('query-parse')?.addEventListener('click', () => {
+  runAction(() => {
+    const result = parseQueryString(byId('query-input')?.value || '');
+    return [JSON.stringify(result.params, null, 2), '', `${t('Параметров', 'Entries')}: ${result.count}`].join('\n');
+  }, 'query-output');
+});
+byId('query-build')?.addEventListener('click', () => {
+  runAction(() => buildQueryString(byId('query-input')?.value || ''), 'query-output');
+});
+byId('query-example')?.addEventListener('click', () => {
+  const input = byId('query-input');
+  if (input) input.value = 'https://example.com/search?q=system+analyst&page=2&tag=api&tag=sa';
+  byId('query-parse')?.click();
 });
 
 
