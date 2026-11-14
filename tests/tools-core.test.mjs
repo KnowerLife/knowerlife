@@ -27,6 +27,8 @@ import {
   convertTimeZoneOffset,
   flattenJson,
   unflattenJson,
+  getJsonPath,
+  checkJsonPaths,
   jsonToCsv,
   makePassword,
   shiftText,
@@ -266,4 +268,23 @@ test('flattenJson and unflattenJson transform nested structures', () => {
   assert.deepEqual(unflattenJson(custom, '/'), { a: { b: 1 } });
   assert.throws(() => flattenJson('null'), /object or array/);
   assert.throws(() => unflattenJson([1, 2]), /flat JSON object/);
+});
+
+
+test('getJsonPath and checkJsonPaths validate required API/data paths', () => {
+  const doc = { user: { id: 1, name: 'Ada' }, items: [{ sku: 'A1' }], ok: true, empty: null };
+  assert.deepEqual(getJsonPath(doc, 'user.id'), { found: true, value: 1 });
+  assert.deepEqual(getJsonPath(doc, 'items.0.sku'), { found: true, value: 'A1' });
+  assert.deepEqual(getJsonPath(doc, 'items[0].sku'), { found: true, value: 'A1' });
+  assert.equal(getJsonPath(doc, 'user.missing').found, false);
+
+  const report = checkJsonPaths(doc, 'user.id\nitems.0.sku\nuser.email\n');
+  assert.equal(report.ok, false);
+  assert.equal(report.total, 3);
+  assert.equal(report.found, 2);
+  assert.deepEqual(report.missing, ['user.email']);
+
+  const ok = checkJsonPaths('{"a":1}', 'a');
+  assert.equal(ok.ok, true);
+  assert.throws(() => checkJsonPaths(doc, ''), /at least one path/);
 });

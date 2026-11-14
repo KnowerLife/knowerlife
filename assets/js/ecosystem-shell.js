@@ -30,7 +30,7 @@
     footerLead: 'System analysis, practical browser tools and creative technology in one coherent ecosystem.', explore: 'Explore', connect: 'Connect',
     pwa: 'One PWA', bilingual: 'RU / EN', accessible: 'Accessibility A+', local: 'Local-first', copyright: 'One domain · one PWA · one ecosystem',
     installStep1: 'Open the browser menu.', installStep2: 'Choose “Install app” or “Add to Home Screen”.', installStepIos1: 'Open this page in Safari.', installStepIos2: 'Tap Share, then “Add to Home Screen”.',
-    mainDesc: 'Portfolio, cases and services', saDesc: '64 topics + analyst workbench', toolsDesc: '30 local browser utilities', creativeDesc: 'Music, AI and Suno portfolio'
+    mainDesc: 'Portfolio, cases and services', saDesc: '64 topics + analyst workbench', toolsDesc: '31 local browser utility', creativeDesc: 'Music, AI and Suno portfolio'
   } : {
     ecosystem: 'Экосистема', home: 'Главная', portfolio: 'Портфолио', cases: 'Кейсы', services: 'Услуги', process: 'Процесс', contact: 'Контакты',
     sa: 'SA Guide', tools: 'Browser Tools', creative: 'Creative Corner', music: 'Музыка', about: 'О проекте', knowledge: 'База знаний', workbench: 'Workbench', resources: 'Ресурсы',

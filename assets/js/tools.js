@@ -33,6 +33,8 @@ import {
   convertTimeZoneOffset,
   flattenJson,
   unflattenJson,
+  getJsonPath,
+  checkJsonPaths,
   inferJsonSchema,
   jsonToCsv,
   makePassword,
@@ -812,6 +814,35 @@ byId('json-flat-example')?.addEventListener('click', () => {
   if (input) input.value = JSON.stringify({ user: { id: 1, name: 'Ada' }, tags: ['api', 'sa'], active: true }, null, 2);
   byId('json-flat-flatten')?.click();
 });
+
+
+byId('json-path-check')?.addEventListener('click', () => {
+  runAction(() => {
+    const report = checkJsonPaths(byId('json-path-input')?.value || '', byId('json-paths')?.value || '');
+    const lines = [
+      `${t('Статус', 'Status')}: ${report.ok ? t('OK — все пути найдены', 'OK — all paths found') : t('Есть отсутствующие пути', 'Missing paths detected')}`,
+      `${t('Найдено', 'Found')}: ${report.found}/${report.total}`,
+      ''
+    ];
+    report.results.forEach((r) => {
+      if (r.found) {
+        let preview = '';
+        try { preview = JSON.stringify(r.value); } catch { preview = String(r.value); }
+        if (preview.length > 80) preview = preview.slice(0, 77) + '…';
+        lines.push(`✓ ${r.path}  (${r.type}) = ${preview}`);
+      } else {
+        lines.push(`✗ ${r.path}  (${t('отсутствует', 'missing')})`);
+      }
+    });
+    return lines.join('\n');
+  }, 'json-path-output');
+});
+byId('json-path-example')?.addEventListener('click', () => {
+  if (byId('json-path-input')) byId('json-path-input').value = JSON.stringify({ user: { id: 1, name: 'Ada' }, items: [{ sku: 'A1' }] }, null, 2);
+  if (byId('json-paths')) byId('json-paths').value = 'user.id\nitems.0.sku\nuser.email';
+  byId('json-path-check')?.click();
+});
+
 
 
 

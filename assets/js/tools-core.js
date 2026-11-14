@@ -952,3 +952,41 @@ export function unflattenJson(input, delimiter = '.') {
   }
   return result;
 }
+
+
+export function getJsonPath(value, path) {
+  const raw = String(path ?? '').trim();
+  if (!raw) throw new Error('Path is required.');
+  const parts = raw.replace(/\[(\d+)\]/g, '.$1').split('.').filter(Boolean);
+  let cur = value;
+  for (const part of parts) {
+    if (cur === null || cur === undefined) return { found: false, value: undefined };
+    const key = /^\d+$/.test(part) && Array.isArray(cur) ? Number(part) : part;
+    if (Object.prototype.hasOwnProperty.call(cur, key) || (Array.isArray(cur) && key in cur)) {
+      cur = cur[key];
+    } else {
+      return { found: false, value: undefined };
+    }
+  }
+  return { found: true, value: cur };
+}
+
+export function checkJsonPaths(input, pathsInput) {
+  const value = typeof input === 'string' ? JSON.parse(input) : input;
+  const text = String(pathsInput ?? '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const paths = text.split('\n').map((l) => l.trim()).filter(Boolean);
+  if (!paths.length) throw new Error('Provide at least one path to check.');
+  const results = paths.map((path) => {
+    const res = getJsonPath(value, path);
+    const type = res.found ? (Array.isArray(res.value) ? 'array' : res.value === null ? 'null' : typeof res.value) : 'missing';
+    return { path, found: res.found, type, value: res.value };
+  });
+  const missing = results.filter((r) => !r.found).map((r) => r.path);
+  return {
+    ok: missing.length === 0,
+    total: results.length,
+    found: results.length - missing.length,
+    missing,
+    results
+  };
+}
