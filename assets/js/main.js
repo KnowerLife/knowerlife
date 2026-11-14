@@ -371,7 +371,22 @@ if (typeof HTMLDialogElement !== 'undefined') {
 
   function renderCommandResults() {
     const query = search.value.trim().toLocaleLowerCase(root.lang);
-    visibleItems = baseItems.filter((item) => `${item.title} ${item.description} ${item.keywords || ''}`.toLocaleLowerCase(root.lang).includes(query));
+    const q = query;
+    const score = (item) => {
+      if (!q) return 0;
+      const t = String(item.title || '').toLocaleLowerCase(root.lang);
+      const d = String(item.description || '').toLocaleLowerCase(root.lang);
+      const k = String(item.keywords || '').toLocaleLowerCase(root.lang);
+      if (t.includes(q)) return 3;
+      if (d.includes(q)) return 2;
+      if (k.includes(q)) return 1;
+      return 0;
+    };
+    visibleItems = baseItems
+      .map((item) => ({ item, s: score(item) }))
+      .filter(({ item, s }) => !q || s > 0)
+      .sort((a, b) => b.s - a.s)
+      .map(({ item }) => item);
     selectedIndex = Math.min(selectedIndex, Math.max(0, visibleItems.length - 1));
     results.replaceChildren();
     if (!visibleItems.length) {

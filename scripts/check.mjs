@@ -173,6 +173,34 @@ if (existsSync(serviceWorkerPath)) {
   fail('service-worker.js is missing');
 }
 
+
+// 4b. Search index must be valid and cover key routes.
+const searchIndexPath = join(root, 'assets', 'search-index.json');
+if (existsSync(searchIndexPath)) {
+  try {
+    const index = JSON.parse(readFileSync(searchIndexPath, 'utf8'));
+    if (!index || !Array.isArray(index.items)) {
+      fail('assets/search-index.json must contain an items array');
+    } else {
+      const urls = new Set(index.items.map((item) => item && item.url));
+      for (const requiredUrl of ['/', '/en/', '/tools/', '/en/tools/', '/sa/', '/en/sa/', '/creative/', '/en/creative/']) {
+        if (!urls.has(requiredUrl)) fail(`assets/search-index.json missing key URL: ${requiredUrl}`);
+      }
+      for (const item of index.items) {
+        if (!item || typeof item.url !== 'string' || typeof item.title !== 'string') {
+          fail('assets/search-index.json contains an invalid item');
+          break;
+        }
+      }
+    }
+  } catch (error) {
+    fail(`Invalid JSON in assets/search-index.json: ${error.message}`);
+  }
+} else {
+  fail('Missing assets/search-index.json (run: npm run search-index)');
+}
+
+
 // 5. Required pages and PWA files
 const required = [
   'index.html',

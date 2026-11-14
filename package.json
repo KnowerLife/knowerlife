@@ -5,7 +5,8 @@
   "description": "Unified KnowerLife ecosystem: portfolio, tools, SA Guide and Creative Corner with one PWA.",
   "scripts": {
     "check": "node scripts/check.mjs && node --test tests/tools-core.test.mjs creative/tests/music-core.test.mjs",
-    "test": "node --test tests/tools-core.test.mjs creative/tests/music-core.test.mjs"
+    "test": "node --test tests/tools-core.test.mjs creative/tests/music-core.test.mjs",
+    "search-index": "node scripts/build-search-index.mjs"
   },
   "engines": {
     "node": ">=20"
