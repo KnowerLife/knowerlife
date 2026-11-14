@@ -141,6 +141,55 @@ function initSectionUtilities(){
   }
 }
 
+
+
+async function copyText(text){try{await navigator.clipboard.writeText(String(text??''));return true}catch{return false}}
+function initCopyButtons(){
+  document.querySelectorAll('[data-copy-target]').forEach(btn=>btn.addEventListener('click',async()=>{const target=document.getElementById(btn.dataset.copyTarget);const text=(target&&'value' in target)?target.value:target?.textContent||'';showToast(await copyText(text)?'Copied':'Could not copy');}));
+}
+
+function initApiTester(){
+  const btn=document.getElementById('sendApiBtn'); if(!btn) return;
+  btn.addEventListener('click',async()=>{
+    const method=document.getElementById('apiMethod')?.value||'GET';const url=document.getElementById('apiUrl')?.value?.trim();const out=document.getElementById('apiResponse');const status=document.getElementById('apiStatus');if(!out||!url)return;
+    let parsed;try{parsed=new URL(url);}catch{out.textContent='Error: invalid URL';return;}if(!/^https?:$/.test(parsed.protocol)){out.textContent='Error: only http/https URLs are supported';return;}
+    out.textContent='Sending request…';if(status)status.textContent='Loading…';
+    const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),10000);
+    try{
+      const options={method,signal:controller.signal,headers:{Accept:'application/json,text/plain;q=0.9,*/*;q=0.8'}};
+      if(method==='POST'){options.headers['Content-Type']='application/json';options.body=JSON.stringify({title:'Test request from SA Guide',body:'Browser demo',userId:1});}
+      const response=await fetch(url,options);clearTimeout(timeout);
+      const contentType=response.headers.get('content-type')||'';const raw=await response.text();let body=raw;
+      if(contentType.includes('application/json')){try{body=JSON.stringify(JSON.parse(raw),null,2);}catch{}}
+      out.textContent=body||'(empty response)';if(status)status.textContent=`${response.status} ${response.statusText||''}`.trim();
+    }catch(error){clearTimeout(timeout);const message=error?.name==='AbortError'?'timeout (10s)':(error?.message||'unknown error');out.textContent=`Request failed: ${message}\n\nPossible cause: CORS policy of the target API or no network.`;if(status)status.textContent='Request failed';}
+  });
+  document.querySelectorAll('[data-api-url]').forEach(b=>b.addEventListener('click',()=>{const input=document.getElementById('apiUrl');if(input)input.value=b.dataset.apiUrl||'';}));
+}
+
+const docTemplates={
+  srs:'1. Introduction\n1.1 Purpose\n1.2 Scope\n1.3 Definitions\n\n2. Context\n2.1 Users and roles\n2.2 Constraints\n\n3. Functional requirements\nFR-001 ...\n\n4. Non-functional requirements\nNFR-001 ...\n\n5. Integrations and data\n\n6. Acceptance criteria\n\n7. Open questions',
+  'user-stories':'As a [role], I want [capability], so that [value].\n\nAcceptance Criteria\nGiven ...\nWhen ...\nThen ...\n\nError scenarios:\n- ...\n\nPriority: Must / Should / Could',
+  'api-spec':'openapi: 3.0.3\ninfo:\n  title: Example API\n  version: 1.0.0\npaths:\n  /resource/{id}:\n    get:\n      summary: Get resource\n      parameters:\n        - in: path\n          name: id\n          required: true\n          schema:\n            type: string\n      responses:\n        \'200\':\n          description: Success\n        \'404\':\n          description: Not found',
+  'test-cases':'Title: Successful scenario\nPreconditions:\n- ...\n\nSteps:\n1. ...\n2. ...\n\nExpected result:\n- ...\n\nPostconditions:\n- ...'
+};
+function initDocuments(){
+  document.querySelectorAll('[data-doc]').forEach(btn=>btn.addEventListener('click',()=>{const content=docTemplates[btn.dataset.doc]||'';const textarea=document.getElementById('docContent');if(textarea)textarea.value=content;const editor=document.getElementById('docEditor');if(editor)editor.hidden=false;}));
+  document.getElementById('downloadDocBtn')?.addEventListener('click',()=>downloadText('sa-template.txt',document.getElementById('docContent')?.value||''));
+  document.getElementById('generateDocBtn')?.addEventListener('click',()=>{const type=document.getElementById('docTypeSelect')?.value;const out=document.getElementById('generatedDoc');if(out)out.value=docTemplates[type]||'';});
+  document.getElementById('downloadGeneratedDoc')?.addEventListener('click',()=>downloadText('sa-generated-document.txt',document.getElementById('generatedDoc')?.value||''));
+}
+const messageTemplates={
+  clarification:'Hello team,\n\nI need to clarify a few points regarding [task]:\n1. [question]\n2. [question]\n\nThis is needed to finalize [decision / criterion / constraint].\nThank you.',
+  meeting:'Hi team, I propose a meeting about [topic].\n\nGoal: [decision to be made].\nInput materials: [link].\nAgenda:\n1. ...\n2. ...\n\nExpected outcome: [decision / list of questions].',
+  review:'Hi team, please review [document / diagram / API contract].\n\nPlease check:\n- scenario completeness;\n- errors and constraints;\n- alignment with the current system.\n\nFeedback requested by [date].',
+  update:'Status for [task]\n\nDone:\n- ...\n\nIn progress:\n- ...\n\nOpen questions / blockers:\n- ...\n\nNext step:\n- ...'
+};
+function initMessages(){
+  document.querySelectorAll('[data-email]').forEach(btn=>btn.addEventListener('click',()=>{const area=document.getElementById('emailTemplateText');if(area)area.value=messageTemplates[btn.dataset.email]||'';}));
+  document.getElementById('copyEmailBtn')?.addEventListener('click',async()=>showToast(await copyText(document.getElementById('emailTemplateText')?.value||'')?'Copied':'Could not copy'));
+}
+
 function exportVisibleMd(){
   const btn=document.getElementById('exportVisibleMdBtn'); if(!btn) return;
   btn.addEventListener('click', async ()=>{
@@ -189,4 +238,4 @@ function saBackup(){
 }
 
 const _domReady = document.addEventListener;
-document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}});
+document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}try{initApiTester()}catch(e){}try{initDocuments()}catch(e){}try{initMessages()}catch(e){}try{initCopyButtons()}catch(e){}});
