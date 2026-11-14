@@ -136,6 +136,7 @@
 <details><summary>Данные и хранение</summary><a href="#db">Базы данных</a><a href="#data-modeling">Моделирование + SQL</a><a href="#data-consistency">Transactions &amp; consistency</a><a href="#caching">Caching</a></details>
 <details><summary>Delivery и эксплуатация</summary><a href="#ci-cd">CI/CD</a><a href="#testing-acceptance">Testing strategy</a><a href="#observability">Observability</a><a href="#release-operability">Release &amp; operability</a><a href="#metrics">Метрики</a><a href="#decision-tree">Decision Tree</a></details>
 <details><summary>Security и качество</summary><a href="#security">OWASP &amp; threats</a><a href="#security-checklist">Security checklist</a><a href="#ux-ui">UX/UI</a><a href="#mistakes">Ошибки аналитика</a></details>
+<details open=""><summary>Курс и подготовка</summary><a href="#sa-course">Пошаговый курс SA</a><a href="#interview-hr">HR-собеседование</a><a href="#interview-technical">Техническое интервью</a><a href="#modeling-practice">Практика BPMN/UML</a></details>
 <details><summary>Документация и развитие</summary><a href="#templates">Шаблоны</a><a href="#document-generator">Генератор</a><a href="#email-templates">Коммуникации</a><a href="#swagger">OpenAPI</a><a href="#decision-records">ADR / Decisions</a><a href="#career">Карьера</a><a href="#competency-map">Компетенции</a><a href="#testing-system">Тесты</a></details>
 <details><summary>Рабочие инструменты</summary><a href="#tools-zone">Workbench</a><a href="#requirement-checker">Requirement checker</a><a href="#acceptance-builder">Acceptance builder</a><a href="#sla-calculator">SLA calculator</a><a href="#pert-calculator">PERT</a><a href="#http-reference">HTTP reference</a><a href="#risk-matrix">Risk matrix</a><a href="#traceability-tool">Traceability tool</a><a href="#quick-tools">Data converter</a><a href="#external-integration">API tester</a><a href="#knowledge-base">Notes</a><a href="#glossary">Glossary</a><a href="#resources">Resources</a></details>
 </nav>
@@ -478,12 +479,140 @@ Then ...</pre>
 <div class="checklist-container" data-checklist="requirements"><label class="checklist-item"><input id="chStakeholders" type="checkbox"/>Стейкхолдеры идентифицированы</label><label class="checklist-item"><input id="chUserStories" type="checkbox"/>Сценарии или User Stories согласованы</label><label class="checklist-item"><input id="chAcceptance" type="checkbox"/>Есть критерии приемки</label><label class="checklist-item"><input id="chNonFunctional" type="checkbox"/>NFR задокументированы</label><label class="checklist-item"><input id="chTrace" type="checkbox"/>Есть трассировка цели и требований</label></div>
 <div class="progress-line"><span>Готовность</span><strong id="reqChecklistPercent">0%</strong></div><div class="progress-bar"><div class="progress-fill" id="reqChecklistProgress"></div></div><button class="btn btn--secondary btn--small" id="resetReqChecklist" type="button">Сбросить</button>
 </section>
+
+<section class="knowledge-card searchable" data-category="requirements" data-search="курс системный аналитик поэтапное обучение программа модули roadmap стажировка junior middle практика теория артефакты" data-title="Пошаговый курс системного аналитика" id="sa-course">
+<div class="card-head"><div><p class="section-code">63 / COURSE</p><h2>Пошаговый курс системного аналитика</h2></div></div>
+<p>Программа выстроена от базовых понятий к самостоятельной работе аналитика. Каждый этап: цель, что изучить, что сделать на практике и как проверить результат. Опирайтесь на разделы справочника и Workbench-инструменты.</p>
+<div class="artifact-grid" style="margin-top:1rem">
+<div><strong>Модуль 1. Роль и контекст (1 неделя)</strong><span>Цель: понять, что делает системный аналитик и с кем взаимодействует. Изучить: <a href="#task-process">получение задачи</a>, <a href="#stakeholders">стейкхолдеры</a>, <a href="#artifacts">артефакты</a>. Практика: разобрать 2–3 реальных задачи по шаблону «проблема → цель → критерий успеха → ограничения». Результат: умеете формулировать цель и контекст без прыжка в решение.</span></div>
+<div><strong>Модуль 2. Сбор и уточнение требований (1–2 недели)</strong><span>Изучить: <a href="#info-gathering">сбор информации</a>, <a href="#discovery-mapping">discovery/mapping</a>, <a href="#requirements">виды требований</a>, <a href="#nfr">NFR</a>. Практика: провести учебное интервью, составить список вопросов, выделить FR/NFR, оформить <a href="#user-stories">User Story</a> и <a href="#use-cases">Use Case</a>. Проверка: <a href="#requirement-checker">Requirement Quality Checker</a>.</span></div>
+<div><strong>Модуль 3. Критерии приёмки и качество (1 неделя)</strong><span>Изучить: <a href="#acceptance-bdd">BDD/Acceptance</a>, <a href="#traceability">трассировка</a>, <a href="#requirements-lifecycle">жизненный цикл требований</a>. Практика: написать Given/When/Then для позитивных, альтернативных и ошибочных сценариев; построить цепочку цель → требование → тест. Инструменты: <a href="#acceptance-builder">Acceptance Builder</a>, <a href="#traceability-tool">Traceability Matrix</a>.</span></div>
+<div><strong>Модуль 4. Процессы и моделирование (1–2 недели)</strong><span>Изучить: <a href="#bpmn">BPMN</a>, <a href="#dmn">DMN</a>, <a href="#uml-c4">UML/C4</a>, <a href="#ddd">DDD</a>. Практика: смоделировать AS-IS/TO-BE процесс, нарисовать sequence/state/ER-диаграмму для учебного кейса (см. <a href="#modeling-practice">практику моделирования</a>). Результат: диаграмма читаема бизнесом и полезна разработке.</span></div>
+<div><strong>Модуль 5. API и интеграции (1–2 недели)</strong><span>Изучить: <a href="#api">API</a>, <a href="#api-design">API design</a>, <a href="#rest">REST</a>, <a href="#auth-access">auth</a>, <a href="#integration-patterns">интеграции</a>, <a href="#async-messaging">события/очереди</a>, <a href="#reliability-patterns">надёжность</a>, <a href="#swagger">OpenAPI</a>. Практика: описать контракт endpoint’а (запрос/ответ/ошибки/коды/идемпотентность), разобрать webhook или асинхронный сценарий. Инструменты: <a href="#external-integration">API tester</a>, <a href="#http-reference">HTTP reference</a>.</span></div>
+<div><strong>Модуль 6. Данные и хранение (1 неделя)</strong><span>Изучить: <a href="#db">БД</a>, <a href="#data-modeling">моделирование данных/SQL</a>, <a href="#data-consistency">транзакции/consistency</a>, <a href="#caching">кэш</a>. Практика: спроектировать сущности и связи, написать базовые SQL-запросы, определить источник истины и стратегию инвалидации кэша.</span></div>
+<div><strong>Модуль 7. Delivery, качество и эксплуатация (1 неделя)</strong><span>Изучить: <a href="#ci-cd">CI/CD</a>, <a href="#testing-acceptance">тестирование</a>, <a href="#observability">observability</a>, <a href="#release-operability">release/operability</a>, <a href="#metrics">метрики</a>, <a href="#security">security</a>. Практика: описать критерии готовности к релизу, риски и план мониторинга; оценить SLA. Инструменты: <a href="#sla-calculator">SLA</a>, <a href="#risk-matrix">Risk Matrix</a>, <a href="#decision-records">ADR</a>.</span></div>
+<div><strong>Модуль 8. Подготовка к собеседованию и портфолио (постоянно)</strong><span>Соберите 2–3 кейса: задача, ваша роль, артефакты, решения, компромиссы, результат. Пройдите <a href="#interview-hr">HR-вопросы</a>, <a href="#interview-technical">технические вопросы</a> и <a href="#modeling-practice">практику моделирования</a>. Используйте <a href="#competency-map">карту компетенций</a> и <a href="#testing-system">проверку знаний</a> для фиксации прогресса.</span></div>
+</div>
+<div class="note note--accent" style="margin-top:1rem"><strong>Рекомендованный ритм</strong><p>40% теория, 60% практика. На каждый модуль — минимум один оформленный артефакт (требования/диаграмма/контракт/чек-лист) и разбор ошибок. Для junior достаточно уверенно пройти модули 1–4 и базу 5–6; для middle — свободно владеть 1–7 и уметь аргументировать trade-offs.</p></div>
+</section>
+
+<section class="knowledge-card searchable" data-category="requirements" data-search="hr собеседование интервью вопросы ответы софт скиллы мотивация конфликт команда сильные слабые стороны зарплата ожидания системный аналитик" data-title="HR-собеседование: частые вопросы и как отвечать" id="interview-hr">
+<div class="card-head"><div><p class="section-code">64 / HR</p><h2>HR-собеседование: частые вопросы и как отвечать</h2></div></div>
+<p>HR оценивает мотивацию, коммуникацию, зрелость в работе с неопределённостью и соответствие роли/команде. Отвечайте по структуре <strong>контекст → действие → результат</strong> (STAR), без выдуманных цифр и конфиденциальных деталей.</p>
+<div class="schema-list">
+<div><span>Расскажите о себе</span><strong>2–3 минуты: текущая роль, ключевой опыт/домены, сильные стороны аналитика, почему интересна эта позиция.</strong></div>
+<div><span>Почему системный анализ / почему мы?</span><strong>Свяжите интерес с задачами роли (требования, интеграции, процессы, продукт). Покажите, что изучили компанию/продукт на уровне открытой информации.</strong></div>
+<div><span>Сильные и слабые стороны</span><strong>Сильные — релевантные роли (структурирование, работа со стейкхолдерами, внимание к деталям). Слабая — реальная зона роста + конкретные шаги, как улучшаете.</strong></div>
+<div><span>Конфликт со стейкхолдером/командой</span><strong>Опишите расхождение требований/приоритетов, как собрали факты, фасилитировали обсуждение, зафиксировали решение и последствия. Фокус на процессе, не на обвинениях.</strong></div>
+<div><span>Неопределённость / неполные требования</span><strong>Уточняющие вопросы, гипотезы, прототип/пример, фиксация допущений, итеративное согласование, управление рисками.</strong></div>
+<div><span>Ошибка в работе аналитика</span><strong>Что произошло (без разглашения NDA), как обнаружили, как исправили, какие проверки/практики внедрили (чек-лист, review, критерии приёмки).</strong></div>
+<div><span>Приоритизация и дедлайны</span><strong>Ценность/риски/зависимости, декомпозиция, прозрачность по статусу, переговоры о scope/сроках на основе фактов.</strong></div>
+<div><span>Взаимодействие с разработкой и QA</span><strong>Уточнение требований, примеры/AC, участие в refinement/review, быстрые ответы на вопросы, проверка реализованного поведения.</strong></div>
+<div><span>Мотивация и развитие</span><strong>Какие компетенции развиваете (данные, интеграции, домен, моделирование), какие задачи хотите решать через 1–2 года.</strong></div>
+<div><span>Вопросы работодателю</span><strong>Про продукт/домен, процессы discovery/delivery, команду, ожидания от роли в первые 3–6 месяцев, инструменты, культуру документации и качества.</strong></div>
+</div>
+<div class="note"><strong>Чего избегать</strong><p>Общих фраз без примеров, критики прошлых работодателей, раскрытия конфиденциальной информации, завышенных обещаний по незнакомым технологиям. Если опыта нет — честно обозначьте уровень и покажите, как решаете задачу через логику и уточняющие вопросы.</p></div>
+</section>
+
+<section class="knowledge-card searchable" data-category="requirements" data-search="техническое собеседование системный аналитик вопросы ответы sql api rest json bpmn интеграции микросервисы kafka требования nfr тестирование" data-title="Техническое интервью: частые вопросы и ключевые темы" id="interview-technical">
+<div class="card-head"><div><p class="section-code">65 / TECH</p><h2>Техническое интервью: частые вопросы и ключевые темы</h2></div></div>
+<p>На техническом интервью проверяют системность мышления, понимание процессов, API/данных, интеграций, качества требований и умение рассуждать о компромиссах. Ниже — частые темы и опорные точки для ответа.</p>
+<div class="two-columns">
+<div>
+<h3>Требования и процессы</h3>
+<ul class="check-list">
+<li><strong>FR vs NFR:</strong> примеры, измеримость, влияние на архитектуру и тесты (<a href="#requirements">виды</a>, <a href="#nfr">NFR</a>).</li>
+<li><strong>User Story / Use Case / AC:</strong> когда что использовать, INVEST, Given/When/Then, граничные случаи.</li>
+<li><strong>Сбор требований:</strong> интервью, воркшоп, анализ AS-IS, прототип, валидация гипотез.</li>
+<li><strong>Изменения:</strong> impact analysis, версионирование, коммуникация, трассировка.</li>
+<li><strong>Приоритизация:</strong> ценность, риск, зависимости, MoSCoW/WSJF на уровне логики.</li>
+</ul>
+<h3>API и интеграции</h3>
+<ul class="check-list">
+<li><strong>REST:</strong> ресурсы, методы, идемпотентность, статусы, пагинация/фильтрация, версионирование.</li>
+<li><strong>Контракт:</strong> схема запроса/ответа, обязательность полей, ошибки, auth, лимиты, <a href="#swagger">OpenAPI</a>.</li>
+<li><strong>Синхронно vs асинхронно:</strong> когда очередь/события, гарантии доставки, повторы, дедупликация, DLQ.</li>
+<li><strong>Надёжность:</strong> timeout/retry/backoff, circuit breaker, outbox/saga на концептуальном уровне.</li>
+<li><strong>Безопасность:</strong> authN/authZ, токены, роли/scopes, чувствительные данные, аудит.</li>
+</ul>
+</div>
+<div>
+<h3>Данные и архитектура</h3>
+<ul class="check-list">
+<li><strong>Моделирование:</strong> сущности, связи, ключи, нормализация/денормализация, миграции.</li>
+<li><strong>SQL (база):</strong> SELECT/JOIN/GROUP BY, индексы (зачем), транзакции, изоляция на высоком уровне.</li>
+<li><strong>Consistency:</strong> ACID, eventual consistency, конкурентные обновления, источник истины.</li>
+<li><strong>Архитектура:</strong> монолит vs микросервисы, границы контекстов, компромиссы сложности.</li>
+<li><strong>Observability:</strong> логи/метрики/трейсы, correlation-id, алерты по бизнес- и техметрикам.</li>
+</ul>
+<h3>Типовые практические вопросы</h3>
+<ul class="check-list">
+<li>«Спроектируйте API для создания/получения заказа» — сущности, методы, статусы, ошибки, идемпотентность.</li>
+<li>«Как опишете интеграцию с внешним сервисом оплаты?» — контракт, статусы, повторы, таймауты, сверка.</li>
+<li>«Сервис тормозит» — уточнить NFR/метрики, где узкое место (БД, сеть, внешняя зависимость), гипотезы.</li>
+<li>«Два пользователя редактируют одну сущность» — конкурентность, блокировки/версии, UX-конфликты.</li>
+<li>«Нужно добавить поле/статус» — миграция, обратная совместимость, влияние на API/отчёты/процессы.</li>
+</ul>
+</div>
+</div>
+<div class="note note--accent"><strong>Как отвечать на кейс</strong><p>1) Уточните контекст и ограничения. 2) Определите акторов и основной сценарий. 3) Назовите сущности/данные и интеграции. 4) Проговорите ошибки, NFR и компромиссы. 5) Зафиксируйте допущения. Интервьюеру важна структура рассуждений не меньше, чем «правильный» ответ.</p></div>
+</section>
+
+<section class="knowledge-card searchable" data-category="architecture" data-search="bpmn uml диаграммы моделирование use case sequence activity state erd c4 практика собеседование как построить нотация примеры" data-title="Практика моделирования: BPMN, UML, ERD, C4" id="modeling-practice">
+<div class="card-head"><div><p class="section-code">66 / MODELING</p><h2>Практика моделирования: BPMN, UML, ERD, C4</h2></div></div>
+<p>На собеседованиях и в работе часто просят «нарисовать процесс» или «спроектировать взаимодействие». Важно выбрать подходящую нотацию, не усложнять диаграмму и уметь объяснить каждый элемент.</p>
+<div class="two-columns">
+<div>
+<h3>BPMN (бизнес-процесс)</h3>
+<ul class="check-list">
+<li><strong>Когда:</strong> сквозной процесс с ролями, событиями, решениями, SLA/таймерами.</li>
+<li><strong>Минимум:</strong> pool/lane (кто), start/end event, tasks, XOR/AND gateways, happy path + ключевые исключения.</li>
+<li><strong>Алгоритм:</strong> цель процесса → участники → триггер → шаги по порядку → ветвления/ошибки → результат.</li>
+<li><strong>Частая ошибка:</strong> смешивать технические детали реализации с бизнес-потоком; забывать альтернативные ветки.</li>
+</ul>
+<h3>UML Use Case</h3>
+<ul class="check-list">
+<li><strong>Когда:</strong> границы системы и цели акторов на высоком уровне.</li>
+<li><strong>Элементы:</strong> акторы, система, use cases, связи include/extend (осторожно, без перегруза).</li>
+<li><strong>Совет:</strong> дополняйте текстовым сценарием (pre/post, основной/альтернативный поток).</li>
+</ul>
+<h3>UML Sequence</h3>
+<ul class="check-list">
+<li><strong>Когда:</strong> порядок взаимодействий во времени (клиент ↔ сервис ↔ БД ↔ внешняя система).</li>
+<li><strong>Элементы:</strong> участники, синхронные/асинхронные сообщения, возвраты, alt/opt фрагменты для ветвлений.</li>
+<li><strong>Совет:</strong> показывайте критичные вызовы, ошибки/таймауты и ретраи, если они важны.</li>
+</ul>
+</div>
+<div>
+<h3>UML Activity / State</h3>
+<ul class="check-list">
+<li><strong>Activity:</strong> поток действий и решений (близко к алгоритму/процессу внутри сценария).</li>
+<li><strong>State Machine:</strong> жизненный цикл сущности (заказ: создан → оплачен → отправлен …), допустимые переходы и условия.</li>
+<li><strong>Совет:</strong> для статусов явно фиксируйте, кто/что инициирует переход и можно ли вернуться назад.</li>
+</ul>
+<h3>ERD / модель данных</h3>
+<ul class="check-list">
+<li><strong>Когда:</strong> сущности, атрибуты, связи, кардинальности, ключи.</li>
+<li><strong>Алгоритм:</strong> выделить сущности предметной области → атрибуты → PK/FK → связи 1:1/1:N/M:N → ограничения.</li>
+<li><strong>Совет:</strong> проговорите, где источник истины и как обрабатываются историчность/удаление.</li>
+</ul>
+<h3>C4 / архитектурный контекст</h3>
+<ul class="check-list">
+<li><strong>Когда:</strong> показать систему в окружении (Context) и контейнеры/интеграции (Container) без лишней детализации.</li>
+<li><strong>Совет:</strong> подписывайте протоколы/направление данных и ответственность компонентов.</li>
+</ul>
+</div>
+</div>
+<div class="code-card code-card--dark" style="margin-top:1rem"><strong>Шаблон ответа на практическое задание «нарисуйте BPMN/UML»</strong><br/><br/>1. Уточняю цель, границы и акторов.<br/>2. Называю выбранную диаграмму и почему она подходит.<br/>3. Рисую основной (happy path) сценарий.<br/>4. Добавляю 2–3 важных исключения/альтернативы.<br/>5. Обозначаю данные/интеграции/статусы, если релевантно.<br/>6. Проверяю читаемость: можно ли по схеме восстановить процесс и требования.</div>
+<p class="muted" style="margin:.75rem 0 0">Инструменты для практики: diagrams.net/draw.io, PlantUML/Mermaid, бумага/доска на интервью. Важно объяснять ход мысли вслух и задавать уточняющие вопросы.</p>
+</section>
+
 <section class="knowledge-card searchable" data-category="tools" data-search="glossary артефакт stakeholder use case user story bpmn rest soap graphql ddd cicd glossary термины" data-title="Глоссарий" id="glossary">
-<div class="card-head"><div><p class="section-code">63 / GLOSSARY</p><h2>Глоссарий</h2></div></div>
+<div class="card-head"><div><p class="section-code">67 / GLOSSARY</p><h2>Глоссарий</h2></div></div>
 <input aria-label="Фильтр глоссария" class="glossary-search" id="glossarySearch" placeholder="Фильтр терминов…" type="search"/><dl class="glossary-grid"><div><dt>Артефакт</dt><dd>Рабочий продукт анализа: документ, модель, схема, контракт.</dd></div><div><dt>Стейкхолдер</dt><dd>Заинтересованная сторона, влияющая на решение или испытывающая его влияние.</dd></div><div><dt>Use Case</dt><dd>Сценарий взаимодействия актора с системой.</dd></div><div><dt>User Story</dt><dd>Короткое описание ценности с точки зрения роли.</dd></div><div><dt>BPMN</dt><dd>Нотация моделирования бизнес-процессов.</dd></div><div><dt>REST</dt><dd>Архитектурный стиль для сетевых API.</dd></div><div><dt>DDD</dt><dd>Проектирование вокруг предметной области и ее языка.</dd></div><div><dt>CI/CD</dt><dd>Автоматизация интеграции, проверок и поставки изменений.</dd></div><div><dt>ACID</dt><dd>Свойства транзакций: atomicity, consistency, isolation, durability.</dd></div><div><dt>ADR</dt><dd>Architecture Decision Record — короткая фиксация контекста, решения и последствий.</dd></div><div><dt>API Contract</dt><dd>Формальное соглашение о запросах, ответах, ошибках и ограничениях взаимодействия.</dd></div><div><dt>Backoff</dt><dd>Увеличение задержки между повторными попытками.</dd></div><div><dt>Bounded Context</dt><dd>Граница, внутри которой модель и язык домена имеют однозначный смысл.</dd></div><div><dt>CDC</dt><dd>Change Data Capture — поток изменений из источника данных.</dd></div><div><dt>Circuit Breaker</dt><dd>Паттерн временного прекращения вызовов нестабильной зависимости.</dd></div><div><dt>Correlation ID</dt><dd>Идентификатор для трассировки одного бизнес-запроса через несколько систем.</dd></div><div><dt>DLQ</dt><dd>Dead Letter Queue — очередь сообщений, которые не удалось корректно обработать.</dd></div><div><dt>Eventual Consistency</dt><dd>Модель, допускающая временное расхождение состояний между компонентами.</dd></div><div><dt>Idempotency</dt><dd>Свойство операции, при котором повтор не создает дополнительный бизнес-эффект.</dd></div><div><dt>NFR</dt><dd>Нефункциональное требование: производительность, доступность, безопасность и другие свойства качества.</dd></div><div><dt>Outbox</dt><dd>Паттерн надежной публикации события вместе с транзакцией изменения данных.</dd></div><div><dt>RPO</dt><dd>Допустимый объем потери данных, выраженный во времени.</dd></div><div><dt>RTO</dt><dd>Допустимое время восстановления сервиса.</dd></div><div><dt>Saga</dt><dd>Паттерн координации распределенной бизнес-транзакции через шаги и компенсации.</dd></div><div><dt>SLA</dt><dd>Договорный уровень сервиса.</dd></div><div><dt>SLO</dt><dd>Целевой показатель качества сервиса.</dd></div><div><dt>Traceability</dt><dd>Связь требования с целью, сценарием, реализацией и проверкой.</dd></div><div><dt>Webhook</dt><dd>HTTP callback, отправляемый источником при наступлении события.</dd></div></dl>
 </section>
 <section class="knowledge-card searchable" data-category="tools" data-search="resources habr modern analyst sql drawio postman swagger github knowerlife ресурсы обучение" data-title="Полезные ресурсы" id="resources">
-<div class="card-head"><div><p class="section-code">64 / LINKS</p><h2>Полезные ресурсы</h2></div></div>
+<div class="card-head"><div><p class="section-code">68 / LINKS</p><h2>Полезные ресурсы</h2></div></div>
 <div class="resource-grid"><a href="https://www.omg.org/bpmn/" rel="noopener" target="_blank"><strong>OMG BPMN</strong><span>официальная спецификация BPMN</span><i>↗</i></a><a href="https://spec.openapis.org/oas/latest.html" rel="noopener" target="_blank"><strong>OpenAPI Specification</strong><span>контракт REST API</span><i>↗</i></a><a href="https://developer.mozilla.org/" rel="noopener" target="_blank"><strong>MDN Web Docs</strong><span>HTTP, Web API и browser platform</span><i>↗</i></a><a href="https://www.postman.com/" rel="noopener" target="_blank"><strong>Postman</strong><span>API development workspace</span><i>↗</i></a><a href="https://app.diagrams.net/" rel="noopener" target="_blank"><strong>diagrams.net</strong><span>диаграммы и модели</span><i>↗</i></a><a href="https://github.com/KnowerLife" rel="noopener" target="_blank"><strong>KnowerLife on GitHub</strong><span>open-source проекты</span><i>↗</i></a><a href="https://owasp.org/Top10/" rel="noopener" target="_blank"><strong>OWASP Top 10:2025</strong><span>Актуальный awareness standard web security</span><i>↗</i></a><a href="https://spec.openapis.org/oas/latest.html" rel="noopener" target="_blank"><strong>OpenAPI 3.2.0</strong><span>Актуальная опубликованная спецификация OpenAPI</span><i>↗</i></a><a href="https://c4model.com/" rel="noopener" target="_blank"><strong>C4 model</strong><span>Архитектурные уровни Context / Container / Component</span><i>↗</i></a><a href="https://www.rfc-editor.org/" rel="noopener" target="_blank"><strong>RFC Editor</strong><span>HTTP и интернет-стандарты</span><i>↗</i></a><a href="https://json-schema.org/" rel="noopener" target="_blank"><strong>JSON Schema</strong><span>Описание и валидация JSON-структур</span><i>↗</i></a><a href="https://www.asyncapi.com/" rel="noopener" target="_blank"><strong>AsyncAPI</strong><span>Описание event-driven API и message contracts</span><i>↗</i></a></div>
 </section>
 </article>
