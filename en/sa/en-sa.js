@@ -81,6 +81,7 @@ function initPersistentChecklist(ids,key,fillSelector,percentSelector,resetSelec
 function downloadText(name, text, type='text/plain;charset=utf-8'){try{const blob=new Blob([String(text??'')],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url)}catch{}}
 function csvCell(value){const text=String(value??'');return /[",\n]/.test(text)?`"${text.replace(/"/g,'""')}"`:text}
 STORAGE.risks='sa_risks_v3'; STORAGE.traceability='sa_traceability_v3'; STORAGE.decisions='sa_decisions_v3';
+STORAGE.competency='sa_competency_v2'; STORAGE.security='sa_security_v2'; STORAGE.lastSection='sa_last_section_v3';
 
 function initRiskMatrix(){
   let risks=readJson(STORAGE.risks,[]);if(!Array.isArray(risks))risks=[];const list=document.getElementById('riskList'); if(!list) return;
@@ -99,6 +100,45 @@ function initDecisionLog(){
   const render=()=>{list.replaceChildren();if(!decisions.length){const p=document.createElement('p');p.className='muted';p.textContent='No local decisions yet.';list.append(p);return;}decisions.forEach((d,index)=>{const card=document.createElement('article');card.className='decision-entry';const head=document.createElement('div');head.className='decision-entry-head';const title=document.createElement('strong');title.textContent=`ADR-${String(index+1).padStart(3,'0')} · ${d.title}`;const status=document.createElement('span');status.textContent=d.status;head.append(title,status);const context=document.createElement('p');context.textContent=d.context||'No context provided';const consequences=document.createElement('small');consequences.textContent=`Consequences: ${d.consequences||'—'}`;const del=document.createElement('button');del.type='button';del.className='note-delete';del.textContent='Delete';del.addEventListener('click',()=>{decisions=decisions.filter(item=>item.id!==d.id);writeJson(STORAGE.decisions,decisions);render();});card.append(head,context,consequences,del);list.append(card);});};
   document.getElementById('saveDecisionBtn')?.addEventListener('click',()=>{const title=document.getElementById('decisionTitle')?.value.trim();if(!title){showToast('Enter a decision title');return;}decisions.push({id:Date.now(),title,status:document.getElementById('decisionStatus')?.value||'Accepted',context:document.getElementById('decisionContext')?.value.trim()||'',consequences:document.getElementById('decisionConsequences')?.value.trim()||'',date:new Date().toISOString()});writeJson(STORAGE.decisions,decisions);['decisionTitle','decisionContext','decisionConsequences'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});render();showToast('Decision saved locally');});
   document.getElementById('exportDecisionsBtn')?.addEventListener('click',()=>{const md=decisions.map((d,i)=>`# ADR-${String(i+1).padStart(3,'0')}: ${d.title}\n\nStatus: ${d.status}\nDate: ${d.date||''}\n\n## Context\n${d.context||'—'}\n\n## Consequences\n${d.consequences||'—'}\n`).join('\n---\n\n');downloadText('architecture-decisions.md',md,'text/markdown;charset=utf-8');});render();
+}
+
+
+
+function initCompetency(){
+  const ids=['comp1','comp2','comp3','comp4','comp5','comp6','comp7','comp8'].filter(id=>document.getElementById(id));
+  if(!ids.length) return;
+  const saved=readJson(STORAGE.competency,{}); ids.forEach(id=>{const cb=document.getElementById(id); if(cb&&saved[id]) cb.checked=true;});
+  const update=()=>{const checked=ids.filter(id=>document.getElementById(id)?.checked).length; const percent=Math.round(checked/ids.length*100); const fill=document.getElementById('compProgressFill'); if(fill) fill.style.width=`${percent}%`; const label=document.getElementById('compProgressPercent'); if(label) label.textContent=`${percent}%`;};
+  ids.forEach(id=>document.getElementById(id)?.addEventListener('change',update));
+  document.getElementById('saveCompBtn')?.addEventListener('click',()=>{const state=Object.fromEntries(ids.map(id=>[id,Boolean(document.getElementById(id)?.checked)])); writeJson(STORAGE.competency,state); showToast('Progress saved');});
+  document.getElementById('resetCompBtn')?.addEventListener('click',()=>{ids.forEach(id=>{const cb=document.getElementById(id); if(cb) cb.checked=false;}); writeJson(STORAGE.competency,{}); update(); showToast('Progress reset');});
+  update();
+}
+
+function initGlossaryFilter(){
+  const input=document.getElementById('glossarySearch'); const items=[...document.querySelectorAll('#glossary .glossary-grid > div')];
+  if(!input||!items.length) return;
+  input.addEventListener('input',()=>{const term=input.value.trim().toLowerCase(); items.forEach(item=>item.hidden=Boolean(term&&!item.textContent.toLowerCase().includes(term)));});
+}
+
+function initSectionUtilities(){
+  const continueBlock=document.getElementById('continueBlock');
+  const continueLink=document.getElementById('continueLink');
+  const continueLabel=document.getElementById('continueLabel');
+  const cards=[...document.querySelectorAll('.searchable')].filter(c=>c.id);
+  const setContinue=id=>{const card=id?document.getElementById(id):null; if(!card||!continueBlock||!continueLink||!continueLabel) return; continueLink.href=`#${id}`; continueLabel.textContent=card.dataset.title||card.querySelector('h2')?.textContent?.trim()||id; continueBlock.hidden=false;};
+  try{const saved=localStorage.getItem(STORAGE.lastSection); if(saved) setContinue(saved);}catch{}
+  cards.forEach(card=>{
+    const head=card.querySelector('.card-head'); if(!head||head.querySelector('.deep-link-copy')) return;
+    const button=document.createElement('button'); button.type='button'; button.className='deep-link-copy'; button.textContent='↗'; button.title='Copy section link'; button.setAttribute('aria-label',`Copy link: ${card.dataset.title||card.id}`);
+    button.addEventListener('click', async (e)=>{e.preventDefault(); const url=`${location.origin}${location.pathname}#${card.id}`; try{await navigator.clipboard.writeText(url); showToast('Link copied')}catch{showToast('Could not copy link')}});
+    head.append(button);
+  });
+  if('IntersectionObserver' in window){
+    let lastWrite='';
+    const observer=new IntersectionObserver(entries=>{const current=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0]; if(!current||current.intersectionRatio<0.28) return; const id=current.target.id; if(!id||id===lastWrite) return; lastWrite=id; try{localStorage.setItem(STORAGE.lastSection,id)}catch{} setContinue(id);},{rootMargin:'-15% 0px -55% 0px',threshold:[0.28,0.5,0.75]});
+    cards.forEach(card=>observer.observe(card));
+  }
 }
 
 function exportVisibleMd(){
@@ -149,4 +189,4 @@ function saBackup(){
 }
 
 const _domReady = document.addEventListener;
-document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}});
+document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}});
