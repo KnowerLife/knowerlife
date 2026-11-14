@@ -25,6 +25,8 @@ import {
   parseUtcOffset,
   formatUtcOffset,
   convertTimeZoneOffset,
+  flattenJson,
+  unflattenJson,
   jsonToCsv,
   makePassword,
   shiftText,
@@ -245,4 +247,23 @@ test('parseUtcOffset, formatUtcOffset and convertTimeZoneOffset work with fixed 
   assert.equal(z.target, '2026-01-01T09:30:00+09:30');
   assert.throws(() => convertTimeZoneOffset('2026-13-01T00:00', 'Z', 'Z'), /Invalid/);
   assert.throws(() => parseUtcOffset('+99:00'), /Invalid/);
+});
+
+
+test('flattenJson and unflattenJson transform nested structures', () => {
+  const src = { user: { id: 1, name: 'Ada' }, tags: ['a', 'b'], meta: {} };
+  const flat = flattenJson(src);
+  assert.equal(flat['user.id'], 1);
+  assert.equal(flat['user.name'], 'Ada');
+  assert.equal(flat['tags.0'], 'a');
+  assert.equal(flat['tags.1'], 'b');
+  assert.deepEqual(flat['meta'], {});
+  const nested = unflattenJson(flat);
+  assert.deepEqual(nested, src);
+
+  const custom = flattenJson({ a: { b: 1 } }, '/');
+  assert.deepEqual(custom, { 'a/b': 1 });
+  assert.deepEqual(unflattenJson(custom, '/'), { a: { b: 1 } });
+  assert.throws(() => flattenJson('null'), /object or array/);
+  assert.throws(() => unflattenJson([1, 2]), /flat JSON object/);
 });

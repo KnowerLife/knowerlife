@@ -31,6 +31,8 @@ import {
   parseUtcOffset,
   formatUtcOffset,
   convertTimeZoneOffset,
+  flattenJson,
+  unflattenJson,
   inferJsonSchema,
   jsonToCsv,
   makePassword,
@@ -789,6 +791,28 @@ byId('tz-example')?.addEventListener('click', () => {
   if (byId('tz-to')) byId('tz-to').value = '-04:00';
   byId('tz-convert')?.click();
 });
+
+
+byId('json-flat-flatten')?.addEventListener('click', () => {
+  runAction(() => {
+    const sep = (byId('json-flat-sep')?.value || '.');
+    const flat = flattenJson(byId('json-flat-input')?.value || '', sep);
+    return JSON.stringify(flat, null, 2);
+  }, 'json-flat-output');
+});
+byId('json-flat-unflatten')?.addEventListener('click', () => {
+  runAction(() => {
+    const sep = (byId('json-flat-sep')?.value || '.');
+    const nested = unflattenJson(byId('json-flat-input')?.value || '', sep);
+    return JSON.stringify(nested, null, 2);
+  }, 'json-flat-output');
+});
+byId('json-flat-example')?.addEventListener('click', () => {
+  const input = byId('json-flat-input');
+  if (input) input.value = JSON.stringify({ user: { id: 1, name: 'Ada' }, tags: ['api', 'sa'], active: true }, null, 2);
+  byId('json-flat-flatten')?.click();
+});
+
 
 
 

@@ -893,3 +893,62 @@ export function convertTimeZoneOffset(datetime, fromOffset, toOffset) {
     diffMinutes: toMin - fromMin
   };
 }
+
+
+export function flattenJson(input, delimiter = '.') {
+  const value = typeof input === 'string' ? JSON.parse(input) : input;
+  const sep = String(delimiter || '.');
+  if (!sep) throw new Error('Delimiter is required.');
+  if (value === null || typeof value !== 'object') throw new Error('Provide a JSON object or array to flatten.');
+  const out = {};
+  const isPlain = (v) => v !== null && typeof v === 'object';
+  const walk = (current, prefix) => {
+    if (Array.isArray(current)) {
+      if (current.length === 0) { out[prefix] = []; return; }
+      current.forEach((item, idx) => {
+        const key = prefix ? `${prefix}${sep}${idx}` : String(idx);
+        if (isPlain(item)) walk(item, key);
+        else out[key] = item;
+      });
+      return;
+    }
+    const keys = Object.keys(current);
+    if (keys.length === 0) { out[prefix] = {}; return; }
+    keys.forEach((k) => {
+      const item = current[k];
+      const key = prefix ? `${prefix}${sep}${k}` : String(k);
+      if (isPlain(item)) walk(item, key);
+      else out[key] = item;
+    });
+  };
+  if (Array.isArray(value)) walk(value, '');
+  else walk(value, '');
+  return out;
+}
+
+export function unflattenJson(input, delimiter = '.') {
+  const obj = typeof input === 'string' ? JSON.parse(input) : input;
+  const sep = String(delimiter || '.');
+  if (!sep) throw new Error('Delimiter is required.');
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) throw new Error('Provide a flat JSON object to unflatten.');
+  const result = {};
+  for (const [flatKey, val] of Object.entries(obj)) {
+    const parts = String(flatKey).split(sep).filter((p) => p.length > 0);
+    if (!parts.length) continue;
+    let cur = result;
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      const next = parts[i + 1];
+      const isIndex = /^\d+$/.test(part);
+      const key = isIndex ? Number(part) : part;
+      if (i === parts.length - 1) {
+        cur[key] = val;
+      } else {
+        const nextIndex = /^\d+$/.test(next);
+        if (cur[key] == null || typeof cur[key] !== 'object') cur[key] = nextIndex ? [] : {};
+        cur = cur[key];
+      }
+    }
+  }
+  return result;
+}
