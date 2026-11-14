@@ -13,6 +13,7 @@ import {
   diffText,
   encodeUrlComponent,
   explainCron,
+  convertCase,
   parseIsoDuration,
   formatIsoDuration,
   describeIsoDuration,
@@ -651,6 +652,23 @@ byId('schema-example')?.addEventListener('click', () => {
     : '{\n  "id": 123,\n  "name": "Заказ",\n  "active": true,\n  "tags": ["api", "sa"],\n  "owner": {"id": 7, "email": "user@example.com"}\n}';
   byId('schema-generate')?.click();
 });
+
+byId('case-convert')?.addEventListener('click', () => {
+  runAction(() => {
+    const result = convertCase(byId('case-input')?.value || '', 'all');
+    if (typeof result === 'string') return result;
+    const labels = isEnglish
+      ? [['camel','camelCase'],['pascal','PascalCase'],['snake','snake_case'],['kebab','kebab-case'],['constant','CONSTANT_CASE'],['title','Title Case'],['sentence','Sentence case'],['lower','lower case'],['upper','UPPER CASE']]
+      : [['camel','camelCase'],['pascal','PascalCase'],['snake','snake_case'],['kebab','kebab-case'],['constant','CONSTANT_CASE'],['title','Title Case'],['sentence','Sentence case'],['lower','нижний регистр'],['upper','ВЕРХНИЙ РЕГИСТР']];
+    return labels.map(([k,label]) => `${label}: ${result[k]}`).join('\n');
+  }, 'case-output');
+});
+byId('case-example')?.addEventListener('click', () => {
+  const input = byId('case-input');
+  if (input) input.value = 'User profile ID';
+  byId('case-convert')?.click();
+});
+
 
 byId('duration-parse')?.addEventListener('click', () => {
   runAction(() => {

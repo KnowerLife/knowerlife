@@ -12,6 +12,7 @@ import {
   parseIsoDuration,
   formatIsoDuration,
   describeIsoDuration,
+  convertCase,
   jsonToCsv,
   makePassword,
   shiftText,
@@ -128,4 +129,15 @@ test('parseIsoDuration and formatIsoDuration handle basic durations', () => {
   const desc = describeIsoDuration('PT90S', 'en');
   assert.equal(desc.iso, 'PT90S');
   assert.ok(desc.human.includes('90'));
+});
+
+
+test('convertCase produces common variants', () => {
+  const result = convertCase('user_profile id');
+  assert.equal(result.camel, 'userProfileId');
+  assert.equal(result.pascal, 'UserProfileId');
+  assert.equal(result.snake, 'user_profile_id');
+  assert.equal(result.kebab, 'user-profile-id');
+  assert.equal(result.constant, 'USER_PROFILE_ID');
+  assert.equal(convertCase('OrderItemDTO', 'snake'), 'order_item_dto');
 });

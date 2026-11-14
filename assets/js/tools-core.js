@@ -628,3 +628,37 @@ export function describeIsoDuration(value, locale = 'ru') {
   const human = labels.map(([k,l]) => p[k] ? `${p[k]} ${l}` : '').filter(Boolean).join(' ');
   return { iso: parsed.input || formatIsoDuration(p), human: human || (locale === 'en' ? '0 s' : '0 с'), totalSecondsApprox: parsed.totalSeconds };
 }
+
+
+function splitWords(input) {
+  return String(input || '')
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+    .replace(/[_\-./]+/g, ' ')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+export function convertCase(input, mode = 'all') {
+  const words = splitWords(input);
+  const lower = words.map((w) => w.toLowerCase());
+  const upper = words.map((w) => w.toUpperCase());
+  const cap = lower.map((w) => w.charAt(0).toUpperCase() + w.slice(1));
+  const variants = {
+    camel: lower.map((w, i) => i ? w.charAt(0).toUpperCase() + w.slice(1) : w).join(''),
+    pascal: cap.join(''),
+    snake: lower.join('_'),
+    kebab: lower.join('-'),
+    constant: upper.join('_'),
+    title: cap.join(' '),
+    sentence: lower.length ? lower[0].charAt(0).toUpperCase() + lower[0].slice(1) + (lower.length > 1 ? ' ' + lower.slice(1).join(' ') : '') : '',
+    lower: lower.join(' '),
+    upper: upper.join(' ')
+  };
+  if (mode && mode !== 'all') {
+    if (!(mode in variants)) throw new Error('Unsupported case mode.');
+    return variants[mode];
+  }
+  return variants;
+}
