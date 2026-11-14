@@ -370,15 +370,18 @@ function openTrackDialog(index) {
   }
 
   els.dialogCredits.replaceChildren();
-  Object.entries(track.credits || {}).forEach(([key, value]) => {
+  const credits = Object.entries(track.credits || {}).filter(([, value]) => value != null && String(value).trim());
+  credits.forEach(([key, value]) => {
     const div = document.createElement('div');
     const label = document.createElement('span');
-    label.textContent = key;
+    label.textContent = ({ concept: 'Концепция', production: 'Продакшн', lyrics: 'Текст', music: 'Музыка' }[key] || key);
     const strong = document.createElement('strong');
     strong.textContent = String(value);
     div.append(label, strong);
     els.dialogCredits.append(div);
   });
+  const creditsBlock = els.dialogCredits.closest('.dialog-section, section, div');
+  if (creditsBlock && creditsBlock.querySelector('#dialogCredits')) creditsBlock.hidden = credits.length === 0;
 
   const dialogPlayButton = $('#dialogPlay');
   if (dialogPlayButton) {

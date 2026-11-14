@@ -404,7 +404,18 @@ if (typeof HTMLDialogElement !== 'undefined') {
       const titleElement = document.createElement('strong');
       titleElement.textContent = item.title;
       const descriptionElement = document.createElement('small');
-      descriptionElement.textContent = item.description;
+      let desc = item.description || '';
+      const query = search.value.trim().toLocaleLowerCase(root.lang);
+      if (query && item.keywords && !String(item.description || '').toLocaleLowerCase(root.lang).includes(query)) {
+        const k = String(item.keywords);
+        const i = k.toLocaleLowerCase(root.lang).indexOf(query);
+        if (i >= 0) {
+          const start = Math.max(0, i - 30);
+          const end = Math.min(k.length, i + query.length + 50);
+          desc = (start > 0 ? '…' : '') + k.slice(start, end).replace(/\s+/g, ' ').trim() + (end < k.length ? '…' : '');
+        }
+      }
+      descriptionElement.textContent = desc;
       anchor.append(titleElement, descriptionElement);
       anchor.addEventListener('click', () => dialog.close());
       anchor.addEventListener('mousemove', () => {
