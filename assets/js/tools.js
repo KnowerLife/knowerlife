@@ -999,6 +999,10 @@ function initPerToolPresets() {
     saveBtn.addEventListener('click', () => {
       const name = (nameInput.value || select.value || '').trim().slice(0, 60);
       if (!name) { showToast(t('Укажите имя пресета', 'Enter a preset name'), 'error'); return; }
+      const existing = getToolNamedPresets(card.id);
+      if (Object.prototype.hasOwnProperty.call(existing, name)) {
+        if (!window.confirm(t(`Перезаписать пресет «${name}»?`, `Overwrite preset "${name}"?`))) return;
+      }
       setToolNamedPreset(card.id, name, collectFormValues(form));
       nameInput.value = name;
       refreshPresetSelect(select, card.id);
@@ -1018,7 +1022,9 @@ function initPerToolPresets() {
     delBtn.addEventListener('click', () => {
       const name = select.value;
       if (!name) return;
+      if (!window.confirm(t(`Удалить пресет «${name}»?`, `Delete preset "${name}"?`))) return;
       deleteToolNamedPreset(card.id, name);
+      if (nameInput.value === name) nameInput.value = '';
       refreshPresetSelect(select, card.id);
       showToast(t('Пресет удалён', 'Preset deleted'));
     });
