@@ -498,3 +498,61 @@ export function diffText(before = '', after = '') {
   const summary = out.reduce((acc, row) => { acc[row.type] = (acc[row.type] || 0) + 1; return acc; }, { added: 0, removed: 0, same: 0 });
   return { lines: out, summary };
 }
+
+
+const CRON_MONTHS = [null,'January','February','March','April','May','June','July','August','September','October','November','December'];
+const CRON_DOW = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const CRON_MONTH_ALIASES = {jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
+const CRON_DOW_ALIASES = {sun:0,mon:1,tue:2,wed:3,thu:4,fri:5,sat:6};
+
+function parseCronToken(token, min, max, aliases = {}, names = null) {
+  const raw = String(token).trim();
+  if (!raw) throw new Error('Empty cron field.');
+  const norm = aliases[raw.toLowerCase()] != null ? String(aliases[raw.toLowerCase()]) : raw;
+  const expand = (part) => {
+    let step = 1;
+    let base = part;
+    if (part.includes('/')) {
+      const [b, s] = part.split('/');
+      base = b || '*';
+      step = Number(s);
+      if (!Number.isInteger(step) || step <= 0) throw new Error(`Invalid step in "${token}".`);
+    }
+    let start = min, end = max;
+    if (base !== '*') {
+      if (base.includes('-')) {
+        const [a,b] = base.split('-').map((x)=>aliases[x.toLowerCase()] ?? x);
+        start = Number(a); end = Number(b);
+      } else {
+        const v = Number(aliases[base.toLowerCase()] ?? base);
+        start = v; end = part.includes('/') ? max : v;
+      }
+    }
+    if (![start,end].every(Number.isInteger) || start < min || end > max || start > end) throw new Error(`Out of range in "${token}".`);
+    const values = [];
+    for (let i = start; i <= end; i += step) values.push(i);
+    if (!values.length) throw new Error(`No values in "${token}".`);
+    return values;
+  };
+  const values = [...new Set(norm.split(',').flatMap(expand))].sort((a,b)=>a-b);
+  const text = values.length === (max - min + 1) ? 'every value' : values.map((v)=>names?.[v] ?? String(v)).join(', ');
+  return { values, text, raw };
+}
+
+export function explainCron(expression, locale = 'ru') {
+  const parts = String(expression || '').trim().split(/\s+/);
+  if (parts.length !== 5) throw new Error(locale === 'en' ? 'Cron expression must have 5 fields: minute hour day-of-month month day-of-week.' : 'Cron-выражение должно содержать 5 полей: минута час день-месяца месяц день-недели.');
+  const [minF, hourF, domF, monF, dowF] = parts;
+  const fields = [
+    { key: 'minute', label: locale === 'en' ? 'Minute' : 'Минута', range: '0-59', parsed: parseCronToken(minF,0,59) },
+    { key: 'hour', label: locale === 'en' ? 'Hour' : 'Час', range: '0-23', parsed: parseCronToken(hourF,0,23) },
+    { key: 'dom', label: locale === 'en' ? 'Day of month' : 'День месяца', range: '1-31', parsed: parseCronToken(domF,1,31) },
+    { key: 'month', label: locale === 'en' ? 'Month' : 'Месяц', range: '1-12 or JAN-DEC', parsed: parseCronToken(monF,1,12,CRON_MONTH_ALIASES,CRON_MONTHS) },
+    { key: 'dow', label: locale === 'en' ? 'Day of week' : 'День недели', range: '0-7 or SUN-SAT', parsed: parseCronToken(dowF,0,7,CRON_DOW_ALIASES,CRON_DOW) },
+  ];
+  const describe = (f) => f.parsed.raw === '*' ? (locale === 'en' ? 'every' : 'каждое значение') : (f.parsed.text || f.parsed.values.join(', '));
+  const summary = locale === 'en'
+    ? `Runs at minute ${describe(fields[0])}, hour ${describe(fields[1])}, day-of-month ${describe(fields[2])}, month ${describe(fields[3])}, day-of-week ${describe(fields[4])}.`
+    : `Запуск: минута ${describe(fields[0])}, час ${describe(fields[1])}, день месяца ${describe(fields[2])}, месяц ${describe(fields[3])}, день недели ${describe(fields[4])}.`;
+  return { expression: parts.join(' '), summary, fields: fields.map((f)=>({ key: f.key, label: f.label, range: f.range, raw: f.parsed.raw, values: f.parsed.values, text: describe(f) })) };
+}

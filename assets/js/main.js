@@ -301,13 +301,13 @@ if (typeof HTMLDialogElement !== 'undefined') {
   const toolItems = isEnglish ? [
     ['Secure password', 'password'], ['UUID v4', 'uuid'], ['SHA hash', 'hash'], ['JSON formatter', 'json'],
     ['JSON diff', 'json-diff'], ['Text diff', 'text-diff'], ['Base64', 'base64'], ['Caesar cipher', 'caesar'], ['URL toolkit', 'url'],
-    ['JWT decoder', 'jwt'], ['Unix timestamp', 'timestamp'], ['CSV ↔ JSON', 'csv'], ['Regex tester', 'regex'],
+    ['JWT decoder', 'jwt'], ['Unix timestamp', 'timestamp'], ['Cron explainer', 'cron'], ['CSV ↔ JSON', 'csv'], ['Regex tester', 'regex'],
     ['Text and slug', 'text'], ['User Story + BDD', 'story'], ['API request → cURL', 'curl'],
     ['Mermaid sequence', 'sequence'], ['Project brief', 'brief']
   ] : [
     ['Безопасный пароль', 'password'], ['UUID v4', 'uuid'], ['SHA-хеш', 'hash'], ['JSON formatter', 'json'],
     ['JSON diff', 'json-diff'], ['Text diff', 'text-diff'], ['Base64', 'base64'], ['Шифр Цезаря', 'caesar'], ['URL toolkit', 'url'],
-    ['JWT decoder', 'jwt'], ['Unix timestamp', 'timestamp'], ['CSV ↔ JSON', 'csv'], ['Regex tester', 'regex'],
+    ['JWT decoder', 'jwt'], ['Unix timestamp', 'timestamp'], ['Cron explainer', 'cron'], ['CSV ↔ JSON', 'csv'], ['Regex tester', 'regex'],
     ['Текст и slug', 'text'], ['User Story + BDD', 'story'], ['API request → cURL', 'curl'],
     ['Mermaid sequence', 'sequence'], ['Проектный бриф', 'brief']
   ];

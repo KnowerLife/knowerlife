@@ -12,6 +12,7 @@ import {
   diffJson,
   diffText,
   encodeUrlComponent,
+  explainCron,
   formatJson,
   hashText,
   jsonToCsv,
@@ -633,6 +634,20 @@ byId('brief-example')?.addEventListener('click', () => {
   };
   Object.entries(values).forEach(([key, value]) => { byId(`brief-${key}`).value = value; });
   byId('brief-generate')?.click();
+});
+
+
+byId('cron-explain')?.addEventListener('click', () => {
+  runAction(() => {
+    const result = explainCron(byId('cron-input')?.value || '', locale);
+    const lines = [result.summary, '', ...result.fields.map((f) => `${f.label}: ${f.raw} → ${Array.isArray(f.values) && f.values.length <= 12 ? f.values.join(', ') : f.text} (${f.range})`)];
+    return lines.join('\n');
+  }, 'cron-output');
+});
+byId('cron-example')?.addEventListener('click', () => {
+  const input = byId('cron-input');
+  if (input) input.value = '*/15 9-17 * * 1-5';
+  byId('cron-explain')?.click();
 });
 
 

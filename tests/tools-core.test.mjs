@@ -7,6 +7,7 @@ import {
   decodeJwt,
   diffJson,
   diffText,
+  explainCron,
   jsonToCsv,
   makePassword,
   shiftText,
@@ -83,4 +84,19 @@ test('diffText compares lines with LCS', () => {
   assert.equal(result.summary.removed, 1);
   assert.equal(result.summary.added, 1);
   assert.deepEqual(result.lines.map((l) => l.type), ['same', 'removed', 'same', 'added']);
+});
+
+
+test('explainCron parses common 5-field expressions', () => {
+  const result = explainCron('*/15 9-17 1,15 JAN MON-FRI', 'en');
+  assert.equal(result.fields.length, 5);
+  assert.deepEqual(result.fields[0].values, [0,15,30,45]);
+  assert.deepEqual(result.fields[1].values, [9,10,11,12,13,14,15,16,17]);
+  assert.deepEqual(result.fields[2].values, [1,15]);
+  assert.deepEqual(result.fields[3].values, [1]);
+  assert.ok(result.summary.includes('minute'));
+});
+
+test('explainCron validates field count', () => {
+  assert.throws(() => explainCron('* * * *', 'en'), /5 fields/);
 });
