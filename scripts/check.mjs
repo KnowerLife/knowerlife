@@ -268,15 +268,6 @@ function hreflangsFor(file) {
 for (const file of htmlFiles) {
   const alternates = hreflangsFor(file);
   if (!alternates.length) continue;
-  const canonicalM = readFileSync(file, 'utf8').match(/<link\b[^>]*\brel\s*=\s*("([^"]*)"|'([^']*)')[^>]*>/gi) || [];
-  let canonical = '';
-  for (const tag of canonicalM) {
-    if (/\bcanonical\b/i.test(tag)) {
-      const hm = tag.match(/\bhref\s*=\s*("([^"]*)"|'([^']*)')/i);
-      canonical = hm ? (hm[2] ?? hm[3] ?? '').trim() : '';
-      break;
-    }
-  }
   const localAlternates = alternates.filter((a) => a.href.startsWith('https://knowerlife.ru/'));
   for (const alt of localAlternates) {
     const target = urlToLocalFile(alt.href);
@@ -294,13 +285,24 @@ for (const file of htmlFiles) {
       if (!hasBack) fail(`Hreflang reciprocity missing: ${rel(target)} does not link back to ${rel(file)}`);
     }
   }
-  if (canonical) {
-    const self = localAlternates.find((a) => a.lang === 'x-default') || localAlternates.find((a) => {
-      const t = urlToLocalFile(a.href);
-      return t && resolve(t) === resolve(file);
-    });
-    if (self && self.href !== canonical) {
-      // allow x-default to differ? usually canonical should match page URL; only warn-level not possible, but avoid false positives
+}
+
+// 5d. Sitemap lastmod vs JSON-LD dateModified consistency where both exist.
+const sitemapPath = join(root, 'sitemap.xml');
+if (existsSync(sitemapPath)) {
+  const sitemap = readFileSync(sitemapPath, 'utf8');
+  const entries = new Map();
+  const urlRe = /<url>\s*<loc>([^<]+)<\/loc>\s*(?:<lastmod>([^<]+)<\/lastmod>)?/g;
+  let um;
+  while ((um = urlRe.exec(sitemap)) !== null) entries.set(um[1], um[2] || '');
+  for (const [loc, lastmod] of entries) {
+    if (!lastmod) continue;
+    const file = urlToLocalFile(loc);
+    if (!file || !existsSync(file)) continue;
+    const html = readFileSync(file, 'utf8');
+    const dm = html.match(/"dateModified"\s*:\s*"([^"]+)"/);
+    if (dm && dm[1] !== lastmod) {
+      fail(`dateModified/sitemap mismatch for ${rel(file)}: JSON-LD ${dm[1]} vs sitemap ${lastmod}`);
     }
   }
 }
