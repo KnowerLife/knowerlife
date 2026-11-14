@@ -280,6 +280,23 @@ function initBookmarks(){
   render();
 }
 
+
+
+function initActiveNav(){
+  if(!('IntersectionObserver' in window)) return;
+  const links=[...document.querySelectorAll('#desktopNav a')];
+  if(!links.length) return;
+  const byId=new Map(links.map(a=>[a.getAttribute('href')?.slice(1), a]));
+  const sections=[...document.querySelectorAll('.searchable')].filter(c=>c.id);
+  const observer=new IntersectionObserver(entries=>{
+    const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+    if(!visible) return;
+    links.forEach(l=>l.classList.remove('is-active'));
+    byId.get(visible.target.id)?.classList.add('is-active');
+  },{rootMargin:'-20% 0px -65% 0px',threshold:[0,.1,.25]});
+  sections.forEach(s=>observer.observe(s));
+}
+
 function exportVisibleMd(){
   const btn=document.getElementById('exportVisibleMdBtn'); if(!btn) return;
   btn.addEventListener('click', async ()=>{
@@ -328,4 +345,4 @@ function saBackup(){
 }
 
 const _domReady = document.addEventListener;
-document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}try{initApiTester()}catch(e){}try{initDocuments()}catch(e){}try{initMessages()}catch(e){}try{initCopyButtons()}catch(e){}try{initQuiz()}catch(e){}try{initBookmarks()}catch(e){}});
+document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}try{initApiTester()}catch(e){}try{initDocuments()}catch(e){}try{initMessages()}catch(e){}try{initCopyButtons()}catch(e){}try{initQuiz()}catch(e){}try{initBookmarks()}catch(e){}try{initActiveNav()}catch(e){}});
