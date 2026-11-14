@@ -68,7 +68,7 @@ KnowerLife
 |---|---|---|---|
 | **KnowerLife** | [`/`](https://knowerlife.ru/) | [`/en/`](https://knowerlife.ru/en/) | Портфолио, услуги, кейсы, компетенции, процесс работы |
 | **SA Guide** | [`/sa/`](https://knowerlife.ru/sa/) | [`/en/sa/`](https://knowerlife.ru/en/sa/) | 64 раздела системного анализа и Analyst Workbench |
-| **Browser Tools** | [`/tools/`](https://knowerlife.ru/tools/) | [`/en/tools/`](https://knowerlife.ru/en/tools/) | 17 локальных инструментов аналитика и разработчика |
+| **Browser Tools** | [`/tools/`](https://knowerlife.ru/tools/) | [`/en/tools/`](https://knowerlife.ru/en/tools/) | 31 локальный инструмент аналитика и разработчика |
 | **Creative Corner** | [`/creative/`](https://knowerlife.ru/creative/) | [`/en/creative/`](https://knowerlife.ru/en/creative/) | Музыкальное портфолио, Suno, AI Music и web-player |
 
 Вся экосистема использует один основной домен, одну PWA-конфигурацию, один root Service Worker, общий набор favicon/PWA icons, единое состояние темы и доступности, общую визуальную систему и согласованную RU/EN-навигацию. В v11.2 поверх модулей работает единая **Ecosystem Shell**: общий header, footer, переключатель продуктов, mobile-dialog и единые controls RU/EN · A+ · Install · Light/Dark.
@@ -171,11 +171,11 @@ KnowerLife
 
 <p align="center">
   <a href="https://knowerlife.ru/tools/">
-    <img src="assets/seo/og-tools-ru.png" alt="Browser Tools KnowerLife — 17 локальных инструментов" width="100%">
+    <img src="assets/seo/og-tools-ru.png" alt="Browser Tools KnowerLife — 31 локальный инструмент" width="100%">
   </a>
 </p>
 
-Browser Tools — **17 локальных утилит**, работающих непосредственно в браузере.
+Browser Tools — **31 локальная утилита**, работающая непосредственно в браузере.
 
 | № | Инструмент | Назначение |
 |---:|---|---|
@@ -636,7 +636,7 @@ It combines:
 
 - **KnowerLife** — portfolio, services and detailed cases;
 - **SA Guide** — 64 system-analysis sections and an interactive analyst workbench;
-- **Browser Tools** — 17 local-first utilities;
+- **Browser Tools** — 31 local-first utilities;
 - **Creative Corner** — an AI-assisted music portfolio with a persistent web audio player.
 
 The platform provides Russian and English versions, one installable PWA, offline fallback, shared accessibility mode, light/dark themes, responsive desktop/tablet/mobile UI, local-first browser processing, SEO-friendly static pages and automated quality checks. Version 11.2 also introduces a shared ecosystem header/footer/navigation shell and dedicated high-contrast semantic colors for Creative Corner in light mode.
