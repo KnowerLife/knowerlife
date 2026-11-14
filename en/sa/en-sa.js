@@ -82,6 +82,7 @@ function downloadText(name, text, type='text/plain;charset=utf-8'){try{const blo
 function csvCell(value){const text=String(value??'');return /[",\n]/.test(text)?`"${text.replace(/"/g,'""')}"`:text}
 STORAGE.risks='sa_risks_v3'; STORAGE.traceability='sa_traceability_v3'; STORAGE.decisions='sa_decisions_v3';
 STORAGE.competency='sa_competency_v2'; STORAGE.security='sa_security_v2'; STORAGE.lastSection='sa_last_section_v3';
+STORAGE.bookmarks='sa_bookmarks_v2';
 
 function initRiskMatrix(){
   let risks=readJson(STORAGE.risks,[]);if(!Array.isArray(risks))risks=[];const list=document.getElementById('riskList'); if(!list) return;
@@ -240,6 +241,45 @@ function initQuiz(){
   document.getElementById('startTestBtn')?.addEventListener('click',start);
 }
 
+
+
+function initBookmarks(){
+  let bookmarks=readJson(STORAGE.bookmarks,[]); if(!Array.isArray(bookmarks)) bookmarks=[];
+  const validIds=new Set([...document.querySelectorAll('.searchable')].filter(c=>c.id).map(c=>c.id));
+  bookmarks=bookmarks.filter(id=>validIds.has(id));
+  const list=document.getElementById('bookmarksList');
+  const counter=document.getElementById('bookmarksCounter');
+  const titleFor=id=>document.getElementById(id)?.dataset.title||document.getElementById(id)?.querySelector('h2')?.textContent?.trim()||id;
+  const render=()=>{
+    if(counter) counter.textContent=String(bookmarks.length);
+    if(!list) return;
+    list.replaceChildren();
+    if(!bookmarks.length){const p=document.createElement('p');p.className='muted';p.textContent='No bookmarks yet';list.append(p);} else {
+      bookmarks.forEach(id=>{
+        const row=document.createElement('div'); row.className='bookmark-row';
+        const link=document.createElement('a'); link.href=`#${id}`; link.textContent=titleFor(id);
+        const remove=document.createElement('button'); remove.type='button'; remove.className='bookmark-remove'; remove.textContent='×'; remove.setAttribute('aria-label',`Remove bookmark: ${titleFor(id)}`);
+        remove.addEventListener('click',()=>toggle(id,false));
+        row.append(link,remove); list.append(row);
+      });
+    }
+    document.querySelectorAll('.bookmark-toggle').forEach(btn=>btn.setAttribute('aria-pressed', String(bookmarks.includes(btn.dataset.bookmark))));
+  };
+  const toggle=(id,announce=true)=>{
+    bookmarks=bookmarks.includes(id)?bookmarks.filter(item=>item!==id):[...bookmarks,id];
+    writeJson(STORAGE.bookmarks,bookmarks); render();
+    if(announce) showToast(bookmarks.includes(id)?'Bookmarked':'Bookmark removed');
+  };
+  [...document.querySelectorAll('.searchable')].filter(c=>c.id).forEach(card=>{
+    const head=card.querySelector('.card-head'); if(!head || head.querySelector('.bookmark-toggle')) return;
+    const btn=document.createElement('button'); btn.type='button'; btn.className='bookmark-toggle'; btn.dataset.bookmark=card.id; btn.textContent='◆';
+    btn.title='Bookmark topic'; btn.setAttribute('aria-label',`Bookmark: ${card.dataset.title||card.id}`); btn.setAttribute('aria-pressed','false');
+    btn.addEventListener('click',(e)=>{e.preventDefault(); toggle(card.id);});
+    head.append(btn);
+  });
+  render();
+}
+
 function exportVisibleMd(){
   const btn=document.getElementById('exportVisibleMdBtn'); if(!btn) return;
   btn.addEventListener('click', async ()=>{
@@ -288,4 +328,4 @@ function saBackup(){
 }
 
 const _domReady = document.addEventListener;
-document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}try{initApiTester()}catch(e){}try{initDocuments()}catch(e){}try{initMessages()}catch(e){}try{initCopyButtons()}catch(e){}try{initQuiz()}catch(e){}});
+document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}try{initApiTester()}catch(e){}try{initDocuments()}catch(e){}try{initMessages()}catch(e){}try{initCopyButtons()}catch(e){}try{initQuiz()}catch(e){}try{initBookmarks()}catch(e){}});
