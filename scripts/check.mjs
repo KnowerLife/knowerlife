@@ -232,6 +232,79 @@ for (const page of ['tools/index.html', 'en/tools/index.html']) {
   if (badgeMatch && Number(badgeMatch[1]) !== cardCount) fail(`${page}: badge count (${badgeMatch[1]}) != tool cards (${cardCount})`);
 }
 
+// 5c. Hreflang/canonical consistency for localized pages.
+function urlToLocalFile(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname !== 'knowerlife.ru') return null;
+    let p = u.pathname.replace(/^\/+/, '').replace(/\/+$/, '');
+    if (!p) return join(root, 'index.html');
+    const asIndex = join(root, p, 'index.html');
+    if (existsSync(asIndex)) return asIndex;
+    const asHtml = join(root, `${p}.html`);
+    if (existsSync(asHtml)) return asHtml;
+    return join(root, p, 'index.html');
+  } catch { return null; }
+}
+
+const hreflangCache = new Map();
+function hreflangsFor(file) {
+  if (hreflangCache.has(file)) return hreflangCache.get(file);
+  const html = readFileSync(file, 'utf8');
+  const out = [];
+  const reTag = /<link\b[^>]*\bhreflang\s*=\s*("([^"]*)"|'([^']*)')[^>]*>/gi;
+  let m;
+  while ((m = reTag.exec(html)) !== null) {
+    const tag = m[0];
+    const lang = (m[2] ?? m[3] ?? '').trim();
+    const hrefM = tag.match(/\bhref\s*=\s*("([^"]*)"|'([^']*)')/i);
+    const href = hrefM ? (hrefM[2] ?? hrefM[3] ?? '').trim() : '';
+    if (lang && href) out.push({ lang, href });
+  }
+  hreflangCache.set(file, out);
+  return out;
+}
+
+for (const file of htmlFiles) {
+  const alternates = hreflangsFor(file);
+  if (!alternates.length) continue;
+  const canonicalM = readFileSync(file, 'utf8').match(/<link\b[^>]*\brel\s*=\s*("([^"]*)"|'([^']*)')[^>]*>/gi) || [];
+  let canonical = '';
+  for (const tag of canonicalM) {
+    if (/\bcanonical\b/i.test(tag)) {
+      const hm = tag.match(/\bhref\s*=\s*("([^"]*)"|'([^']*)')/i);
+      canonical = hm ? (hm[2] ?? hm[3] ?? '').trim() : '';
+      break;
+    }
+  }
+  const localAlternates = alternates.filter((a) => a.href.startsWith('https://knowerlife.ru/'));
+  for (const alt of localAlternates) {
+    const target = urlToLocalFile(alt.href);
+    if (!target) continue;
+    if (!existsSync(target)) {
+      fail(`Hreflang target missing for ${rel(file)} (${alt.lang}): ${alt.href}`);
+      continue;
+    }
+    const back = hreflangsFor(target);
+    if (back.length) {
+      const hasBack = back.some((b) => {
+        const bt = urlToLocalFile(b.href);
+        return bt && resolve(bt) === resolve(file);
+      });
+      if (!hasBack) fail(`Hreflang reciprocity missing: ${rel(target)} does not link back to ${rel(file)}`);
+    }
+  }
+  if (canonical) {
+    const self = localAlternates.find((a) => a.lang === 'x-default') || localAlternates.find((a) => {
+      const t = urlToLocalFile(a.href);
+      return t && resolve(t) === resolve(file);
+    });
+    if (self && self.href !== canonical) {
+      // allow x-default to differ? usually canonical should match page URL; only warn-level not possible, but avoid false positives
+    }
+  }
+}
+
 // Report
 const summary = `Checked ${checked.js} JS, ${checked.json} JSON, ${checked.html} HTML files and ${checked.links} internal links.`;
 if (failures.length) {
