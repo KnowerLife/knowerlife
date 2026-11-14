@@ -351,8 +351,12 @@ function openTrackDialog(index) {
   els.dialogTitle.textContent = track.title;
   els.dialogMeta.textContent = [track.artist, track.genre, track.duration, track.releaseDate].filter(Boolean).join(' · ');
   els.dialogDescription.textContent = track.description || '';
-  els.dialogStory.textContent = track.story || 'Story not added yet.';
-  els.dialogLyrics.textContent = track.lyrics || 'Lyrics not added yet.';
+  const hasStory = Boolean((track.story || '').trim());
+  const hasLyrics = Boolean((track.lyrics || '').trim());
+  els.dialogStory.textContent = hasStory ? track.story : 'Story not added yet.';
+  els.dialogLyrics.textContent = hasLyrics ? track.lyrics : 'Lyrics not added yet.';
+  els.dialogStory.closest('.dialog-block, section, div')?.toggleAttribute?.('data-empty', !hasStory);
+  els.dialogLyrics.closest('.dialog-block, section, div')?.toggleAttribute?.('data-empty', !hasLyrics);
   els.dialogTags.replaceChildren();
   [...(track.tags || []), ...(track.mood || [])].forEach((item) => els.dialogTags.append(tag(item)));
 
@@ -376,10 +380,13 @@ function openTrackDialog(index) {
     els.dialogCredits.append(div);
   });
 
-  $('#dialogPlay').onclick = () => {
-    els.dialog.close();
-    playTrack(index);
-  };
+  const dialogPlayButton = $('#dialogPlay');
+  if (dialogPlayButton) {
+    dialogPlayButton.onclick = () => {
+      els.dialog.close();
+      playTrack(index);
+    };
+  }
   els.dialog.showModal();
 }
 
@@ -636,6 +643,12 @@ function setupControls() {
       els.audio.currentTime = Math.max(0, els.audio.currentTime - 5);
     } else if (event.key.toLowerCase() === 'm') {
       els.playerMute.click();
+    } else if (event.key.toLowerCase() === 'n' && state.current >= 0) {
+      goNext();
+    } else if (event.key.toLowerCase() === 'p' && state.current >= 0) {
+      goPrevious();
+    } else if (event.key.toLowerCase() === 'f' && state.current >= 0) {
+      toggleFavorite(state.tracks[state.current].id);
     }
   });
 }

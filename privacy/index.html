@@ -71,7 +71,7 @@
 <p class="eyebrow">Документ · без юридического тумана</p>
 <h1>Политика конфиденциальности</h1>
 <p class="lead">Сайт работает на GitHub Pages. Большинство данных обрабатывается локально в браузере, а аналитика загружается только после явного согласия.</p>
-<p class="privacy-updated">Обновлено <time datetime="2026-08-03">3 августа 2026 года</time></p>
+<p class="privacy-updated">Обновлено <time datetime="2026-11-14">14 ноября 2026 года</time></p>
 </div>
 <div aria-label="Ключевые принципы" class="privacy-summary">
 <div><span aria-hidden="true">01</span><strong>Без собственной базы</strong><p>На сайте нет серверного хранилища пользовательских форм и инструментов.</p></div>
@@ -124,7 +124,15 @@
 <section id="local-storage">
 <p class="privacy-section-index">04 / Browser storage</p>
 <h2>Хранилище браузера</h2>
-<p>В <code>localStorage</code> могут сохраняться выбранная тема, режим отображения портфолио и решение относительно аналитики. Эти данные находятся в браузере пользователя и могут быть удалены через настройки сайта или браузера.</p>
+<p>В <code>localStorage</code> (на этом устройстве и для этого домена) могут сохраняться:</p>
+<ul>
+<li><code>knowerlife-theme</code>, <code>knowerlife-accessibility</code> — тема и режим доступности;</li>
+<li><code>knowerlife-analytics-consent</code> — решение по аналитике;</li>
+<li><code>knowerlife-portfolio-view</code> — вид каталога портфолио;</li>
+<li><code>sa_*</code> — данные SA Guide (закладки, заметки, чек-листы, риски, трассировка, решения, компетенции, последняя секция);</li>
+<li>локальные настройки Creative Corner (избранное/состояние плеера, если используется браузером).</li>
+</ul>
+<p>Service Worker и Cache Storage используются для офлайн-работы и ускорения загрузки (страницы, стили, скрипты). Аудиофайлы не входят в app shell.</p>
 </section>
 <section id="analytics">
 <p class="privacy-section-index">05 / Analytics</p>
@@ -141,10 +149,12 @@
 <p class="privacy-section-index">07 / Control</p>
 <h2>Как управлять локальными данными</h2>
 <ol>
-<li>Откройте настройки сайта в браузере.</li>
-<li>Удалите cookies и данные сайта для домена <code>knowerlife.ru</code>.</li>
-<li>При следующем посещении сайт снова предложит выбрать режим аналитики.</li>
+<li>Откройте настройки сайта в браузере и удалите данные/кэш для домена <code>knowerlife.ru</code>; или</li>
+<li>Используйте кнопку ниже, чтобы очистить <code>localStorage</code>, кэши и регистрацию Service Worker на этом устройстве;</li>
+<li>В SA Guide доступен отдельный экспорт/импорт и очистка только данных раздела.</li>
 </ol>
+<div class="button-row" style="margin-top:.75rem"><button class="btn btn--secondary btn--small" data-clear-site-data="" type="button">Очистить локальные данные сайта</button></div>
+<p aria-live="polite" class="privacy-status" data-clear-site-data-status=""></p>
 </section>
 <section id="contacts">
 <p class="privacy-section-index">08 / Contact</p>
@@ -172,5 +182,31 @@
 <div class="consent-actions"><button class="btn btn--primary btn--small" data-consent-accept="" type="button">Разрешить</button><button class="btn btn--secondary btn--small" data-consent-decline="" type="button">Не сейчас</button></div>
 </aside>
 <script src="../assets/js/main.js" type="module"></script>
+<script>
+(() => {
+  const btn = document.querySelector('[data-clear-site-data]');
+  const status = document.querySelector('[data-clear-site-data-status]');
+  if (!btn) return;
+  btn.addEventListener('click', async () => {
+    if (!window.confirm('Очистить локальные данные, кэши и Service Worker для этого сайта на этом устройстве?')) return;
+    try {
+      try { localStorage.clear(); } catch {}
+      try { sessionStorage.clear(); } catch {}
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map((k) => caches.delete(k)));
+      }
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map((r) => r.unregister()));
+      }
+      if (status) status.textContent = 'Локальные данные очищены. Страница будет перезагружена.';
+      window.setTimeout(() => window.location.reload(), 500);
+    } catch {
+      if (status) status.textContent = 'Не удалось очистить часть данных. Проверьте настройки браузера для сайта.';
+    }
+  });
+})();
+</script>
 </body>
 </html>

@@ -142,6 +142,18 @@
 </aside>
 <article class="guide-content" id="guideContent">
 <div class="empty-state" hidden="" id="noSearchResults"><strong>Ничего не найдено</strong><p>Попробуйте изменить запрос или используйте термин из навигации.</p><button class="btn btn--secondary btn--small" id="clearSearchBtn" type="button">Сбросить поиск</button></div>
+<section class="knowledge-card searchable" data-category="requirements" data-search="learning path с чего начать junior middle roadmap обучение маршрут аналитик" data-title="Маршруты изучения" id="learning-paths">
+<div class="card-head"><div><p class="section-code">00 / PATHS</p><h2>Маршруты изучения</h2></div></div>
+<p>Выберите маршрут под свой уровень и задачу. Можно читать последовательно или перейти к нужному блоку.</p>
+<div class="artifact-grid">
+<div><strong>Старт / Junior</strong><span><a href="#task-process">01 Получение задачи</a> → <a href="#requirements">03 Требования</a> → <a href="#use-cases">Use Cases</a> → <a href="#user-stories">User Stories</a> → <a href="#acceptance-bdd">BDD</a> → <a href="#api">API</a></span></div>
+<div><strong>Middle / Практика</strong><span><a href="#traceability">Traceability</a> → <a href="#nfr">NFR</a> → <a href="#bpmn">BPMN</a> → <a href="#api-design">API design</a> → <a href="#integration-patterns">Integration patterns</a> → <a href="#testing-acceptance">Testing</a></span></div>
+<div><strong>Интеграции и надёжность</strong><span><a href="#rest">REST</a> → <a href="#async-messaging">Events &amp; queues</a> → <a href="#reliability-patterns">Reliability</a> → <a href="#data-consistency">Consistency</a> → <a href="#observability">Observability</a></span></div>
+<div><strong>Подготовка к работе</strong><span><a href="#tools-zone">Workbench</a> → <a href="#requirement-checker">Requirement checker</a> → <a href="#traceability-tool">Traceability</a> → <a href="#decision-records">ADR</a> → <a href="#templates">Шаблоны</a></span></div>
+</div>
+<div class="button-row" style="margin-top:1rem"><button class="btn btn--secondary btn--small" id="exportVisibleMdBtn" type="button">Экспорт видимых разделов (Markdown)</button></div>
+<p class="muted" style="margin:.5rem 0 0">Экспорт учитывает текущий поиск/фильтр — удобно собрать конспект или распечатать в PDF через браузер.</p>
+</section>
 <section class="knowledge-card searchable" data-category="requirements" data-search="задача алгоритм бизнес цель анализ исследование моделирование требования команда контроль" data-title="Что делать при получении задачи" id="task-process">
 <div class="card-head"><div><p class="section-code">01 / START</p><h2>Что делать при получении задачи</h2></div></div>
 <p>Начинайте не с решения, а с контекста: какую проблему решаем, кто получает ценность, какие ограничения уже известны и как будет измеряться результат.</p>
@@ -299,7 +311,7 @@
 </section>
 <section class="knowledge-card searchable interactive-card" data-category="data" data-search="data modeling entity attribute sql create table модель данных сущность атрибут генератор" data-title="Моделирование данных и SQL" id="data-modeling">
 <div class="card-head"><div><p class="section-code">33 / MODEL</p><h2>Моделирование данных + SQL</h2></div></div>
-<p>Создайте несколько сущностей, добавьте атрибуты и получите безопасно нормализованный черновик `CREATE TABLE`.</p>
+<p>Создайте несколько сущностей, добавьте атрибуты и получите безопасно нормализованный черновик <code>CREATE TABLE</code>.</p>
 <div class="modeling-grid"><div><div class="button-row"><button class="btn btn--primary btn--small" id="addEntityBtn" type="button">+ Сущность</button><button class="btn btn--secondary btn--small" id="genSqlBtn" type="button">Сгенерировать SQL</button><button class="btn btn--ghost btn--small" id="clearEntitiesBtn" type="button">Очистить</button></div><div aria-live="polite" class="entities-list" id="entitiesList"></div></div><div><div class="result-head"><strong>SQL preview</strong><button class="text-button" data-copy-target="sqlPreview" type="button">Копировать</button></div><pre class="code-output" id="sqlPreview">-- Добавьте хотя бы одну сущность</pre></div></div>
 </section>
 <section class="knowledge-card searchable" data-category="delivery" data-search="scrum kanban sprint wip lead time cycle time agile methodology timer meeting" data-title="Kanban vs Scrum" id="kanban-scrum">
@@ -366,8 +378,8 @@
 <textarea aria-label="Шаблон сообщения" id="emailTemplateText" placeholder="Выберите шаблон выше" rows="7"></textarea><button class="btn btn--secondary btn--small" id="copyEmailBtn" type="button">Копировать</button>
 </section>
 <section class="knowledge-card searchable" data-category="architecture" data-search="swagger openapi schema api documentation yaml contract 3.2.0 openapi 3.2" data-title="Swagger и OpenAPI" id="swagger">
-<div class="card-head"><div><p class="section-code">47 / webhook и ошибки API в машиночитаемом виде. Актуальная опубликованная версия спецификации — 3.2.0.</p><h2>Swagger / OpenAPI</h2></div></div>
-<p>OpenAPI описывает операции, параметры, схемы, ответы и ошибки REST API в машиночитаемом виде.</p>
+<div class="card-head"><div><p class="section-code">47 / CONTRACT</p><h2>Swagger / OpenAPI</h2></div></div>
+<p>OpenAPI описывает операции, параметры, схемы, ответы, webhook и ошибки API в машиночитаемом виде. Актуальная опубликованная версия спецификации — 3.2.0.</p>
 <div class="code-card code-card--dark">openapi: 3.2.0
 info:
   title: Orders API
@@ -389,7 +401,7 @@ paths:
 </section>
 <section class="knowledge-card searchable interactive-card" data-category="tools" data-search="competency map skills bpmn api sql security user stories communication progress компетенции навыки" data-title="Карта компетенций" id="competency-map">
 <div class="card-head"><div><p class="section-code">50 / SKILLS</p><h2>Карта компетенций</h2></div></div>
-<p>Отметьте освоенные навыки. Состояние хранится только в `localStorage` этого браузера.</p>
+<p>Отметьте освоенные навыки. Состояние хранится только в <code>localStorage</code> этого браузера.</p>
 <div class="checklist-container" id="competencyChecklist"><label class="checklist-item"><input class="comp-cb" id="comp1" type="checkbox"/>Выявление и анализ требований</label><label class="checklist-item"><input class="comp-cb" id="comp2" type="checkbox"/>BPMN и моделирование процессов</label><label class="checklist-item"><input class="comp-cb" id="comp3" type="checkbox"/>REST / OpenAPI</label><label class="checklist-item"><input class="comp-cb" id="comp4" type="checkbox"/>SQL и модели данных</label><label class="checklist-item"><input class="comp-cb" id="comp5" type="checkbox"/>Security requirements</label><label class="checklist-item"><input class="comp-cb" id="comp6" type="checkbox"/>User Stories / Use Cases</label><label class="checklist-item"><input class="comp-cb" id="comp7" type="checkbox"/>Traceability и change analysis</label><label class="checklist-item"><input class="comp-cb" id="comp8" type="checkbox"/>Фасилитация и коммуникация</label></div>
 <div class="progress-line"><span>Освоено</span><strong id="compProgressPercent">0%</strong></div><div class="progress-bar"><div class="progress-fill" id="compProgressFill"></div></div><div class="button-row"><button class="btn btn--primary btn--small" id="saveCompBtn" type="button">Сохранить</button><button class="btn btn--secondary btn--small" id="resetCompBtn" type="button">Сбросить</button></div>
 </section>
@@ -449,11 +461,17 @@ Then ...</pre>
 <div class="template-tabs"><button class="chip" data-api-url="https://jsonplaceholder.typicode.com/posts/1" type="button">JSONPlaceholder GET</button><button class="chip" data-api-url="https://jsonplaceholder.typicode.com/posts" type="button">JSONPlaceholder POST</button></div>
 <div class="result-head"><strong id="apiStatus">Response</strong><button class="text-button" data-copy-target="apiResponse" type="button">Копировать</button></div><pre class="code-output" id="apiResponse">Ответ появится здесь…</pre>
 </section>
-<section class="knowledge-card searchable interactive-card" data-category="tools" data-search="notes localstorage база знаний заметки аналитика" data-title="Заметки аналитика" id="knowledge-base">
+<section class="knowledge-card searchable interactive-card" data-category="tools" data-search="notes localstorage база знаний заметки аналитика backup export import" data-title="Заметки аналитика" id="knowledge-base">
 <div class="card-head"><div><p class="section-code">61 / NOTES</p><h2>Заметки аналитика</h2></div></div>
-<p>Заметки не уходят на сервер и сохраняются только в браузере.</p>
+<p>Заметки, закладки, чек-листы и рабочие данные сохраняются только в <code>localStorage</code> этого браузера и не отправляются на сервер.</p>
 <div class="notes-form"><input aria-label="Заголовок заметки" id="noteTitle" maxlength="80" placeholder="Заголовок" type="text"/><textarea aria-label="Содержание заметки" id="noteContent" maxlength="4000" placeholder="Содержание заметки" rows="4"></textarea><button class="btn btn--primary" id="addNoteBtn" type="button">Добавить заметку</button></div>
 <div aria-live="polite" class="notes-grid" id="notesList"></div>
+<div class="tool-workspace" style="margin-top:1rem">
+<h3 style="margin:0 0 .5rem">Резервная копия локальных данных</h3>
+<p class="muted" style="margin:0 0 .75rem">Экспортируйте или перенесите прогресс (закладки, заметки, риски, трассировка, решения, чек-листы, компетенции, настройки SA) в другой браузер.</p>
+<div class="button-row"><button class="btn btn--secondary btn--small" id="exportSaDataBtn" type="button">Экспорт JSON</button><button class="btn btn--secondary btn--small" id="importSaDataBtn" type="button">Импорт JSON</button><button class="btn btn--ghost btn--small" id="clearSaDataBtn" type="button">Очистить данные SA</button></div>
+<input accept="application/json" hidden id="importSaDataInput" type="file"/>
+</div>
 </section>
 <section class="knowledge-card searchable interactive-card" data-category="tools" data-search="requirements checklist stakeholder user stories acceptance nfr traceability чеклист требования" data-title="Чеклист анализа требований" id="interactive-checklists">
 <div class="card-head"><div><p class="section-code">62 / READY</p><h2>Чеклист анализа требований</h2></div></div>

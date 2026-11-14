@@ -233,6 +233,7 @@ Web experience
 | **Сердце дома** | [Открыть](https://suno.com/song/8df8adc7-d80d-4257-b8a1-3a679b2cec14) |
 | **Simulation Hacker** | [Открыть](https://suno.com/song/a3bf799e-6cb0-4b1f-84cd-706ffa7cbdb4) |
 | **Хакер Симуляции** | [Открыть](https://suno.com/song/1463f85b-b2d9-4d5f-83bc-5ba69ad51101) |
+| **Выход из матрицы** | [Открыть](https://suno.com/song/b20aba69-8fe1-485c-99db-ec4f26663c88) |
 
 Creative Corner включает persistent player, previous/next, seek, volume, shuffle, repeat, favorites, share, deep links, Media Session API и Web Audio visualization.
 
@@ -537,7 +538,7 @@ Browser Tools RU:         17
 Browser Tools EN:         17
 SA sections RU:           64
 SA sections EN:           64
-Creative tracks:           4
+Creative tracks:           5
 
 Browser Tools tests:      16 passed
 Creative Core tests:       5 passed
@@ -602,9 +603,9 @@ knowerlife/
 
 # GitHub Pages и автоматизация
 
-GitHub Actions используются для Pages deployment, quality checks, IndexNow и миграции музыкальных MP3 при необходимости.
+GitHub Actions используется для quality checks: workflow `.github/workflows/check.yml` запускает `npm run check` на каждый push в `main` и pull request. Публикация выполняется через GitHub Pages.
 
-Перед публикацией unified-версии выполняются проверки основной платформы и отдельных модулей.
+Проверка включает синтаксис JavaScript, JSON, внутренние ссылки, дубли `id`, наличие обязательных файлов и целостность PWA app shell, а также unit-тесты Browser Tools и Creative Corner.
 
 ---
 

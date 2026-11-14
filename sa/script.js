@@ -526,6 +526,43 @@
   }
 
 
+  function initGuideExport() {
+    const btn = $('#exportVisibleMdBtn');
+    if (!btn) return;
+    btn.addEventListener('click', async () => {
+      const sections = $$('.searchable').filter((s) => !s.hidden);
+      if (!sections.length) { showToast('Нет видимых разделов'); return; }
+      const md = (node) => (node.textContent || '').replace(/\s+/g, ' ').trim();
+      const lines = ['# SA Guide — экспорт', '', `Дата: ${new Date().toLocaleString('ru-RU')}`, `Разделов: ${sections.length}`, ''];
+      sections.forEach((section) => {
+        const code = section.querySelector('.section-code')?.textContent.trim();
+        const title = section.querySelector('h2')?.textContent.trim() || section.dataset.title || section.id;
+        lines.push(`## ${code ? code + ' — ' : ''}${title}`, '');
+        const intro = [...section.children].find((el) => el.tagName === 'P' && !el.closest('.note') && !el.closest('.button-row') && !el.closest('.tool-workspace'));
+        if (intro) lines.push(md(intro), '');
+        section.querySelectorAll(':scope > h3, :scope > div > h3, :scope .two-columns h3').forEach((h3) => lines.push(`### ${md(h3)}`));
+        section.querySelectorAll(':scope li, :scope .artifact-grid span, :scope .compact-grid p').forEach((li) => {
+          const t = md(li); if (t && t.length < 240) lines.push(`- ${t}`);
+        });
+        section.querySelectorAll(':scope .code-card, :scope pre').forEach((pre) => {
+          const t = (pre.textContent || '').trim();
+          if (t && t.length < 1000 && !/^(Response|Ответ появится|—)/.test(t)) lines.push('', '```', t, '```');
+        });
+        section.querySelectorAll(':scope .note').forEach((note) => { const t = md(note); if (t) lines.push('', `> ${t}`); });
+        lines.push('');
+      });
+      const out = lines.join('\n').replace(/\n{3,}/g, '\n\n');
+      try {
+        const blob = new Blob([out], { type: 'text/markdown;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'sa-guide-export.md'; document.body.append(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      } catch {}
+      const ok = await copyText(out);
+      showToast(ok ? 'Markdown скачан и скопирован' : 'Markdown скачан');
+    });
+  }
+
   function initSectionUtilities() {
     const continueBlock = $('#continueBlock');
     const continueLink = $('#continueLink');
@@ -713,6 +750,7 @@
     initActiveNav();
     initBookmarks();
     initSectionUtilities();
+    initGuideExport();
     initTimer();
     initDecisionTree();
     initDataModeler();
@@ -732,7 +770,67 @@
     initGlossaryFilter();
     initBackToTop();
     initPwaInstall();
+    function initDataBackup() {
+      const exportBtn = $('#exportSaDataBtn');
+      const importBtn = $('#importSaDataBtn');
+      const clearBtn = $('#clearSaDataBtn');
+      const input = $('#importSaDataInput');
+      if (!exportBtn || !importBtn || !input) return;
+      const collect = () => {
+        const data = { schema: 'knowerlife-sa-backup', version: 1, exportedAt: new Date().toISOString(), storage: {} };
+        Object.values(STORAGE).forEach((key) => {
+          try {
+            const raw = localStorage.getItem(key);
+            if (raw !== null) data.storage[key] = raw;
+          } catch {}
+        });
+        return data;
+      };
+      exportBtn.addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(collect(), null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'knowerlife-sa-backup.json';
+        document.body.append(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        showToast('Экспорт создан');
+      });
+      importBtn.addEventListener('click', () => input.click());
+      input.addEventListener('change', async () => {
+        const file = input.files?.[0];
+        if (!file) return;
+        try {
+          const text = await file.text();
+          const data = JSON.parse(text);
+          const storage = data && typeof data.storage === 'object' ? data.storage : null;
+          if (!storage) throw new Error('Invalid backup format');
+          if (!window.confirm('Импорт перезапишет текущие локальные данные SA Guide в этом браузере. Продолжить?')) return;
+          Object.entries(storage).forEach(([key, value]) => {
+            if (typeof value === 'string') {
+              try { localStorage.setItem(key, value); } catch {}
+            }
+          });
+          showToast('Данные импортированы, обновляю страницу…');
+          window.setTimeout(() => window.location.reload(), 400);
+        } catch {
+          showToast('Не удалось импортировать файл');
+        } finally {
+          input.value = '';
+        }
+      });
+      clearBtn?.addEventListener('click', () => {
+        if (!window.confirm('Удалить все локальные данные SA Guide (заметки, закладки, прогресс, решения)?')) return;
+        Object.values(STORAGE).forEach((key) => { try { localStorage.removeItem(key); } catch {} });
+        showToast('Локальные данные SA очищены');
+        window.setTimeout(() => window.location.reload(), 400);
+      });
+    }
+
     initNotes();
+    initDataBackup();
     initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist');
     initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist');
     initCompetency();

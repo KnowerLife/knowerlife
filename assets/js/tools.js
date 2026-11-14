@@ -10,6 +10,7 @@ import {
   decodeJwt,
   decodeUrlComponent,
   diffJson,
+  diffText,
   encodeUrlComponent,
   formatJson,
   hashText,
@@ -208,7 +209,49 @@ document.addEventListener('keydown', (event) => {
     toolSearch.value = '';
     applyToolFilters();
   }
+  if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+    const active = document.activeElement;
+    const card = active?.closest?.('[data-tool-card]') || toolCards.find((item) => item.open && !item.hidden);
+    const primary = card?.querySelector('.tool-workspace .btn--primary:not([disabled])');
+    if (primary) {
+      event.preventDefault();
+      primary.click();
+    }
+  }
 });
+
+toolCards.forEach((card) => {
+  const summary = card.querySelector('.tool-summary');
+  if (!summary || summary.querySelector('[data-tool-link-copy]')) return;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.dataset.toolLinkCopy = card.id;
+  button.className = 'tool-link-copy';
+  button.title = t('Скопировать ссылку на инструмент', 'Copy tool link');
+  button.setAttribute('aria-label', button.title);
+  button.textContent = '↗';
+  button.addEventListener('click', async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const url = `${location.origin}${location.pathname}#${card.id}`;
+    try {
+      await copyText(url);
+      showToast(t('Ссылка скопирована', 'Link copied'));
+    } catch {
+      showToast(messages.copyFailed, 'error');
+    }
+  });
+  summary.append(button);
+});
+
+function openTool(id, { scroll = false } = {}) {
+  if (!id) return;
+  const card = document.getElementById(id);
+  if (!card || !card.matches("[data-tool-card]")) return;
+  card.hidden = false;
+  card.open = true;
+  if (scroll) card.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 
 function openToolFromHash({ scroll = false } = {}) {
   const id = decodeURIComponent(location.hash.slice(1));
@@ -342,7 +385,7 @@ byId('json-minify')?.addEventListener('click', () => runAction(() => formatJson(
   mode: 'minify', sortKeys: byId('json-sort')?.checked
 }), 'json-output'));
 byId('json-example')?.addEventListener('click', () => {
-  byId('json-input').value = '{"project":"KnowerLife","status":"active","roles":["analyst","developer"],"metrics":{"cases":21,"tools":16}}';
+  byId('json-input').value = '{"project":"KnowerLife","status":"active","roles":["analyst","developer"],"metrics":{"cases":21,"tools":17}}';
   byId('json-format')?.click();
 });
 
@@ -421,10 +464,16 @@ byId('timestamp-now')?.addEventListener('click', () => {
 });
 byId('timestamp-to-date')?.addEventListener('click', () => runAction(() => {
   const date = timestampToDate(byId('timestamp-input')?.value || '');
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local';
+  const offsetMin = -date.getTimezoneOffset();
+  const sign = offsetMin >= 0 ? '+' : '-';
+  const pad = (n) => String(Math.floor(Math.abs(n))).padStart(2, '0');
+  const offset = `${sign}${pad(offsetMin / 60)}:${pad(offsetMin % 60)}`;
   return [
-    `ISO: ${date.toISOString()}`,
+    `ISO (UTC): ${date.toISOString()}`,
     `UTC: ${date.toUTCString()}`,
-    `${t('Локальное время', 'Local time')}: ${date.toLocaleString(localeTag, { dateStyle: 'full', timeStyle: 'long' })}`
+    `${t('Локальное время', 'Local time')}: ${date.toLocaleString(localeTag, { dateStyle: 'full', timeStyle: 'long' })}`,
+    `${t('Часовой пояс', 'Time zone')}: ${tz} (UTC${offset})`
   ].join('\n');
 }, 'timestamp-output'));
 byId('date-to-timestamp')?.addEventListener('click', () => runAction(() => {
@@ -585,3 +634,147 @@ byId('brief-example')?.addEventListener('click', () => {
   Object.entries(values).forEach(([key, value]) => { byId(`brief-${key}`).value = value; });
   byId('brief-generate')?.click();
 });
+
+
+byId('text-diff-run')?.addEventListener('click', () => {
+  runAction('text-diff-output', () => {
+    const result = diffText(byId('text-diff-left')?.value || '', byId('text-diff-right')?.value || '');
+    if (!result.lines.length) return t('Нет строк для сравнения.', 'No lines to compare.');
+    const lines = result.lines.map((line) => `${line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ' '} ${line.value}`);
+    return [`${t('Добавлено', 'Added')}: ${result.summary.added} · ${t('Удалено', 'Removed')}: ${result.summary.removed} · ${t('Без изменений', 'Unchanged')}: ${result.summary.same}`, '', ...lines].join('\n');
+  });
+});
+byId('text-diff-example')?.addEventListener('click', () => {
+  const left = byId('text-diff-left'); const right = byId('text-diff-right');
+  if (left) left.value = isEnglish ? 'GET /orders 200\nCache: disabled\nOwner: checkout' : 'GET /orders 200\nКэш: выключен\nВладелец: checkout';
+  if (right) right.value = isEnglish ? 'GET /orders 200\nCache: enabled\nOwner: platform' : 'GET /orders 200\nКэш: включен\nВладелец: platform';
+});
+
+
+
+// Persist tool form state locally (inputs/selects/textareas) to improve continuity.
+const TOOL_STATE_KEY = 'knowerlife-tools-state-v1';
+function readToolState() {
+  try { const raw = localStorage.getItem(TOOL_STATE_KEY); return raw ? JSON.parse(raw) : {}; } catch { return {}; }
+}
+function writeToolState(state) {
+  try { localStorage.setItem(TOOL_STATE_KEY, JSON.stringify(state)); } catch {}
+}
+function getToolStateId(card, field, index) {
+  return field.id || field.name || `${card?.id || 'tool'}-field-${index}`;
+}
+function saveToolFormState(form) {
+  const card = form.closest('[data-tool-card]');
+  if (!card?.id) return;
+  const state = readToolState();
+  const values = {};
+  [...form.querySelectorAll('input, textarea, select')].forEach((field, index) => {
+    const key = getToolStateId(card, field, index);
+    if (field.type === 'password' || field.type === 'file') return;
+    if (field.type === 'checkbox' || field.type === 'radio') values[key] = { type: field.type, checked: field.checked, name: field.name, value: field.value };
+    else values[key] = { type: field.tagName.toLowerCase(), value: field.value };
+  });
+  state[card.id] = values;
+  writeToolState(state);
+}
+function applyValuesToForm(form, values) {
+  if (!values || typeof values !== 'object') return;
+  [...form.querySelectorAll('input, textarea, select')].forEach((field, index) => {
+    const key = getToolStateId(form.closest('[data-tool-card]'), field, index);
+    const saved = values[key];
+    if (!saved) return;
+    if ((saved.type === 'checkbox' || saved.type === 'radio') && (field.type === 'checkbox' || field.type === 'radio')) field.checked = Boolean(saved.checked);
+    else if ('value' in saved && field.type !== 'file' && field.type !== 'password') field.value = String(saved.value ?? '');
+  });
+}
+function restoreToolFormState(form) {
+  const card = form.closest('[data-tool-card]');
+  if (!card?.id) return;
+  const state = readToolState()[card.id];
+  applyValuesToForm(form, state);
+}
+function collectShareableValues(form) {
+  const card = form.closest('[data-tool-card]');
+  const values = {};
+  [...form.querySelectorAll('input, textarea, select')].forEach((field, index) => {
+    const key = getToolStateId(card, field, index);
+    if (field.type === 'password' || field.type === 'file') return;
+    if (field.type === 'checkbox' || field.type === 'radio') {
+      if (field.checked) values[key] = field.value || '1';
+    } else if (String(field.value || '').length <= 800) {
+      values[key] = field.value;
+    }
+  });
+  return values;
+}
+function applyUrlState() {
+  const params = new URLSearchParams(window.location.search);
+  const toolId = params.get('tool');
+  if (!toolId) return;
+  const card = document.getElementById(toolId);
+  if (!card || !card.matches('[data-tool-card]')) return;
+  openTool(toolId, { scroll: true });
+  const values = {};
+  params.forEach((value, key) => {
+    if (key === 'tool') return;
+    // support checkbox markers encoded as field=1
+    values[key] = { value };
+  });
+  // try to infer checkbox/radio
+  card.querySelectorAll('form').forEach((form) => {
+    [...form.querySelectorAll('input, textarea, select')].forEach((field, index) => {
+      const key = getToolStateId(card, field, index);
+      if (!params.has(key)) return;
+      if (field.type === 'checkbox' || field.type === 'radio') {
+        field.checked = params.get(key) === field.value || params.get(key) === '1' || params.get(key) === 'true';
+      } else {
+        field.value = params.get(key) || '';
+      }
+    });
+    form.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+}
+
+document.querySelectorAll('[data-tool-form]').forEach((form) => {
+  restoreToolFormState(form);
+  form.addEventListener('input', () => saveToolFormState(form));
+  form.addEventListener('change', () => saveToolFormState(form));
+  form.querySelector('[data-tool-reset]')?.addEventListener('click', () => {
+    const card = form.closest('[data-tool-card]');
+    if (card?.id) { const state = readToolState(); delete state[card.id]; writeToolState(state); }
+  });
+});
+
+// add share-state buttons
+toolCards.forEach((card) => {
+  const summary = card.querySelector('.tool-summary');
+  if (!summary || summary.querySelector('[data-tool-share]')) return;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.dataset.toolShare = card.id;
+  button.className = 'tool-link-copy';
+  button.title = t('Скопировать ссылку с текущими значениями', 'Copy link with current values');
+  button.setAttribute('aria-label', button.title);
+  button.textContent = '⎘';
+  button.addEventListener('click', async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const form = card.querySelector('[data-tool-form]');
+    const params = new URLSearchParams();
+    params.set('tool', card.id);
+    if (form) {
+      const values = collectShareableValues(form);
+      Object.entries(values).forEach(([k, v]) => params.set(k, v));
+    }
+    const url = `${location.origin}${location.pathname}?${params.toString()}`;
+    try {
+      await copyText(url);
+      showToast(t('Ссылка с параметрами скопирована', 'State link copied'));
+    } catch {
+      showToast(messages.copyFailed, 'error');
+    }
+  });
+  summary.append(button);
+});
+
+applyUrlState();

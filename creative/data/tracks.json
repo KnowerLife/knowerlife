@@ -2,7 +2,7 @@
   "$schema": "./tracks.schema.json",
   "version": 5,
   "artist": "KnowerLife",
-  "updated": "2026-09-10",
+  "updated": "2026-11-14",
   "tracks": [
     {
       "enabled": true,
@@ -11,6 +11,7 @@
       "title": "Кованое сердце",
       "artist": "KnowerLife",
       "audio": "assets/music/1.mp3",
+      "duration": "3:55",
       "cover": "assets/covers/default-cover.jpg",
       "genre": "AI Music",
       "mood": [],
@@ -37,6 +38,7 @@
       "title": "Сердце дома",
       "artist": "KnowerLife",
       "audio": "assets/music/3.mp3",
+      "duration": "5:04",
       "cover": "assets/covers/default-cover.jpg",
       "genre": "AI Music",
       "mood": [],
@@ -63,6 +65,7 @@
       "title": "Simulation Hacker",
       "artist": "KnowerLife",
       "audio": "assets/music/4.mp3",
+      "duration": "5:44",
       "cover": "assets/covers/default-cover.jpg",
       "genre": "AI Music",
       "mood": [],
@@ -89,6 +92,7 @@
       "title": "Хакер Симуляции",
       "artist": "KnowerLife",
       "audio": "assets/music/2.mp3",
+      "duration": "3:43",
       "cover": "assets/covers/default-cover.jpg",
       "genre": "AI Music",
       "mood": [],
@@ -108,13 +112,14 @@
         "production": "AI-assisted / Suno"
       }
     },
-        {
+    {
       "enabled": true,
       "id": "Vykhod-iz-matritsy",
       "sunoId": "b20aba69-8fe1-485c-99db-ec4f26663c88",
       "title": "Выход из матрицы",
       "artist": "KnowerLife",
       "audio": "assets/music/5.mp3",
+      "duration": "3:54",
       "cover": "assets/covers/default-cover.jpg",
       "genre": "AI Music",
       "mood": [],
@@ -127,7 +132,7 @@
         "Suno",
         "AI Music"
       ],
-      "sunoUrl": "https://suno.com//song/b20aba69-8fe1-485c-99db-ec4f26663c88",
+      "sunoUrl": "https://suno.com/song/b20aba69-8fe1-485c-99db-ec4f26663c88",
       "downloadable": false,
       "credits": {
         "concept": "KnowerLife",

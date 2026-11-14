@@ -39,3 +39,55 @@ document.addEventListener('DOMContentLoaded',()=>{theme();access();mobile();sear
   else window.setTimeout(boot, 0);
 })();
 
+
+
+
+function exportVisibleMd(){
+  const btn=document.getElementById('exportVisibleMdBtn'); if(!btn) return;
+  btn.addEventListener('click', async ()=>{
+    const sections=[...document.querySelectorAll('.searchable')].filter(s=>!s.hidden);
+    if(!sections.length){alert('No visible topics');return}
+    const lines=['# SA Guide — export','',`Date: ${new Date().toLocaleString('en-GB')}`,`Topics: ${sections.length}`,''];
+    sections.forEach(sec=>{
+      const code=sec.querySelector('.section-code')?.textContent.trim();
+      const title=sec.querySelector('h2')?.textContent.trim()||sec.dataset.title||sec.id;
+      lines.push(`## ${code?code+' — ':''}${title}`,'');
+      const intro=[...sec.children].find(el=>el.tagName==='P');
+      if(intro){const t=(intro.textContent||'').replace(/\s+/g,' ').trim(); if(t) lines.push(t,'')}
+      sec.querySelectorAll('li,a strong').forEach(el=>{const t=(el.textContent||'').replace(/\s+/g,' ').trim(); if(t && t.length<220) lines.push(`- ${t}`)});
+      lines.push('');
+    });
+    const out=lines.join('\n').replace(/\n{3,}/g,'\n\n');
+    try{const blob=new Blob([out],{type:'text/markdown;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='sa-guide-export.md';document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url)}catch{}
+    try{await navigator.clipboard.writeText(out)}catch{}
+  });
+}
+
+function saBackup(){
+  const STORAGE={bookmarks:'sa_bookmarks_v2',notes:'sa_notes_v2',competency:'sa_competency_v2',requirements:'sa_requirements_v2',security:'sa_security_v2',lastSection:'sa_last_section_v3',risks:'sa_risks_v3',traceability:'sa_traceability_v3',decisions:'sa_decisions_v3'};
+  const exportBtn=document.getElementById('exportSaDataBtn');
+  const importBtn=document.getElementById('importSaDataBtn');
+  const clearBtn=document.getElementById('clearSaDataBtn');
+  const input=document.getElementById('importSaDataInput');
+  if(!exportBtn||!importBtn||!input) return;
+  exportBtn.addEventListener('click',()=>{
+    const data={schema:'knowerlife-sa-backup',version:1,exportedAt:new Date().toISOString(),storage:{}};
+    Object.entries(STORAGE).forEach(([k,key])=>{const v=read(key); if(v) data.storage[key]=v});
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='knowerlife-sa-backup.json'; document.body.append(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  });
+  importBtn.addEventListener('click',()=>input.click());
+  input.addEventListener('change',async()=>{
+    const file=input.files&&input.files[0]; if(!file) return;
+    try{const text=await file.text(); const data=JSON.parse(text); const storage=(data&&data.storage)||((data&&data.schema)?null:data); if(!storage||typeof storage!=='object') throw 0; Object.entries(storage).forEach(([key,val])=>{if(Object.values(STORAGE).includes(key)) write(key, typeof val==='string'?val:JSON.stringify(val))}); alert('Imported. Reload to apply.'); location.reload()}catch{alert('Invalid backup file')}
+    input.value='';
+  });
+  clearBtn?.addEventListener('click',()=>{
+    if(!confirm('Clear local SA data in this browser?')) return;
+    Object.values(STORAGE).forEach(k=>{try{localStorage.removeItem(k)}catch{}});
+    alert('SA local data cleared.'); location.reload();
+  });
+}
+
+const _domReady = document.addEventListener;
+document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}});

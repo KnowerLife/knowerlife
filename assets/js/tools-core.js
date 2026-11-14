@@ -478,3 +478,23 @@ export function buildBrief(fields, locale = 'ru', generatedAt = new Date()) {
   const localeTag = isEnglish ? 'en-GB' : 'ru-RU';
   return [title, '', ...body, `${isEnglish ? 'Generated' : 'Сформировано'}: ${generatedAt.toLocaleString(localeTag)}`].join('\n');
 }
+
+
+export function diffText(before = '', after = '') {
+  const left = String(before).replace(/\r\n/g, '\n').split('\n');
+  const right = String(after).replace(/\r\n/g, '\n').split('\n');
+  const n = left.length, m = right.length;
+  const dp = Array.from({ length: n + 1 }, () => Array(m + 1).fill(0));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) dp[i][j] = left[i] === right[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+  const out = [];
+  let i = 0, j = 0;
+  while (i < n && j < m) {
+    if (left[i] === right[j]) { out.push({ type: 'same', value: left[i] }); i++; j++; }
+    else if (dp[i + 1][j] >= dp[i][j + 1]) { out.push({ type: 'removed', value: left[i++] }); }
+    else { out.push({ type: 'added', value: right[j++] }); }
+  }
+  while (i < n) out.push({ type: 'removed', value: left[i++] });
+  while (j < m) out.push({ type: 'added', value: right[j++] });
+  const summary = out.reduce((acc, row) => { acc[row.type] = (acc[row.type] || 0) + 1; return acc; }, { added: 0, removed: 0, same: 0 });
+  return { lines: out, summary };
+}

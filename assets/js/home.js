@@ -9,11 +9,15 @@ const ui = {
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const projectCards = [...document.querySelectorAll('[data-project-card]')];
+const projectGrid = document.querySelector('[data-project-grid]');
 const projectFilters = [...document.querySelectorAll('[data-project-filter]')];
 const projectSearch = document.querySelector('[data-project-search]');
+const projectSort = document.querySelector('[data-project-sort]');
 const projectCount = document.querySelector('[data-project-count]');
 const projectEmpty = document.querySelector('[data-project-empty]');
 let activeProjectFilter = 'all';
+let activeProjectSort = 'default';
+const originalProjectOrder = [...projectCards];
 
 function getProjectCountLabel(count) {
   if (isEnglish) return `${count} ${count === 1 ? 'project' : 'projects'}`;
@@ -25,7 +29,40 @@ function getProjectCountLabel(count) {
   return `${count} проектов`;
 }
 
-function applyProjectFilters() {
+function updatePortfolioUrl() {
+  if (!projectCards.length) return;
+  const url = new URL(window.location.href);
+  const query = String(projectSearch?.value || '').trim();
+  if (activeProjectFilter && activeProjectFilter !== 'all') url.searchParams.set('filter', activeProjectFilter);
+  else url.searchParams.delete('filter');
+  if (query) url.searchParams.set('q', query);
+  else url.searchParams.delete('q');
+  if (activeProjectSort && activeProjectSort !== 'default') url.searchParams.set('sort', activeProjectSort);
+  else url.searchParams.delete('sort');
+  const view = projectGrid?.dataset.view;
+  if (view === 'list') url.searchParams.set('view', 'list');
+  else url.searchParams.delete('view');
+  const next = `${url.pathname}${url.search}${url.hash}`;
+  const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  if (next !== current) history.replaceState(null, '', next);
+}
+
+function applyProjectSort() {
+  if (!projectGrid || !projectCards.length) return;
+  const sorted = [...originalProjectOrder].sort((a, b) => {
+    if (activeProjectSort === 'title') {
+      return (a.querySelector('h3')?.textContent || '').localeCompare(b.querySelector('h3')?.textContent || '', root.lang);
+    }
+    if (activeProjectSort === 'type') {
+      return (a.querySelector('.project-type')?.textContent || '').localeCompare(b.querySelector('.project-type')?.textContent || '', root.lang)
+        || (a.querySelector('h3')?.textContent || '').localeCompare(b.querySelector('h3')?.textContent || '', root.lang);
+    }
+    return originalProjectOrder.indexOf(a) - originalProjectOrder.indexOf(b);
+  });
+  sorted.forEach((card) => projectGrid.append(card));
+}
+
+function applyProjectFilters(syncUrl = true) {
   if (!projectCards.length) return;
   const query = String(projectSearch?.value || '').trim().toLocaleLowerCase(root.lang);
   let visibleCount = 0;
@@ -42,6 +79,29 @@ function applyProjectFilters() {
 
   if (projectCount) projectCount.textContent = getProjectCountLabel(visibleCount);
   if (projectEmpty) projectEmpty.hidden = visibleCount !== 0;
+  if (syncUrl) updatePortfolioUrl();
+}
+
+function initPortfolioFromUrl() {
+  if (!projectCards.length) return;
+  const params = new URLSearchParams(window.location.search);
+  const filter = params.get('filter');
+  const q = params.get('q');
+  const view = params.get('view');
+  const sort = params.get('sort');
+  if (filter && projectFilters.some((button) => button.dataset.projectFilter === filter)) {
+    activeProjectFilter = filter;
+  }
+  if (sort && ['default', 'title', 'type'].includes(sort)) {
+    activeProjectSort = sort;
+    if (projectSort) projectSort.value = sort;
+  }
+  projectFilters.forEach((button) => button.setAttribute('aria-pressed', String((button.dataset.projectFilter || 'all') === activeProjectFilter)));
+  if (q && projectSearch) projectSearch.value = q;
+  if (view === 'list' && projectGrid) {
+    projectGrid.dataset.view = 'list';
+    localStorage.setItem('knowerlife-portfolio-view', 'list');
+  }
 }
 
 projectFilters.forEach((button) => {
@@ -51,7 +111,14 @@ projectFilters.forEach((button) => {
     applyProjectFilters();
   });
 });
-projectSearch?.addEventListener('input', applyProjectFilters);
+projectSearch?.addEventListener('input', () => applyProjectFilters());
+projectSort?.addEventListener('change', () => {
+  activeProjectSort = projectSort.value || 'default';
+  applyProjectSort();
+  applyProjectFilters();
+});
+initPortfolioFromUrl();
+applyProjectSort();
 applyProjectFilters();
 
 function getContactText(form) {
@@ -222,16 +289,17 @@ if (navigatorRoot) {
 
 // v6: compact/grid portfolio view, persisted locally.
 const portfolioView = document.querySelector('[data-portfolio-view]');
-const portfolioGrid = document.querySelector('#portfolio .portfolio-grid');
-if (portfolioView && portfolioGrid) {
+if (portfolioView && projectGrid) {
   const viewButtons = [...portfolioView.querySelectorAll('[data-portfolio-view-option]')];
+  const urlView = new URLSearchParams(window.location.search).get('view');
   const storedView = localStorage.getItem('knowerlife-portfolio-view');
-  let currentView = storedView === 'list' ? 'list' : 'grid';
+  let currentView = urlView === 'list' || (!urlView && storedView === 'list') ? 'list' : 'grid';
   function applyPortfolioView(view) {
     currentView = view === 'list' ? 'list' : 'grid';
-    portfolioGrid.dataset.view = currentView;
+    projectGrid.dataset.view = currentView;
     viewButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.portfolioViewOption === currentView)));
     localStorage.setItem('knowerlife-portfolio-view', currentView);
+    updatePortfolioUrl();
   }
   viewButtons.forEach((button) => button.addEventListener('click', () => applyPortfolioView(button.dataset.portfolioViewOption)));
   applyPortfolioView(currentView);

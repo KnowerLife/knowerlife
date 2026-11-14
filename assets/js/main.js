@@ -255,7 +255,7 @@ document.querySelectorAll('.cards, .portfolio-grid, .steps, .deliverables-grid, 
 
 // v6: lightweight command palette. It is progressive enhancement and has no external dependency.
 const navActions = document.querySelector('[data-nav-actions]');
-if (navActions && typeof HTMLDialogElement !== 'undefined') {
+if (typeof HTMLDialogElement !== 'undefined') {
   const commandButton = document.createElement('button');
   commandButton.type = 'button';
   commandButton.className = 'command-button';
@@ -269,7 +269,7 @@ if (navActions && typeof HTMLDialogElement !== 'undefined') {
   const commandKey = document.createElement('kbd');
   commandKey.textContent = '⌘K';
   commandButton.append(commandIcon, commandText, commandKey);
-  navActions.prepend(commandButton);
+  navActions?.prepend(commandButton);
 
   const dialog = document.createElement('dialog');
   dialog.className = 'command-dialog';
@@ -296,15 +296,41 @@ if (navActions && typeof HTMLDialogElement !== 'undefined') {
   document.body.append(dialog);
 
   const brandHref = document.querySelector('.brand')?.getAttribute('href') || `${basePath}index.html`;
-  const toolsHref = [...document.querySelectorAll('.nav-links a')].find((item) => /tools/i.test(item.getAttribute('href') || ''))?.getAttribute('href') || `${basePath}tools/index.html`;
+  const langBase = isEnglish ? `${basePath}en/` : basePath;
+  const toolsHref = [...document.querySelectorAll('.nav-links a')].find((item) => /tools|инструмент/i.test(item.textContent || ''))?.getAttribute('href') || `${langBase}tools/`;
+  const toolItems = isEnglish ? [
+    ['Secure password', 'password'], ['UUID v4', 'uuid'], ['SHA hash', 'hash'], ['JSON formatter', 'json'],
+    ['JSON diff', 'json-diff'], ['Text diff', 'text-diff'], ['Base64', 'base64'], ['Caesar cipher', 'caesar'], ['URL toolkit', 'url'],
+    ['JWT decoder', 'jwt'], ['Unix timestamp', 'timestamp'], ['CSV ↔ JSON', 'csv'], ['Regex tester', 'regex'],
+    ['Text and slug', 'text'], ['User Story + BDD', 'story'], ['API request → cURL', 'curl'],
+    ['Mermaid sequence', 'sequence'], ['Project brief', 'brief']
+  ] : [
+    ['Безопасный пароль', 'password'], ['UUID v4', 'uuid'], ['SHA-хеш', 'hash'], ['JSON formatter', 'json'],
+    ['JSON diff', 'json-diff'], ['Text diff', 'text-diff'], ['Base64', 'base64'], ['Шифр Цезаря', 'caesar'], ['URL toolkit', 'url'],
+    ['JWT decoder', 'jwt'], ['Unix timestamp', 'timestamp'], ['CSV ↔ JSON', 'csv'], ['Regex tester', 'regex'],
+    ['Текст и slug', 'text'], ['User Story + BDD', 'story'], ['API request → cURL', 'curl'],
+    ['Mermaid sequence', 'sequence'], ['Проектный бриф', 'brief']
+  ];
+  const sections = isEnglish ? [
+    ['SA Guide', '64 topics and the analyst workbench', `${langBase}sa/`],
+    ['Creative Corner', 'Music, Suno and AI-assisted production', `${langBase}creative/`],
+    ['Privacy', 'Data, storage and analytics principles', `${langBase}privacy/`],
+    ['Site map', 'Every page of the ecosystem', `${langBase}site-map/`]
+  ] : [
+    ['SA Guide', '64 темы и Analyst Workbench', `${langBase}sa/`],
+    ['Creative Corner', 'Музыка, Suno и AI-assisted production', `${langBase}creative/`],
+    ['Конфиденциальность', 'Данные, хранение и аналитика', `${langBase}privacy/`],
+    ['Карта сайта', 'Все страницы экосистемы', `${langBase}site-map/`]
+  ];
   const baseItems = [
     { title: isEnglish ? 'Services' : 'Компетенции', description: isEnglish ? 'System analysis, integrations and delivery' : 'Системный анализ, интеграции и реализация', href: `${brandHref}#services` },
     { title: isEnglish ? 'Selected cases' : 'Избранные кейсы', description: isEnglish ? 'Detailed project stories' : 'Подробные истории проектов', href: `${brandHref}#cases` },
     { title: isEnglish ? 'Full portfolio' : 'Полное портфолио', description: isEnglish ? 'All 21 projects' : 'Все 21 проекта', href: `${brandHref}#portfolio` },
     { title: isEnglish ? 'Process' : 'Процесс работы', description: isEnglish ? 'From discovery to delivery' : 'От discovery до сопровождения', href: `${brandHref}#process` },
     { title: isEnglish ? 'Project navigator' : 'Навигатор по задаче', description: isEnglish ? 'Find the right starting format' : 'Подобрать формат старта', href: `${brandHref}#navigator` },
-    { title: isEnglish ? 'Browser tools' : 'Инструменты', description: isEnglish ? '17 local utilities' : '17 локальных утилит', href: toolsHref },
-    { title: isEnglish ? 'Project brief builder' : 'Конструктор брифа', description: isEnglish ? 'Create a structured Markdown brief' : 'Собрать структурированный Markdown', href: `${toolsHref}#brief` },
+    { title: isEnglish ? 'Browser tools' : 'Инструменты', description: isEnglish ? '18 local utilities' : '18 локальных утилит', href: toolsHref },
+    ...sections.map(([title, description, href]) => ({ title, description, href })),
+    ...toolItems.map(([title, anchor]) => ({ title, description: isEnglish ? 'Local browser utility' : 'Локальный browser-инструмент', href: `${toolsHref}#${anchor}` })),
     { title: isEnglish ? 'Contact' : 'Контакты', description: isEnglish ? 'Discuss a challenge' : 'Обсудить задачу', href: `${brandHref}#contact` }
   ];
 
@@ -359,6 +385,7 @@ if (navActions && typeof HTMLDialogElement !== 'undefined') {
     window.requestAnimationFrame(() => search.focus());
   }
 
+  window.__knowerlifeCommand = openCommand;
   commandButton.addEventListener('click', openCommand);
   close.addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', (event) => {
@@ -406,3 +433,6 @@ if (document.body.classList.contains('home-page')) {
   window.addEventListener('load', () => scheduleIdle(loadHomeEnhancements, 1200), { once: true });
 }
 ;(()=>{addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.__knowerlifeInstallPrompt=e;dispatchEvent(new CustomEvent('knowerlife:installprompt',{detail:e}))});const b=()=>{if(window.__knowerlifeEcosystemShellBooted)return;window.__knowerlifeEcosystemShellBooted=1;const p=document.documentElement.dataset.base||'./',s=document.createElement('script');s.src=new URL(`${p}assets/js/ecosystem-shell.js`,location.href);document.body.append(s)};document.readyState==='loading'?addEventListener('DOMContentLoaded',b,{once:true}):setTimeout(b)})();
+
+
+document.querySelectorAll('[data-print-profile]').forEach((btn)=>btn.addEventListener('click',()=>window.print()));

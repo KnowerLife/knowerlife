@@ -331,6 +331,8 @@ input:invalid:not(:placeholder-shown), textarea:invalid:not(:placeholder-shown) 
 .tool-summary::-webkit-details-marker { display: none; }
 .tool-summary:hover { background: var(--surface-muted); }
 .tool-summary:focus-visible { outline-offset: -4px; }
+.tool-link-copy { display: inline-flex; align-items: center; justify-content: center; width: 1.8rem; height: 1.8rem; margin-left: .25rem; border: 1px solid var(--border); border-radius: .45rem; background: transparent; color: var(--text-muted); cursor: pointer; font: inherit; flex: 0 0 auto; }
+.tool-link-copy:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 30%, var(--border)); }
 .tool-icon { display: grid; min-width: 3rem; height: 3rem; place-items: center; padding-inline: 0.45rem; border-radius: 0.8rem; background: var(--accent-soft); color: var(--accent-strong); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.78rem; font-weight: 950; }
 .tool-summary__copy { display: grid; min-width: 0; }
 .tool-category { margin-bottom: 0.15rem; color: var(--accent-strong); font-size: 0.7rem; font-weight: 900; letter-spacing: 0.09em; text-transform: uppercase; }
@@ -1116,8 +1118,24 @@ textarea { field-sizing: content; min-height: 10rem; }
 .prose li::marker { color: var(--accent); }
 .note { border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border)); border-left-width: 4px; border-radius: 0 .8rem .8rem 0; }
 .case-next { display: grid; gap: 1rem; margin-top: 4rem; grid-template-columns: repeat(2, 1fr); }
-.case-next a { display: block; padding: 1.2rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); text-decoration: none; }
+.case-next a { display: block; padding: 1.2rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); text-decoration: none; transition: border-color .2s, transform .2s; }
 .case-next small { color: var(--text-muted); }.case-next strong { display: block; margin-top: .3rem; }
+.case-tldr { margin: 0 0 2rem; padding: 1.1rem 1.2rem; border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border)); border-radius: var(--radius-md); background: color-mix(in srgb, var(--surface) 80%, var(--accent-soft)); }
+.case-tldr h2 { margin: 0 0 .6rem; font-size: 1rem; letter-spacing: .02em; }
+.case-tldr ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .35rem; }
+.case-tldr li strong { color: var(--text); }
+.case-toc { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.case-toc h2 { margin: 0 0 .5rem; font-size: .95rem; }
+.case-toc nav { display: grid; gap: .35rem; }
+.case-toc a { color: var(--text-muted); text-decoration: none; font-size: .92rem; }
+.case-toc a:hover { color: var(--accent-strong); }
+@media print {
+  .site-header, .eco-header, .eco-mobile-menu, .consent, .skip-link, .case-grid-bg, .case-blueprint, .button-row, .case-next, [data-header-sentinel], .command-dialog { display: none !important; }
+  .case-hero, .case-content { background: #fff !important; color: #000 !important; }
+  .case-layout { grid-template-columns: 1fr !important; gap: 1rem !important; }
+  .case-aside { position: static !important; box-shadow: none !important; }
+  a { color: #000; text-decoration: underline; }
+}
 
 /* Modern footer */
 .site-footer { padding-block: 2rem; border-top: 1px solid var(--border); background: var(--bg); }
@@ -1219,7 +1237,10 @@ textarea { field-sizing: content; min-height: 10rem; }
 .tools-layout .tool-index__link { width: 100%; }
 @keyframes orbit-spin { to { transform: rotate(1turn); } }
 @media (max-width: 58rem) { .tools-hero-grid, .tools-layout { grid-template-columns: 1fr; }.tools-orbit { width: min(80vw, 24rem); }.tools-layout .tool-index { position: static; max-height: none; }.tools-layout .tool-index__links { display: flex; } }
-@media (prefers-reduced-motion: reduce) { .orbit-ring { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) {
+  .orbit-ring { animation: none !important; }
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+}
 
 /* v6 case storytelling */
 .case-hero { position: relative; min-height: 48rem; display: grid; align-items: center; padding: clamp(5rem, 9vw, 8rem) 0 4rem; overflow: clip; }
@@ -1764,3 +1785,6 @@ html[data-accessibility="enhanced"] .card,html[data-accessibility="enhanced"] .e
 @media (min-width: 46.01rem) {
   .home-page .hero-copy .gradient-text { white-space: nowrap; }
 }
+
+[data-empty="true"] { opacity: .72; }
+[data-empty="true"] > p, [data-empty="true"] > .dialog-text { font-style: italic; }

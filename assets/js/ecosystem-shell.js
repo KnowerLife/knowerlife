@@ -26,18 +26,18 @@
     privacy: 'Privacy', sitemap: 'Site map', analytics: 'Analytics', principles: 'Principles', contacts: 'Contacts',
     language: 'Russian version', accessibilityOn: 'Use standard accessibility', accessibilityOff: 'Enhanced accessibility', themeLight: 'Switch to light theme', themeDark: 'Switch to dark theme',
     install: 'Install KnowerLife', installTitle: 'Install KnowerLife', installReady: 'The app is ready to install.', installFallback: 'Installation is managed by your browser.', installed: 'KnowerLife is already running as an installed app.',
-    nav: 'Navigation', currentPage: 'On this page', settings: 'Appearance & app', close: 'Close', print: 'Print / PDF',
+    nav: 'Navigation', currentPage: 'On this page', settings: 'Appearance & app', close: 'Close', print: 'Print / PDF', command: 'Quick navigation',
     footerLead: 'System analysis, practical browser tools and creative technology in one coherent ecosystem.', explore: 'Explore', connect: 'Connect',
     pwa: 'One PWA', bilingual: 'RU / EN', accessible: 'Accessibility A+', local: 'Local-first', copyright: 'One domain · one PWA · one ecosystem',
     installStep1: 'Open the browser menu.', installStep2: 'Choose “Install app” or “Add to Home Screen”.', installStepIos1: 'Open this page in Safari.', installStepIos2: 'Tap Share, then “Add to Home Screen”.',
-    mainDesc: 'Portfolio, cases and services', saDesc: '64 topics + analyst workbench', toolsDesc: '17 local browser utilities', creativeDesc: 'Music, AI and Suno portfolio'
+    mainDesc: 'Portfolio, cases and services', saDesc: '64 topics + analyst workbench', toolsDesc: '18 local browser utilities', creativeDesc: 'Music, AI and Suno portfolio'
   } : {
     ecosystem: 'Экосистема', home: 'Главная', portfolio: 'Портфолио', cases: 'Кейсы', services: 'Услуги', process: 'Процесс', contact: 'Контакты',
     sa: 'SA Guide', tools: 'Browser Tools', creative: 'Creative Corner', music: 'Музыка', about: 'О проекте', knowledge: 'База знаний', workbench: 'Workbench', resources: 'Ресурсы',
     privacy: 'Конфиденциальность', sitemap: 'Карта сайта', analytics: 'Аналитика', principles: 'Принципы', contacts: 'Контакты',
     language: 'English version', accessibilityOn: 'Обычный режим отображения', accessibilityOff: 'Версия для слабовидящих', themeLight: 'Включить светлую тему', themeDark: 'Включить тёмную тему',
     install: 'Установить KnowerLife', installTitle: 'Установка KnowerLife', installReady: 'Приложение готово к установке.', installFallback: 'Установка управляется вашим браузером.', installed: 'KnowerLife уже открыт как установленное приложение.',
-    nav: 'Навигация', currentPage: 'На этой странице', settings: 'Вид и приложение', close: 'Закрыть', print: 'Печать / PDF',
+    nav: 'Навигация', currentPage: 'На этой странице', settings: 'Вид и приложение', close: 'Закрыть', print: 'Печать / PDF', command: 'Быстрый поиск',
     footerLead: 'Системный анализ, практические browser tools и творческие технологии в одной цельной экосистеме.', explore: 'Разделы', connect: 'Связаться',
     pwa: 'Единый PWA', bilingual: 'RU / EN', accessible: 'Доступность A+', local: 'Local-first', copyright: 'Один домен · одна PWA · одна экосистема',
     installStep1: 'Откройте меню браузера.', installStep2: 'Выберите «Установить приложение» или «Добавить на главный экран».', installStepIos1: 'Откройте страницу в Safari.', installStepIos2: 'Нажмите «Поделиться», затем «На экран Домой».',
@@ -263,6 +263,18 @@
   const accessibility = button('A+', 'eco-action'); accessibility.dataset.ecoAccessibility = '';
   const install = button('⇩', 'eco-action eco-action--install'); install.dataset.ecoInstall = ''; install.setAttribute('aria-label', text.install); install.title = text.install;
   const theme = button('☾', 'eco-action'); theme.dataset.ecoTheme = '';
+  const commandPalette = document.querySelector('.command-button');
+  if (commandPalette || typeof window.__knowerlifeCommand === 'function') {
+    const command = button('⌕', 'eco-action');
+    command.setAttribute('aria-label', text.command);
+    command.title = text.command;
+    command.dataset.ecoCommand = '';
+    command.addEventListener('click', () => {
+      if (typeof window.__knowerlifeCommand === 'function') window.__knowerlifeCommand();
+      else commandPalette.click();
+    });
+    actions.append(command);
+  }
   actions.append(language, accessibility, install, theme);
   if (product === 'sa') {
     const print = button('⎙', 'eco-action'); print.setAttribute('aria-label', text.print); print.title = text.print; print.dataset.ecoPrint = ''; actions.append(print);

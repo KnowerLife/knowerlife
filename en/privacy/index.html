@@ -71,7 +71,7 @@
 <p class="eyebrow">Document · plain language</p>
 <h1>Privacy policy</h1>
 <p class="lead">The site is hosted on GitHub Pages. Most data is processed locally in the browser, while analytics is loaded only after explicit consent.</p>
-<p class="privacy-updated">Updated <time datetime="2026-08-03">3 August 2026</time></p>
+<p class="privacy-updated">Updated <time datetime="2026-11-14">14 November 2026</time></p>
 </div>
 <div aria-label="Key principles" class="privacy-summary">
 <div><span aria-hidden="true">01</span><strong>No private database</strong><p>The site does not store form or toolbox content in a KnowerLife server database.</p></div>
@@ -102,10 +102,10 @@
 <section id="principles"><p class="privacy-section-index">01 / Principles</p><h2>What the site processes</h2><p>KnowerLife is a static GitHub Pages site. It does not use a private backend, user accounts or a server database to retain form and browser-tool content.</p><div class="privacy-note"><strong>Important</strong><p>Do not paste real passwords, secret keys, personal JWTs or production API tokens into examples on a device you do not control.</p></div></section>
 <section id="contact-form"><p class="privacy-section-index">02 / Messages</p><h2>Contact form</h2><p>The form creates a <code>mailto:</code> link and opens the user’s email application. Nothing is sent automatically; the message is transmitted only after confirmation in that application.</p><p>After sending, the email providers of the sender and recipient process the message under their own privacy terms.</p></section>
 <section id="tools-data"><p class="privacy-section-index">03 / Browser lab</p><h2>Local tools</h2><p>Password generation, JSON formatting and diffing, Base64, JWT decoding, SHA, Regex, CSV conversion and project generators run directly in the browser.</p><ul><li>input is not sent to a KnowerLife server;</li><li>results are not retained by the site after the page is closed;</li><li>file downloads are created locally by the browser.</li></ul></section>
-<section id="local-storage"><p class="privacy-section-index">04 / Browser storage</p><h2>Browser storage</h2><p><code>localStorage</code> may retain the selected theme, portfolio view and analytics decision. These values remain in the user’s browser and can be removed through site or browser settings.</p></section>
+<section id="local-storage"><p class="privacy-section-index">04 / Browser storage</p><h2>Browser storage</h2><p><code>localStorage</code> (on this device and for this domain) may retain:</p><ul><li><code>knowerlife-theme</code>, <code>knowerlife-accessibility</code> — theme and accessibility mode;</li><li><code>knowerlife-analytics-consent</code> — analytics decision;</li><li><code>knowerlife-portfolio-view</code> — portfolio catalogue view;</li><li><code>sa_*</code> — SA Guide data (bookmarks, notes, checklists, risks, traceability, decisions, competency, last section);</li><li>local Creative Corner settings (such as favourites/player state, if used by the browser).</li></ul><p>Service Worker and Cache Storage are used for offline support and faster loading (pages, styles, scripts). Audio files are not part of the app shell.</p></section>
 <section id="analytics"><p class="privacy-section-index">05 / Analytics</p><h2>Yandex Metrica</h2><p>The Yandex Metrica script loads only after the consent button is selected. Basic visit and link reports are enabled. Webvisor session recording is disabled.</p><p>Before consent, no analytics request is made. The choice can be changed with the “Analytics settings” button in this page navigation.</p></section>
 <section id="external-services"><p class="privacy-section-index">06 / Third parties</p><h2>External links and platforms</h2><p>The site links to GitHub, Telegram, VK, email and project websites. After following an external link, data is handled under that platform’s own policy.</p></section>
-<section id="rights"><p class="privacy-section-index">07 / Control</p><h2>How to manage local data</h2><ol><li>Open the browser’s settings for this site.</li><li>Remove cookies and site data for <code>knowerlife.ru</code>.</li><li>The analytics choice will be presented again on the next visit.</li></ol></section>
+<section id="rights"><p class="privacy-section-index">07 / Control</p><h2>How to manage local data</h2><ol><li>Open the browser’s site settings and remove data/cache for <code>knowerlife.ru</code>; or</li><li>Use the button below to clear <code>localStorage</code>, caches and the Service Worker registration on this device;</li><li>SA Guide provides separate export/import and clearing for that section’s data.</li></ol><div class="button-row" style="margin-top:.75rem"><button class="btn btn--secondary btn--small" data-clear-site-data="" type="button">Clear site local data</button></div><p aria-live="polite" class="privacy-status" data-clear-site-data-status=""></p></section>
 <section id="contacts"><p class="privacy-section-index">08 / Contact</p><h2>Contact</h2><p>Questions about site data handling: <a href="mailto:info@knowerlife.ru">info@knowerlife.ru</a>.</p></section>
 </article>
 </div>
@@ -114,5 +114,31 @@
 <footer class="site-footer"><div class="container footer-grid"><p class="muted">© <span data-current-year=""></span> KnowerLife</p><nav aria-label="Additional links" class="footer-links"><a data-site-map-link="" href="../site-map/">Sitemap</a><a aria-current="page" href="./">Privacy</a><a href="https://github.com/KnowerLife" rel="me noopener" target="_blank">GitHub</a><a href="https://t.me/knowerlife" rel="me noopener" target="_blank">Telegram</a><a href="mailto:info@knowerlife.ru">Email</a></nav></div></footer>
 <aside aria-label="Analytics settings" class="consent" data-consent="" data-nosnippet="" hidden=""><strong>Site analytics</strong><p>Yandex Metrica loads only after consent. Webvisor is disabled.</p><div class="consent-actions"><button class="btn btn--primary btn--small" data-consent-accept="" type="button">Allow</button><button class="btn btn--secondary btn--small" data-consent-decline="" type="button">Not now</button></div></aside>
 <script src="../../assets/js/main.js" type="module"></script>
+<script>
+(() => {
+  const btn = document.querySelector('[data-clear-site-data]');
+  const status = document.querySelector('[data-clear-site-data-status]');
+  if (!btn) return;
+  btn.addEventListener('click', async () => {
+    if (!window.confirm('Clear local data, caches and the Service Worker for this site on this device?')) return;
+    try {
+      try { localStorage.clear(); } catch {}
+      try { sessionStorage.clear(); } catch {}
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map((k) => caches.delete(k)));
+      }
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map((r) => r.unregister()));
+      }
+      if (status) status.textContent = 'Local data cleared. The page will reload.';
+      window.setTimeout(() => window.location.reload(), 500);
+    } catch {
+      if (status) status.textContent = 'Could not clear some data. Check browser site settings.';
+    }
+  });
+})();
+</script>
 </body>
 </html>
