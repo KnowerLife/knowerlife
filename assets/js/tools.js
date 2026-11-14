@@ -778,3 +778,39 @@ toolCards.forEach((card) => {
 });
 
 applyUrlState();
+
+
+
+// Global tool presets export/import
+(function initToolPresets(){
+  const exportBtn = byId('tools-export-state');
+  const importBtn = byId('tools-import-state');
+  const input = byId('tools-import-input');
+  if (!exportBtn && !importBtn) return;
+  exportBtn?.addEventListener('click', () => {
+    const payload = { schema: 'knowerlife-tools-presets', version: 1, exportedAt: new Date().toISOString(), state: readToolState() };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'knowerlife-tools-presets.json'; document.body.append(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    showToast(t('Пресеты экспортированы', 'Presets exported'));
+  });
+  importBtn?.addEventListener('click', () => input?.click());
+  input?.addEventListener('change', async () => {
+    const file = input.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      const state = data && typeof data.state === 'object' ? data.state : (data && data.schema ? null : data);
+      if (!state || typeof state !== 'object') throw new Error('invalid');
+      if (!window.confirm(t('Импорт перезапишет сохранённые значения инструментов в этом браузере. Продолжить?', 'Import will overwrite saved tool values in this browser. Continue?'))) return;
+      writeToolState(state);
+      document.querySelectorAll('[data-tool-form]').forEach(restoreToolFormState);
+      showToast(t('Пресеты импортированы', 'Presets imported'));
+    } catch {
+      showToast(t('Не удалось импортировать пресеты', 'Could not import presets'), 'error');
+    }
+    input.value = '';
+  });
+})();
