@@ -328,7 +328,7 @@ if (typeof HTMLDialogElement !== 'undefined') {
     { title: isEnglish ? 'Full portfolio' : 'Полное портфолио', description: isEnglish ? 'All 21 projects' : 'Все 21 проекта', href: `${brandHref}#portfolio` },
     { title: isEnglish ? 'Process' : 'Процесс работы', description: isEnglish ? 'From discovery to delivery' : 'От discovery до сопровождения', href: `${brandHref}#process` },
     { title: isEnglish ? 'Project navigator' : 'Навигатор по задаче', description: isEnglish ? 'Find the right starting format' : 'Подобрать формат старта', href: `${brandHref}#navigator` },
-    { title: isEnglish ? 'Browser tools' : 'Инструменты', description: isEnglish ? '18 local utilities' : '18 локальных утилит', href: toolsHref },
+    { title: isEnglish ? 'Browser tools' : 'Инструменты', description: isEnglish ? '19 local utilities' : '19 локальных утилит', href: toolsHref },
     ...sections.map(([title, description, href]) => ({ title, description, href })),
     ...toolItems.map(([title, anchor]) => ({ title, description: isEnglish ? 'Local browser utility' : 'Локальный browser-инструмент', href: `${toolsHref}#${anchor}` })),
     { title: isEnglish ? 'Contact' : 'Контакты', description: isEnglish ? 'Discuss a challenge' : 'Обсудить задачу', href: `${brandHref}#contact` }
