@@ -301,13 +301,13 @@ if (typeof HTMLDialogElement !== 'undefined') {
   const toolItems = isEnglish ? [
     ['Secure password', 'password'], ['UUID v4', 'uuid'], ['SHA hash', 'hash'], ['HMAC', 'hmac'], ['JSON formatter', 'json'],
     ['JSON diff', 'json-diff'], ['Text diff', 'text-diff'], ['JSON Schema from sample', 'json-schema'], ['Base64', 'base64'], ['Caesar cipher', 'caesar'], ['URL toolkit', 'url'],
-    ['JWT decoder', 'jwt'], ['Unix timestamp', 'timestamp'], ['Cron explainer', 'cron'], ['ISO 8601 duration', 'iso-duration'], ['Date/time interval diff', 'datetime-diff'], ['CSV ↔ JSON', 'csv'], ['NDJSON ↔ JSON', 'ndjson'], ['Regex tester', 'regex'],
+    ['JWT decoder', 'jwt'], ['Unix timestamp', 'timestamp'], ['Cron explainer', 'cron'], ['ISO 8601 duration', 'iso-duration'], ['Date/time interval diff', 'datetime-diff'], ['UTC offset converter', 'timezone-offset'], ['CSV ↔ JSON', 'csv'], ['NDJSON ↔ JSON', 'ndjson'], ['Regex tester', 'regex'],
     ['Text and slug', 'text'], ['Case converter', 'case-converter'], ['Number base converter', 'base-converter'], ['User Story + BDD', 'story'], ['API request → cURL', 'curl'],
     ['Mermaid sequence', 'sequence'], ['Project brief', 'brief']
   ] : [
     ['Безопасный пароль', 'password'], ['UUID v4', 'uuid'], ['SHA-хеш', 'hash'], ['HMAC', 'hmac'], ['JSON formatter', 'json'],
     ['JSON diff', 'json-diff'], ['Text diff', 'text-diff'], ['JSON Schema from sample', 'json-schema'], ['Base64', 'base64'], ['Шифр Цезаря', 'caesar'], ['URL toolkit', 'url'],
-    ['JWT decoder', 'jwt'], ['Unix timestamp', 'timestamp'], ['Cron explainer', 'cron'], ['ISO 8601 duration', 'iso-duration'], ['Date/time interval diff', 'datetime-diff'], ['CSV ↔ JSON', 'csv'], ['NDJSON ↔ JSON', 'ndjson'], ['Regex tester', 'regex'],
+    ['JWT decoder', 'jwt'], ['Unix timestamp', 'timestamp'], ['Cron explainer', 'cron'], ['ISO 8601 duration', 'iso-duration'], ['Date/time interval diff', 'datetime-diff'], ['UTC offset converter', 'timezone-offset'], ['CSV ↔ JSON', 'csv'], ['NDJSON ↔ JSON', 'ndjson'], ['Regex tester', 'regex'],
     ['Текст и slug', 'text'], ['Case converter', 'case-converter'], ['Number base converter', 'base-converter'], ['User Story + BDD', 'story'], ['API request → cURL', 'curl'],
     ['Mermaid sequence', 'sequence'], ['Проектный бриф', 'brief']
   ];
@@ -328,7 +328,7 @@ if (typeof HTMLDialogElement !== 'undefined') {
     { title: isEnglish ? 'Full portfolio' : 'Полное портфолио', description: isEnglish ? 'All 21 projects' : 'Все 21 проекта', href: `${brandHref}#portfolio` },
     { title: isEnglish ? 'Process' : 'Процесс работы', description: isEnglish ? 'From discovery to delivery' : 'От discovery до сопровождения', href: `${brandHref}#process` },
     { title: isEnglish ? 'Project navigator' : 'Навигатор по задаче', description: isEnglish ? 'Find the right starting format' : 'Подобрать формат старта', href: `${brandHref}#navigator` },
-    { title: isEnglish ? 'Browser tools' : 'Инструменты', description: isEnglish ? '28 local utilities' : '28 локальных утилит', href: toolsHref },
+    { title: isEnglish ? 'Browser tools' : 'Инструменты', description: isEnglish ? '29 local utilities' : '29 локальных утилит', href: toolsHref },
     ...sections.map(([title, description, href]) => ({ title, description, href })),
     ...toolItems.map(([title, anchor]) => ({ title, description: isEnglish ? 'Local browser utility' : 'Локальный browser-инструмент', href: `${toolsHref}#${anchor}` })),
     { title: isEnglish ? 'Contact' : 'Контакты', description: isEnglish ? 'Discuss a challenge' : 'Обсудить задачу', href: `${brandHref}#contact` }

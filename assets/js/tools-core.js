@@ -837,3 +837,59 @@ export async function hmacText(value, secret, algorithm = 'SHA-256', format = 'h
   if (out === 'base64url') return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
   return b64;
 }
+
+
+export function parseUtcOffset(value) {
+  const raw = String(value ?? '').trim();
+  if (!raw) throw new Error('UTC offset is required.');
+  if (raw === 'Z' || raw === 'z') return 0;
+  const m = raw.match(/^([+-])(\d{2})(?::?(\d{2}))?$/);
+  if (!m) throw new Error('Invalid UTC offset. Use +HH:MM, -HH:MM, or Z.');
+  const sign = m[1] === '-' ? -1 : 1;
+  const hh = Number(m[2]);
+  const mm = Number(m[3] || '0');
+  if (hh > 23 || mm > 59) throw new Error('Invalid UTC offset. Hours must be 00-23 and minutes 00-59.');
+  return sign * (hh * 60 + mm);
+}
+
+export function formatUtcOffset(minutes) {
+  const m = Number(minutes);
+  if (!Number.isFinite(m)) throw new Error('Invalid offset minutes.');
+  const sign = m < 0 ? '-' : '+';
+  const abs = Math.abs(Math.trunc(m));
+  const hh = String(Math.floor(abs / 60)).padStart(2, '0');
+  const mm = String(abs % 60).padStart(2, '0');
+  return `${sign}${hh}:${mm}`;
+}
+
+export function convertTimeZoneOffset(datetime, fromOffset, toOffset) {
+  const raw = String(datetime ?? '').trim();
+  if (!raw) throw new Error('Date/time is required.');
+  const m = raw.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T\s](\d{2}):(\d{2})(?::(\d{2}))?)?$/);
+  if (!m) throw new Error('Use datetime format YYYY-MM-DDTHH:mm or YYYY-MM-DDTHH:mm:ss.');
+  const year = Number(m[1]), month = Number(m[2]), day = Number(m[3]);
+  const hour = Number(m[4] || '0'), minute = Number(m[5] || '0'), second = Number(m[6] || '0');
+  const probe = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+  if (probe.getUTCFullYear() !== year || probe.getUTCMonth() !== month - 1 || probe.getUTCDate() !== day || probe.getUTCHours() !== hour || probe.getUTCMinutes() !== minute || probe.getUTCSeconds() !== second) {
+    throw new Error('Invalid date/time value.');
+  }
+  const fromMin = parseUtcOffset(fromOffset);
+  const toMin = parseUtcOffset(toOffset);
+  const utcMs = Date.UTC(year, month - 1, day, hour, minute, second) - fromMin * 60000;
+  const targetMs = utcMs + toMin * 60000;
+  const pad = (n, l = 2) => String(n).padStart(l, '0');
+  const fmt = (ms, offMin) => {
+    const d = new Date(ms);
+    return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}T${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}${formatUtcOffset(offMin)}`;
+  };
+  return {
+    utc: fmt(utcMs, 0),
+    target: fmt(targetMs, toMin),
+    source: fmt(utcMs + fromMin * 60000, fromMin),
+    fromOffset: formatUtcOffset(fromMin),
+    toOffset: formatUtcOffset(toMin),
+    unixMs: utcMs,
+    unixSec: Math.floor(utcMs / 1000),
+    diffMinutes: toMin - fromMin
+  };
+}

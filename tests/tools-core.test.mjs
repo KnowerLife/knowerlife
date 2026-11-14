@@ -22,6 +22,9 @@ import {
   ndjsonToJson,
   jsonToNdjson,
   hmacText,
+  parseUtcOffset,
+  formatUtcOffset,
+  convertTimeZoneOffset,
   jsonToCsv,
   makePassword,
   shiftText,
@@ -221,4 +224,25 @@ test('hmacText computes deterministic HMAC signatures', async () => {
   const b64url = await hmacText('hello', 'secret', 'SHA-256', 'base64url');
   assert.match(b64url, /^[A-Za-z0-9_-]+$/);
   await assert.rejects(() => hmacText('a', 'b', 'MD5', 'hex'), /Unsupported/);
+});
+
+
+test('parseUtcOffset, formatUtcOffset and convertTimeZoneOffset work with fixed offsets', () => {
+  assert.equal(parseUtcOffset('Z'), 0);
+  assert.equal(parseUtcOffset('+03:00'), 180);
+  assert.equal(parseUtcOffset('-0500'), -300);
+  assert.equal(formatUtcOffset(180), '+03:00');
+  assert.equal(formatUtcOffset(-300), '-05:00');
+
+  const result = convertTimeZoneOffset('2026-05-10T14:30:00', '+03:00', '-04:00');
+  assert.equal(result.source, '2026-05-10T14:30:00+03:00');
+  assert.equal(result.utc, '2026-05-10T11:30:00+00:00');
+  assert.equal(result.target, '2026-05-10T07:30:00-04:00');
+  assert.equal(result.diffMinutes, -420);
+  assert.equal(result.unixMs, Date.UTC(2026, 4, 10, 11, 30, 0));
+
+  const z = convertTimeZoneOffset('2026-01-01T00:00', 'Z', '+09:30');
+  assert.equal(z.target, '2026-01-01T09:30:00+09:30');
+  assert.throws(() => convertTimeZoneOffset('2026-13-01T00:00', 'Z', 'Z'), /Invalid/);
+  assert.throws(() => parseUtcOffset('+99:00'), /Invalid/);
 });

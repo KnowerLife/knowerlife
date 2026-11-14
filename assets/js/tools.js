@@ -28,6 +28,9 @@ import {
   formatJson,
   hashText,
   hmacText,
+  parseUtcOffset,
+  formatUtcOffset,
+  convertTimeZoneOffset,
   inferJsonSchema,
   jsonToCsv,
   makePassword,
@@ -765,6 +768,28 @@ byId('hmac-example')?.addEventListener('click', () => {
   const secret = byId('hmac-secret'); if (secret) secret.value = 'top-secret-key';
   byId('hmac-generate')?.click();
 });
+
+
+byId('tz-convert')?.addEventListener('click', () => {
+  runAction(() => {
+    const result = convertTimeZoneOffset(byId('tz-datetime')?.value || '', byId('tz-from')?.value || 'Z', byId('tz-to')?.value || 'Z');
+    return [
+      `${t('Источник', 'Source')}: ${result.source}`,
+      `${t('UTC', 'UTC')}: ${result.utc}`,
+      `${t('Результат', 'Target')}: ${result.target}`,
+      `${t('Смещение', 'Offset delta')}: ${result.diffMinutes} ${t('мин', 'min')}`,
+      `${t('Unix (сек)', 'Unix (sec)')}: ${result.unixSec}`,
+      `${t('Unix (мс)', 'Unix (ms)')}: ${result.unixMs}`
+    ].join('\n');
+  }, 'tz-output');
+});
+byId('tz-example')?.addEventListener('click', () => {
+  if (byId('tz-datetime')) byId('tz-datetime').value = '2026-05-10T14:30:00';
+  if (byId('tz-from')) byId('tz-from').value = '+03:00';
+  if (byId('tz-to')) byId('tz-to').value = '-04:00';
+  byId('tz-convert')?.click();
+});
+
 
 
 
