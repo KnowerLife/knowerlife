@@ -13,6 +13,9 @@ import {
   diffText,
   encodeUrlComponent,
   explainCron,
+  parseIsoDuration,
+  formatIsoDuration,
+  describeIsoDuration,
   formatJson,
   hashText,
   inferJsonSchema,
@@ -649,6 +652,29 @@ byId('schema-example')?.addEventListener('click', () => {
   byId('schema-generate')?.click();
 });
 
+byId('duration-parse')?.addEventListener('click', () => {
+  runAction(() => {
+    const d = describeIsoDuration(byId('duration-input')?.value || '', locale);
+    return [`ISO 8601: ${d.iso}`, `${t('Человеко-читаемо', 'Human-readable')}: ${d.human}`, `${t('Примерно секунд', 'Approx. seconds')}: ${Number.isFinite(d.totalSecondsApprox) ? d.totalSecondsApprox : '—'} (${t('оценка: месяцы=30д, годы=365д', 'estimate: months=30d, years=365d')})`].join('\n');
+  }, 'duration-output');
+});
+byId('duration-build')?.addEventListener('click', () => {
+  runAction(() => {
+    const iso = formatIsoDuration({
+      days: Number(byId('duration-days')?.value || 0),
+      hours: Number(byId('duration-hours')?.value || 0),
+      minutes: Number(byId('duration-minutes')?.value || 0),
+      seconds: Number(byId('duration-seconds')?.value || 0)
+    });
+    const d = describeIsoDuration(iso, locale);
+    return [`ISO 8601: ${d.iso}`, `${t('Человеко-читаемо', 'Human-readable')}: ${d.human}`].join('\n');
+  }, 'duration-output');
+});
+byId('duration-example')?.addEventListener('click', () => {
+  const input = byId('duration-input');
+  if (input) input.value = 'P2DT3H30M';
+  byId('duration-parse')?.click();
+});
 
 byId('cron-explain')?.addEventListener('click', () => {
   runAction(() => {

@@ -594,3 +594,37 @@ export function inferJsonSchema(input) {
   };
   return JSON.stringify(schema, null, 2);
 }
+
+
+export function parseIsoDuration(value) {
+  const input = String(value || '').trim();
+  const m = input.match(/^P(?:(\d+(?:\.\d+)?)Y)?(?:(\d+(?:\.\d+)?)M)?(?:(\d+(?:\.\d+)?)W)?(?:(\d+(?:\.\d+)?)D)?(?:T(?:(\d+(?:\.\d+)?)H)?(?:(\d+(?:\.\d+)?)M)?(?:(\d+(?:\.\d+)?)S)?)?$/i);
+  if (!m || input === 'P' || input === 'PT') throw new Error('Invalid ISO 8601 duration.');
+  const [ , y, mo, w, d, h, mi, s ] = m;
+  const parts = { years: Number(y||0), months: Number(mo||0), weeks: Number(w||0), days: Number(d||0), hours: Number(h||0), minutes: Number(mi||0), seconds: Number(s||0) };
+  const totalSeconds = (((parts.years * 365 + parts.months * 30 + parts.weeks * 7 + parts.days) * 24 + parts.hours) * 60 + parts.minutes) * 60 + parts.seconds;
+  return { input, parts, totalSeconds };
+}
+
+export function formatIsoDuration(parts = {}) {
+  const norm = {
+    years: Number(parts.years || 0), months: Number(parts.months || 0), weeks: Number(parts.weeks || 0),
+    days: Number(parts.days || 0), hours: Number(parts.hours || 0), minutes: Number(parts.minutes || 0), seconds: Number(parts.seconds || 0)
+  };
+  if (Object.values(norm).some((v) => !Number.isFinite(v) || v < 0)) throw new Error('Duration parts must be non-negative numbers.');
+  const date = `${norm.years ? norm.years + 'Y' : ''}${norm.months ? norm.months + 'M' : ''}${norm.weeks ? norm.weeks + 'W' : ''}${norm.days ? norm.days + 'D' : ''}`;
+  const time = `${norm.hours ? norm.hours + 'H' : ''}${norm.minutes ? norm.minutes + 'M' : ''}${norm.seconds ? norm.seconds + 'S' : ''}`;
+  const out = `P${date}${time ? 'T' + time : ''}`;
+  if (out === 'P') throw new Error('At least one duration part must be greater than zero.');
+  return out;
+}
+
+export function describeIsoDuration(value, locale = 'ru') {
+  const parsed = typeof value === 'string' ? parseIsoDuration(value) : { parts: value, totalSeconds: null, input: formatIsoDuration(value) };
+  const p = parsed.parts;
+  const labels = locale === 'en'
+    ? [['years','y'],['months','mo'],['weeks','w'],['days','d'],['hours','h'],['minutes','min'],['seconds','s']]
+    : [['years','г'],['months','мес'],['weeks','нед'],['days','д'],['hours','ч'],['minutes','мин'],['seconds','с']];
+  const human = labels.map(([k,l]) => p[k] ? `${p[k]} ${l}` : '').filter(Boolean).join(' ');
+  return { iso: parsed.input || formatIsoDuration(p), human: human || (locale === 'en' ? '0 s' : '0 с'), totalSecondsApprox: parsed.totalSeconds };
+}

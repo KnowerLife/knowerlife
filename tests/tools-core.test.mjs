@@ -9,6 +9,9 @@ import {
   diffText,
   explainCron,
   inferJsonSchema,
+  parseIsoDuration,
+  formatIsoDuration,
+  describeIsoDuration,
   jsonToCsv,
   makePassword,
   shiftText,
@@ -113,4 +116,16 @@ test('inferJsonSchema infers basic object and array schema', () => {
   assert.equal(schema.properties.active.type, 'boolean');
   assert.equal(schema.properties.meta.type, 'null');
   assert.deepEqual(schema.required, ['id','name','tags','active','meta']);
+});
+
+
+test('parseIsoDuration and formatIsoDuration handle basic durations', () => {
+  const parsed = parseIsoDuration('P1DT2H30M');
+  assert.equal(parsed.parts.days, 1);
+  assert.equal(parsed.parts.hours, 2);
+  assert.equal(parsed.parts.minutes, 30);
+  assert.equal(formatIsoDuration({ hours: 1, minutes: 5 }), 'PT1H5M');
+  const desc = describeIsoDuration('PT90S', 'en');
+  assert.equal(desc.iso, 'PT90S');
+  assert.ok(desc.human.includes('90'));
 });
