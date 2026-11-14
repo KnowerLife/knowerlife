@@ -246,8 +246,7 @@ paths:
 <label class="field-label">Requirement statement<textarea id="requirementInput" placeholder="Example: The system shall return the user’s order list in no more than 400 ms at p95 under 300 RPS." rows="5"></textarea></label>
 <div class="button-row"><button class="btn btn--primary" id="requirementCheckBtn" type="button">Check</button><button class="btn btn--ghost" id="clearRequirementBtn" type="button">Clear</button></div>
 <div aria-live="polite" class="score-panel" id="requirementScore"><strong>—</strong><span>Add a requirement to check</span></div><ul class="finding-list" id="requirementFindings"></ul>
-<div aria-live="polite" class="note" id="requirementResult" hidden>Enter a requirement to review ambiguity, measurability and testability.
-</article></div></div></div></section>
+<div aria-live="polite" class="note" id="requirementResult" hidden>Enter a requirement to review ambiguity, measurability and testability.</div></section>
 <section class="knowledge-card searchable interactive-card" data-category="tools" id="wb-acceptance-builder"><div class="card-head"><div><p class="section-code">WB / 02</p><h2>Acceptance Criteria Builder</h2></div></div>
 <div class="form-grid form-grid--3"><label>Given<input id="givenInput" placeholder="order is awaiting payment"/></label><label>When<input id="whenInput" placeholder="user confirms payment"/></label><label>Then<input id="thenInput" placeholder="order moves to paid"/></label></div>
 <div class="button-row"><button class="btn btn--primary" id="acceptanceBuildBtn" type="button">Build scenario</button><button class="btn btn--ghost" data-copy-target="acceptanceOutput" type="button">Copy</button></div><pre class="code-output" id="acceptanceOutput">Given ...
@@ -294,7 +293,7 @@ Then ...</pre></section>
 <section class="knowledge-card searchable interactive-card" data-category="tools" id="sa-data-backup"><div class="card-head"><div><p class="section-code">WB / 17</p><h2>Local data backup</h2></div></div>
 <p class="muted">Bookmarks, notes and workbench data are stored in this browser only (localStorage). Export/import lets you move progress between browsers; it is compatible with the Russian SA Guide.</p>
 <div class="button-row"><button class="btn btn--secondary" id="exportSaDataBtn" type="button">Export JSON</button><button class="btn btn--secondary" id="importSaDataBtn" type="button">Import JSON</button><button class="btn btn--ghost" id="clearSaDataBtn" type="button">Clear SA data</button></div><input accept="application/json" hidden id="importSaDataInput" type="file"/></section>
-</main><footer class="site-footer">
+</article></div></div></div></section></main><footer class="site-footer">
 <div class="container footer-grid">
 <div><a class="brand footer-brand" href="#top"><span class="brand-name">&lt;KnowerLife /&gt;</span><span class="brand-product">SA Guide</span></a><p class="muted">Interactive system analyst knowledge base. No registration and no custom backend.</p></div>
 <nav aria-label="Additional links" class="footer-links"><a href="../site-map/">Sitemap</a><a href="../privacy/">Privacy</a><a href="../../">KnowerLife</a><a href="../tools/">Tools</a><a href="../creative/">Creative Corner</a><a href="https://github.com/KnowerLife" rel="me noopener" target="_blank">GitHub</a></nav>
