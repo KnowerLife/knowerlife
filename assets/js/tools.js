@@ -20,6 +20,8 @@ import {
   buildQueryString,
   parseHttpHeaders,
   formatHttpHeaders,
+  ndjsonToJson,
+  jsonToNdjson,
   parseIsoDuration,
   formatIsoDuration,
   describeIsoDuration,
@@ -721,6 +723,22 @@ byId('dt-diff-example')?.addEventListener('click', () => {
   if (b) b.value = '2026-01-02T12:30';
   byId('dt-diff-run')?.click();
 });
+
+byId('ndjson-to-json')?.addEventListener('click', () => {
+  runAction(() => {
+    const result = ndjsonToJson(byId('ndjson-input')?.value || '');
+    return [JSON.stringify(result.items, null, 2), '', `${t('Объектов', 'Objects')}: ${result.count}`].join('\n');
+  }, 'ndjson-output');
+});
+byId('json-to-ndjson')?.addEventListener('click', () => {
+  runAction(() => jsonToNdjson(byId('ndjson-input')?.value || ''), 'ndjson-output');
+});
+byId('ndjson-example')?.addEventListener('click', () => {
+  const input = byId('ndjson-input');
+  if (input) input.value = '{"id":1,"event":"created"}\n{"id":2,"event":"updated"}\n{"id":3,"event":"deleted"}';
+  byId('ndjson-to-json')?.click();
+});
+
 
 byId('headers-parse')?.addEventListener('click', () => {
   runAction(() => {

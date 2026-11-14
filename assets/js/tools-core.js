@@ -794,3 +794,24 @@ export function formatHttpHeaders(input) {
   }
   return lines.join('\n');
 }
+
+
+export function ndjsonToJson(input) {
+  const text = String(input ?? '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = text.split('\n');
+  const items = [];
+  let errors = 0;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    try { items.push(JSON.parse(line)); }
+    catch { errors++; throw new Error(`Invalid JSON on line ${i + 1}.`); }
+  }
+  return { items, count: items.length };
+}
+
+export function jsonToNdjson(input) {
+  const value = typeof input === 'string' ? JSON.parse(input) : input;
+  if (!Array.isArray(value)) throw new Error('Provide a JSON array to convert to NDJSON.');
+  return value.map((item) => JSON.stringify(item)).join('\n');
+}

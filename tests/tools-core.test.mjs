@@ -19,6 +19,8 @@ import {
   buildQueryString,
   parseHttpHeaders,
   formatHttpHeaders,
+  ndjsonToJson,
+  jsonToNdjson,
   jsonToCsv,
   makePassword,
   shiftText,
@@ -195,4 +197,16 @@ test('parseHttpHeaders and formatHttpHeaders handle common cases', () => {
   const formatted = formatHttpHeaders({ 'Accept': 'application/json', 'X-Multi': ['1','2'] });
   assert.ok(formatted.includes('Accept: application/json'));
   assert.ok(formatted.includes('X-Multi: 1') && formatted.includes('X-Multi: 2'));
+});
+
+
+test('ndjsonToJson and jsonToNdjson convert between formats', () => {
+  const nd = '{"a":1}\n{"b":2}\n\n{"c":3}';
+  const parsed = ndjsonToJson(nd);
+  assert.equal(parsed.count, 3);
+  assert.deepEqual(parsed.items, [{a:1},{b:2},{c:3}]);
+  const back = jsonToNdjson(parsed.items);
+  assert.equal(back, '{"a":1}\n{"b":2}\n{"c":3}');
+  assert.throws(() => jsonToNdjson({a:1}), /JSON array/);
+  assert.throws(() => ndjsonToJson('{"a":1}\n{bad}'), /line 2/);
 });
