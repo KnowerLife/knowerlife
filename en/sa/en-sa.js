@@ -297,6 +297,88 @@ function initActiveNav(){
   sections.forEach(s=>observer.observe(s));
 }
 
+
+
+function normalizeIdentifier(value, fallback = 'field') {
+  const normalized = String(value || '').trim().toLowerCase().replace(/[^a-z0-9_]+/g, '_').replace(/^_+|_+$/g, '').replace(/_{2,}/g, '_');
+  const safe = normalized || fallback;
+  return /^[0-9]/.test(safe) ? `_${safe}` : safe;
+}
+
+function initDataModeler() {
+  let entities = [];
+  const container = document.getElementById('entitiesList');
+  const preview = document.getElementById('sqlPreview');
+  if (!container || !preview) return;
+  const render = () => {
+    container.replaceChildren();
+    if (!entities.length) {
+      const p = document.createElement('p'); p.className='muted'; p.textContent='No entities added yet.'; container.append(p); return;
+    }
+    entities.forEach((entity,index) => {
+      const row = document.createElement('div'); row.className='entity-row';
+      const text = document.createElement('div');
+      const strong = document.createElement('strong'); strong.textContent=entity.name;
+      const small = document.createElement('small'); small.textContent=entity.attrs.join(', ');
+      text.append(strong,small);
+      const actions = document.createElement('div'); actions.className='entity-actions';
+      const attr = document.createElement('button'); attr.type='button'; attr.textContent='+'; attr.title='Add attribute';
+      attr.addEventListener('click',()=>{
+        const value = prompt('Attribute name, e.g. email');
+        if (!value) return;
+        const safe = normalizeIdentifier(value,'field');
+        if (!entity.attrs.includes(safe)) entity.attrs.push(safe);
+        render();
+      });
+      const rename = document.createElement('button'); rename.type='button'; rename.textContent='✎'; rename.title='Rename';
+      rename.addEventListener('click',()=>{
+        const value = prompt('New entity name', entity.name); if(!value)return; entity.name=normalizeIdentifier(value,'entity'); render();
+      });
+      const remove = document.createElement('button'); remove.type='button'; remove.textContent='×'; remove.title='Remove';
+      remove.addEventListener('click',()=>{entities.splice(index,1);render();});
+      actions.append(attr,rename,remove); row.append(text,actions); container.append(row);
+    });
+  };
+  document.getElementById('addEntityBtn')?.addEventListener('click',()=>{
+    const value=prompt('Entity name, e.g. users'); if(!value)return;
+    const name=normalizeIdentifier(value,'entity');
+    if(entities.some(e=>e.name===name)){showToast('Entity already exists');return;}
+    entities.push({name,attrs:['id','created_at']});render();
+  });
+  document.getElementById('clearEntitiesBtn')?.addEventListener('click',()=>{entities=[];render();preview.textContent='-- Add at least one entity';});
+  document.getElementById('genSqlBtn')?.addEventListener('click',()=>{
+    if(!entities.length){preview.textContent='-- Add at least one entity';return;}
+    preview.textContent=entities.map(entity=>`CREATE TABLE ${entity.name} (\n  ${entity.attrs.map((attr,index)=>`${attr} ${index===0 && attr==='id'?'BIGINT PRIMARY KEY':'VARCHAR(255)'}`).join(',\n  ')}\n);`).join('\n\n');
+  });
+  render();
+}
+
+function initTimer() {
+  let interval = null;
+  let remaining = 0;
+  const display = document.getElementById('meetingTimerDisplay');
+  if (!display) return;
+  const render = () => {
+    const min = Math.floor(remaining / 60).toString().padStart(2,'0');
+    const sec = (remaining % 60).toString().padStart(2,'0');
+    display.textContent = `${min}:${sec}`;
+  };
+  const stop = (reset = false) => {
+    if (interval) clearInterval(interval);
+    interval = null;
+    if (reset) { remaining = 0; render(); }
+  };
+  document.querySelectorAll('[data-time]').forEach(btn => btn.addEventListener('click', () => {
+    stop(); remaining = Number(btn.dataset.time) || 0; render();
+    interval = setInterval(() => {
+      remaining = Math.max(0, remaining - 1); render();
+      if (remaining <= 0) { stop(); showToast('Timer finished'); }
+    }, 1000);
+  }));
+  document.getElementById('stopMeetingTimer')?.addEventListener('click', () => stop(true));
+  render();
+}
+
 function exportVisibleMd(){
   const btn=document.getElementById('exportVisibleMdBtn'); if(!btn) return;
   btn.addEventListener('click', async ()=>{
@@ -345,4 +427,4 @@ function saBackup(){
 }
 
 const _domReady = document.addEventListener;
-document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}try{initApiTester()}catch(e){}try{initDocuments()}catch(e){}try{initMessages()}catch(e){}try{initCopyButtons()}catch(e){}try{initQuiz()}catch(e){}try{initBookmarks()}catch(e){}try{initActiveNav()}catch(e){}});
+document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}try{initApiTester()}catch(e){}try{initDocuments()}catch(e){}try{initMessages()}catch(e){}try{initCopyButtons()}catch(e){}try{initQuiz()}catch(e){}try{initBookmarks()}catch(e){}try{initActiveNav()}catch(e){}try{initDataModeler()}catch(e){}try{initTimer()}catch(e){}});
