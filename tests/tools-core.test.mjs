@@ -17,6 +17,8 @@ import {
   diffDateTime,
   parseQueryString,
   buildQueryString,
+  parseHttpHeaders,
+  formatHttpHeaders,
   jsonToCsv,
   makePassword,
   shiftText,
@@ -181,4 +183,16 @@ test('parseQueryString and buildQueryString round-trip common cases', () => {
   const fromRaw = parseQueryString('?empty=&flag');
   assert.equal(fromRaw.params.empty, '');
   assert.equal(fromRaw.params.flag, '');
+});
+
+
+test('parseHttpHeaders and formatHttpHeaders handle common cases', () => {
+  const parsed = parseHttpHeaders('HTTP/1.1 200 OK\nContent-Type: application/json\nX-Trace: a\nX-Trace: b\n\n');
+  assert.equal(parsed.headers['Content-Type'], 'application/json');
+  assert.deepEqual(parsed.headers['X-Trace'], ['a','b']);
+  assert.equal(parsed.count, 3);
+  assert.equal(parsed.ignored, 1);
+  const formatted = formatHttpHeaders({ 'Accept': 'application/json', 'X-Multi': ['1','2'] });
+  assert.ok(formatted.includes('Accept: application/json'));
+  assert.ok(formatted.includes('X-Multi: 1') && formatted.includes('X-Multi: 2'));
 });

@@ -18,6 +18,8 @@ import {
   diffDateTime,
   parseQueryString,
   buildQueryString,
+  parseHttpHeaders,
+  formatHttpHeaders,
   parseIsoDuration,
   formatIsoDuration,
   describeIsoDuration,
@@ -720,6 +722,22 @@ byId('dt-diff-example')?.addEventListener('click', () => {
   byId('dt-diff-run')?.click();
 });
 
+byId('headers-parse')?.addEventListener('click', () => {
+  runAction(() => {
+    const result = parseHttpHeaders(byId('headers-input')?.value || '');
+    return [JSON.stringify(result.headers, null, 2), '', `${t('Заголовков', 'Headers')}: ${result.count}${result.ignored ? ` · ${t('пропущено строк', 'ignored lines')}: ${result.ignored}` : ''}`].join('\n');
+  }, 'headers-output');
+});
+byId('headers-format')?.addEventListener('click', () => {
+  runAction(() => formatHttpHeaders(byId('headers-input')?.value || ''), 'headers-output');
+});
+byId('headers-example')?.addEventListener('click', () => {
+  const input = byId('headers-input');
+  if (input) input.value = 'Content-Type: application/json\nAuthorization: Bearer <token>\nAccept: application/json\nX-Request-Id: req-123';
+  byId('headers-parse')?.click();
+});
+
+
 byId('query-parse')?.addEventListener('click', () => {
   runAction(() => {
     const result = parseQueryString(byId('query-input')?.value || '');
@@ -831,6 +849,21 @@ function restoreToolFormState(form) {
   const state = readToolState()[card.id];
   applyValuesToForm(form, state);
 }
+function collectFormValues(form, { shareable = false } = {}) {
+  const card = form.closest('[data-tool-card]');
+  const values = {};
+  [...form.querySelectorAll('input, textarea, select')].forEach((field, index) => {
+    const key = getToolStateId(card, field, index);
+    if (field.type === 'password' || field.type === 'file') return;
+    if (shareable && (field.tagName.toLowerCase() === 'textarea' || String(field.value || '').length > 800)) {
+      if (field.type === 'checkbox' || field.type === 'radio') { if (field.checked) values[key] = { type: field.type, checked: true, name: field.name, value: field.value }; }
+      return;
+    }
+    if (field.type === 'checkbox' || field.type === 'radio') values[key] = { type: field.type, checked: field.checked, name: field.name, value: field.value };
+    else values[key] = { type: field.tagName.toLowerCase(), value: field.value };
+  });
+  return values;
+}
 function collectShareableValues(form) {
   const card = form.closest('[data-tool-card]');
   const values = {};
@@ -844,6 +877,115 @@ function collectShareableValues(form) {
     }
   });
   return values;
+}
+
+const NAMED_PRESETS_KEY = 'knowerlife-tools-named-presets-v1';
+function readNamedPresets() {
+  try { const raw = localStorage.getItem(NAMED_PRESETS_KEY); const parsed = raw ? JSON.parse(raw) : {}; return parsed && typeof parsed === 'object' ? parsed : {}; } catch { return {}; }
+}
+function writeNamedPresets(data) {
+  try { localStorage.setItem(NAMED_PRESETS_KEY, JSON.stringify(data)); } catch {}
+}
+function getToolNamedPresets(toolId) {
+  const all = readNamedPresets();
+  return (all[toolId] && typeof all[toolId] === 'object') ? all[toolId] : {};
+}
+function setToolNamedPreset(toolId, name, values) {
+  const all = readNamedPresets();
+  if (!all[toolId] || typeof all[toolId] !== 'object') all[toolId] = {};
+  all[toolId][name] = values;
+  writeNamedPresets(all);
+}
+function deleteToolNamedPreset(toolId, name) {
+  const all = readNamedPresets();
+  if (all[toolId] && Object.prototype.hasOwnProperty.call(all[toolId], name)) {
+    delete all[toolId][name];
+    if (!Object.keys(all[toolId]).length) delete all[toolId];
+    writeNamedPresets(all);
+  }
+}
+function refreshPresetSelect(select, toolId) {
+  if (!select) return;
+  const presets = getToolNamedPresets(toolId);
+  const names = Object.keys(presets).sort((a,b)=>a.localeCompare(b, localeTag));
+  const current = select.value;
+  select.replaceChildren();
+  const empty = document.createElement('option');
+  empty.value = '';
+  empty.textContent = t('Сохранённые пресеты…', 'Saved presets…');
+  select.append(empty);
+  names.forEach((name) => {
+    const opt = document.createElement('option');
+    opt.value = name; opt.textContent = name; select.append(opt);
+  });
+  if (names.includes(current)) select.value = current;
+}
+
+function initPerToolPresets() {
+  toolCards.forEach((card) => {
+    const form = card.querySelector('[data-tool-form]');
+    if (!form || !card.id || form.querySelector('[data-tool-presets]')) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'tool-preset-bar';
+    wrap.dataset.toolPresets = card.id;
+    wrap.style.cssText = 'display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-top:.5rem;padding-top:.5rem;border-top:1px dashed var(--border,rgba(128,128,128,.25))';
+    const select = document.createElement('select');
+    select.className = 'tool-preset-select';
+    select.setAttribute('aria-label', t('Сохранённые пресеты инструмента', 'Saved tool presets'));
+    select.style.cssText = 'max-width:14rem';
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = t('Имя пресета', 'Preset name');
+    nameInput.className = 'tool-preset-name';
+    nameInput.setAttribute('aria-label', t('Имя пресета', 'Preset name'));
+    nameInput.style.cssText = 'max-width:10rem';
+    const saveBtn = document.createElement('button');
+    saveBtn.type = 'button'; saveBtn.className = 'btn btn--ghost btn--small';
+    saveBtn.textContent = t('Сохранить', 'Save');
+    const applyBtn = document.createElement('button');
+    applyBtn.type = 'button'; applyBtn.className = 'btn btn--secondary btn--small';
+    applyBtn.textContent = t('Применить', 'Apply');
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button'; delBtn.className = 'btn btn--ghost btn--small';
+    delBtn.textContent = t('Удалить', 'Delete');
+
+    refreshPresetSelect(select, card.id);
+    saveBtn.addEventListener('click', () => {
+      const name = (nameInput.value || select.value || '').trim().slice(0, 60);
+      if (!name) { showToast(t('Укажите имя пресета', 'Enter a preset name'), 'error'); return; }
+      setToolNamedPreset(card.id, name, collectFormValues(form));
+      nameInput.value = name;
+      refreshPresetSelect(select, card.id);
+      select.value = name;
+      showToast(t('Пресет сохранён', 'Preset saved'));
+    });
+    applyBtn.addEventListener('click', () => {
+      const name = select.value;
+      if (!name) { showToast(t('Выберите пресет', 'Choose a preset'), 'error'); return; }
+      const values = getToolNamedPresets(card.id)[name];
+      if (!values) { showToast(t('Пресет не найден', 'Preset not found'), 'error'); return; }
+      applyValuesToForm(form, values);
+      saveToolFormState(form);
+      form.dispatchEvent(new Event('input', { bubbles: true }));
+      showToast(t('Пресет применён', 'Preset applied'));
+    });
+    delBtn.addEventListener('click', () => {
+      const name = select.value;
+      if (!name) return;
+      deleteToolNamedPreset(card.id, name);
+      refreshPresetSelect(select, card.id);
+      showToast(t('Пресет удалён', 'Preset deleted'));
+    });
+    select.addEventListener('change', () => { if (select.value) nameInput.value = select.value; });
+
+    const label = document.createElement('span');
+    label.textContent = t('Пресеты:', 'Presets:');
+    label.style.cssText = 'font-size:.85em;color:var(--muted,#888)';
+    wrap.append(label, select, nameInput, saveBtn, applyBtn, delBtn);
+    const actions = form.querySelector('.tool-form-actions');
+    if (actions) actions.insertAdjacentElement('afterend', wrap);
+    else form.append(wrap);
+  });
 }
 function applyUrlState() {
   const params = new URLSearchParams(window.location.search);
@@ -916,7 +1058,7 @@ toolCards.forEach((card) => {
 });
 
 applyUrlState();
-
+initPerToolPresets();
 
 
 // Global tool presets export/import
@@ -926,7 +1068,7 @@ applyUrlState();
   const input = byId('tools-import-input');
   if (!exportBtn && !importBtn) return;
   exportBtn?.addEventListener('click', () => {
-    const payload = { schema: 'knowerlife-tools-presets', version: 1, exportedAt: new Date().toISOString(), state: readToolState() };
+    const payload = { schema: 'knowerlife-tools-presets', version: 2, exportedAt: new Date().toISOString(), state: readToolState(), namedPresets: readNamedPresets() };
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -942,9 +1084,14 @@ applyUrlState();
       const data = JSON.parse(text);
       const state = data && typeof data.state === 'object' ? data.state : (data && data.schema ? null : data);
       if (!state || typeof state !== 'object') throw new Error('invalid');
-      if (!window.confirm(t('Импорт перезапишет сохранённые значения инструментов в этом браузере. Продолжить?', 'Import will overwrite saved tool values in this browser. Continue?'))) return;
+      if (!window.confirm(t('Импорт перезапишет сохранённые значения и именованные пресеты инструментов в этом браузере. Продолжить?', 'Import will overwrite saved tool values and named presets in this browser. Continue?'))) return;
       writeToolState(state);
+      if (data && typeof data.namedPresets === 'object' && data.namedPresets) writeNamedPresets(data.namedPresets);
       document.querySelectorAll('[data-tool-form]').forEach(restoreToolFormState);
+      document.querySelectorAll('[data-tool-presets]').forEach((wrap) => {
+        const sel = wrap.querySelector('select');
+        if (sel) refreshPresetSelect(sel, wrap.dataset.toolPresets);
+      });
       showToast(t('Пресеты импортированы', 'Presets imported'));
     } catch {
       showToast(t('Не удалось импортировать пресеты', 'Could not import presets'), 'error');

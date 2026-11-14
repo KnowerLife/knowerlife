@@ -756,3 +756,41 @@ export function buildQueryString(input) {
   }
   return parts.join('&');
 }
+
+
+export function parseHttpHeaders(input) {
+  const text = String(input ?? '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = text.split('\n');
+  const headers = Object.create(null);
+  const entries = [];
+  let ignored = 0;
+  for (const raw of lines) {
+    const line = raw.trimEnd();
+    if (!line.trim()) continue;
+    if (/^HTTP\//i.test(line) || /^(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS|TRACE|CONNECT)\s+/i.test(line)) { ignored++; continue; }
+    const idx = line.indexOf(':');
+    if (idx === -1) { ignored++; continue; }
+    const name = line.slice(0, idx).trim();
+    const value = line.slice(idx + 1).trim();
+    if (!name) { ignored++; continue; }
+    entries.push({ name, value });
+    const key = name;
+    if (Object.hasOwn(headers, key)) headers[key] = Array.isArray(headers[key]) ? [...headers[key], value] : [headers[key], value];
+    else headers[key] = value;
+  }
+  return { headers, entries, count: entries.length, ignored };
+}
+
+export function formatHttpHeaders(input) {
+  let obj = input;
+  if (typeof input === 'string') {
+    try { obj = JSON.parse(input); } catch { throw new Error('Provide valid JSON object to format headers.'); }
+  }
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) throw new Error('Provide an object to format headers.');
+  const lines = [];
+  for (const [name, value] of Object.entries(obj)) {
+    const values = Array.isArray(value) ? value : [value];
+    for (const v of values) lines.push(`${String(name).trim()}: ${v == null ? '' : String(v)}`);
+  }
+  return lines.join('\n');
+}
