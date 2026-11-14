@@ -197,29 +197,244 @@ function initMessages(){
 const quizBank = {
   requirements:[
     {q:'Which is a non-functional requirement?',o:['Create an order','API response time','Edit profile'],a:1},
-    {q:'What makes a requirement testable?',o:['A long description','Acceptance criteria','A mockup link'],a:1}
+    {q:'What makes a requirement testable?',o:['A long description','Acceptance criteria','A mockup link'],a:1},
+    {q:'What best describes a good requirement?',o:['Unambiguous, verifiable and agreed','A fully detailed technical solution','Only a business wish without constraints'],a:0},
+    {q:'When is a Use Case more useful than a short User Story?',o:['When step sequence, actors and alternative flows matter','When only story-point estimation is needed','When describing button color'],a:0}
   ],
   api:[
     {q:'Which HTTP method is typically used to read a resource?',o:['GET','POST','DELETE'],a:0},
-    {q:'Which status code means the resource was not found?',o:['201','404','503'],a:1}
+    {q:'Which status code means the resource was not found?',o:['201','404','503'],a:1},
+    {q:'What should be explicitly defined in an API contract?',o:['Only the happy path','Request/response, errors, status codes, auth and constraints','Only the endpoint name'],a:1},
+    {q:'What helps safely retry a create request after network failures?',o:['Idempotency / idempotency key','Infinite timeout','Ignoring duplicates on the client only'],a:0}
   ],
   db:[
     {q:'What does atomicity of values in a table relate to?',o:['1NF','2NF','3NF'],a:0},
-    {q:'Which operator combines rows from multiple tables?',o:['JOIN','ORDER BY','TRUNCATE'],a:0}
+    {q:'Which operator combines rows from multiple tables?',o:['JOIN','ORDER BY','TRUNCATE'],a:0},
+    {q:'What does a foreign key (FK) usually represent?',o:['Referential integrity between tables','A unique index on all columns','A JSON data type'],a:0},
+    {q:'Why should an analyst clarify the source of truth for data?',o:['To understand which system owns the current value','To replace documentation with code','To remove all integrations'],a:0}
   ],
   bpmn:[
     {q:'Which BPMN element is used for branching?',o:['Task','Gateway','Pool'],a:1},
-    {q:'What typically separates participant responsibilities?',o:['Lane','Timer','Message'],a:0}
+    {q:'What typically separates participant responsibilities?',o:['Lane','Timer','Message'],a:0},
+    {q:'What is a good starting point for BPMN process modeling?',o:['Goal, participants, trigger and the main flow','Choosing shape colors','Implementation details in code'],a:0},
+    {q:'What should be added after the happy path?',o:['Key alternatives, errors and timers/exceptions','Only extra tasks for visuals','Remove all gateways'],a:0}
   ],
   security:[
     {q:'What should be defined for authorization?',o:['Only a password','Roles and permissions','Only HTTPS'],a:1},
-    {q:'What helps analyze threats?',o:['STRIDE','CRUD','INVEST'],a:0}
+    {q:'What helps analyze threats?',o:['STRIDE','CRUD','INVEST'],a:0},
+    {q:'Which is a good security practice for data handling?',o:['Least privilege and protection of sensitive data','Storing tokens in plain logs','Putting secrets in URLs unnecessarily'],a:0},
+    {q:'What should integration requirements cover from a security perspective?',o:['Authentication, authorization, audit and secret handling','Only JSON format','Only response time'],a:0}
   ],
   ddd:[
     {q:'What defines the boundary where a model applies?',o:['Bounded Context','HTTP endpoint','Sprint Goal'],a:0},
-    {q:'What is Ubiquitous Language?',o:['A shared domain language','SQL language','UI language'],a:0}
+    {q:'What is Ubiquitous Language?',o:['A shared domain language','SQL language','UI language'],a:0},
+    {q:'Why define bounded contexts?',o:['To reduce ambiguity of models and terms across domain areas','To increase the number of microservices','To avoid business alignment'],a:0},
+    {q:'What is an aggregate in practice?',o:['A consistency boundary for related entities','Any database table','An HTTP controller'],a:0}
+  ],
+  hr:[
+    {q:'What is a strong way to answer “Tell me about yourself” for a Systems Analyst role?',o:['Briefly cover your role/experience, key competencies, relevant outcomes and interest in the position','Tell your full life story','Start with salary expectations only'],a:0},
+    {q:'What does an interviewer expect in a stakeholder conflict question?',o:['A specific example with your actions, communication and outcome (STAR)','That others were to blame','That conflicts never happen'],a:0},
+    {q:'How should you talk about a weakness?',o:['Name a real growth area and concrete steps you take to improve','Say you have no weaknesses','Name a critical weakness for the role with no plan'],a:0},
+    {q:'What if you lack data to answer a question?',o:['Clarify context, state assumptions and propose a structured approach','Invent numbers and details','Refuse to answer'],a:0},
+    {q:'How can you show motivation in an HR interview?',o:['Connect your interest to the role, product/domain and skill growth','Say only remote work matters','Focus only on negatives of your current job'],a:0},
+    {q:'Which questions to the employer are usually well received?',o:['About role tasks, processes, 3–6 month expectations and the team','Only about fast promotion without context','Questions easily answered on the website in a minute'],a:0},
+    {q:'How should you discuss a past mistake?',o:['Describe the situation, your part, the fix and lessons/improvements','Blame colleagues','Hide that mistakes are possible'],a:0},
+    {q:'What matters when describing achievements?',o:['Facts, your role, artifacts/decisions and outcomes without breaking NDA','Only vague claims like “worked hard”','Exaggerating impact without evidence'],a:0}
+  ],
+  technical:[
+    {q:'How do functional and non-functional requirements differ?',o:['FR describe behavior/functions; NFR describe qualities (performance, availability, security, etc.)','FR are always UI, NFR are always DB','There is no difference'],a:0},
+    {q:'What should be clarified when designing a REST API to create a resource?',o:['Method, request/response contract, validation, error codes, auth and idempotency when needed','Only the URL','Only button color in UI'],a:0},
+    {q:'When is asynchronous interaction (queue/events) worth considering?',o:['For long operations, decoupling, load spikes or when immediate response is not required','Always, even for simple lookups','Never, synchronous calls are always better'],a:0},
+    {q:'What should an analyst describe for integration with an external system?',o:['Contract, data format/mapping, errors/retries, timeouts, security and monitoring','Only the happy path','Only the partner system name'],a:0},
+    {q:'Which artifact best shows an entity lifecycle (e.g. order)?',o:['State diagram','ER diagram without statuses','Only chat messages'],a:0},
+    {q:'What is requirements traceability?',o:['Linking goals → requirements → implementation/tests → acceptance','Copying requirements into multiple documents','Deleting old requirements without analysis'],a:0},
+    {q:'How to approach a “service responds slowly” case in an interview?',o:['Clarify symptoms/metrics and NFRs, locate bottlenecks, form hypotheses and checks','Rewrite everything to microservices immediately','Ignore metrics and change random settings'],a:0},
+    {q:'What matters when adding a new field/status to an existing process?',o:['Compatibility, data migration, impact on APIs/integrations/reports, transition rules and tests','Change only UI','Ignore existing data'],a:0},
+    {q:'Which diagram is suitable for showing service interactions over time?',o:['Sequence diagram','Pie chart','Only a mind map'],a:0},
+    {q:'What must be considered for concurrent updates to one entity?',o:['Concurrency strategy (locks/versions), conflict handling and expected user behavior','Assume conflicts are impossible','Silently overwrite data without rules'],a:0}
   ]
 };
+
+
+function initDiagramTool() {
+  const codeEl = document.getElementById('diagramCode');
+  const preview = document.getElementById('diagramPreview');
+  const status = document.getElementById('diagramStatus');
+  const templateSel = document.getElementById('diagramTemplate');
+  if (!codeEl || !preview) return;
+
+  const templates = {
+    flowchart: `flowchart TD
+    A([Start: request received]) --> B[Validate data]
+    B --> C{Is data valid?}
+    C -->|Yes| D[Create order]
+    D --> E[Send notification]
+    E --> F([End: success])
+    C -->|No| G[Return validation errors]
+    G --> H([End: rework])`,
+    sequence: `sequenceDiagram
+    autonumber
+    actor User
+    participant Web as Web/App
+    participant API
+    participant DB as Database
+
+    User->>Web: Create order
+    Web->>API: POST /orders
+    API->>DB: INSERT order
+    DB-->>API: order_id
+    API-->>Web: 201 Created
+    Web-->>User: Show order number`,
+    class: `classDiagram
+    class Order {
+      +UUID id
+      +String status
+      +Decimal total
+      +create()
+      +pay()
+      +cancel()
+    }
+    class OrderItem {
+      +UUID id
+      +UUID productId
+      +int qty
+      +Decimal price
+    }
+    class Customer {
+      +UUID id
+      +String name
+      +String email
+    }
+    Customer "1" --> "*" Order
+    Order "1" --> "1..*" OrderItem`,
+    state: `stateDiagram-v2
+    [*] --> Draft
+    Draft --> PendingPayment: submit
+    PendingPayment --> Paid: payment_success
+    PendingPayment --> Cancelled: timeout/cancel
+    Paid --> Shipped: ship
+    Shipped --> Delivered: confirm
+    Delivered --> [*]
+    Cancelled --> [*]`,
+    er: `erDiagram
+    CUSTOMER ||--o{ ORDER : places
+    ORDER ||--|{ ORDER_ITEM : contains
+    PRODUCT ||--o{ ORDER_ITEM : included_in
+
+    CUSTOMER {
+      uuid id PK
+      string email
+      string name
+    }
+    ORDER {
+      uuid id PK
+      uuid customer_id FK
+      string status
+      datetime created_at
+    }
+    PRODUCT {
+      uuid id PK
+      string title
+      decimal price
+    }
+    ORDER_ITEM {
+      uuid id PK
+      uuid order_id FK
+      uuid product_id FK
+      int qty
+    }`,
+    journey: `journey
+    title User journey: placing an order
+    section Browse
+      Open catalog: 5: User
+      Find product: 4: User
+    section Purchase
+      Add to cart: 5: User
+      Pay: 3: User, Payment provider
+    section Result
+      Receive confirmation: 5: User, System`,
+    c4: `flowchart TB
+    user([User])
+    admin([Admin])
+
+    subgraph System[Order system]
+      web[Web/Mobile UI]
+      api[Backend API]
+      db[(Database)]
+    end
+
+    pay[Payment provider]
+    notify[Notification service]
+
+    user --> web
+    admin --> web
+    web --> api
+    api --> db
+    api --> pay
+    api --> notify`
+  };
+
+  if (!codeEl.value.trim()) codeEl.value = templates.flowchart;
+
+  let mermaidReady = null;
+  const loadMermaid = () => {
+    if (window.mermaid) return Promise.resolve(window.mermaid);
+    if (mermaidReady) return mermaidReady;
+    mermaidReady = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+      script.async = true;
+      script.onload = () => {
+        try { window.mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default' }); } catch {}
+        resolve(window.mermaid);
+      };
+      script.onerror = () => reject(new Error('Failed to load Mermaid'));
+      document.head.appendChild(script);
+    });
+    return mermaidReady;
+  };
+
+  const setStatus = (msg) => { if (status) status.textContent = msg || ''; };
+
+  const renderDiagram = async () => {
+    const code = (codeEl.value || '').trim();
+    if (!code) { preview.innerHTML = '<p class="muted">Enter diagram code.</p>'; return; }
+    setStatus('Rendering diagram…');
+    try {
+      const mermaid = await loadMermaid();
+      try { mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default' }); } catch {}
+      const id = 'mermaid-' + Date.now();
+      const { svg } = await mermaid.render(id, code);
+      preview.innerHTML = svg;
+      setStatus('Diagram updated.');
+    } catch (e) {
+      preview.innerHTML = '';
+      const pre = document.createElement('pre');
+      pre.className = 'code-output';
+      pre.textContent = 'Render error: ' + (e && e.message ? e.message : String(e));
+      preview.appendChild(pre);
+      setStatus('Check Mermaid syntax.');
+    }
+  };
+
+  document.getElementById('insertDiagramTemplateBtn')?.addEventListener('click', () => {
+    const key = templateSel ? templateSel.value : 'flowchart';
+    codeEl.value = templates[key] || templates.flowchart;
+    renderDiagram();
+  });
+  document.getElementById('renderDiagramBtn')?.addEventListener('click', renderDiagram);
+  document.getElementById('copyDiagramCodeBtn')?.addEventListener('click', async () => { await copyText(codeEl.value || ''); showToast('Diagram code copied'); });
+  document.getElementById('downloadDiagramSvgBtn')?.addEventListener('click', () => {
+    const svgEl = preview.querySelector('svg');
+    if (!svgEl) { showToast('Render a diagram first'); return; }
+    const serializer = new XMLSerializer();
+    let svgText = serializer.serializeToString(svgEl);
+    if (!svgText.match(/^<\?xml/)) svgText = '<?xml version="1.0" encoding="UTF-8"?>\n' + svgText;
+    downloadText('diagram.svg', svgText, 'image/svg+xml;charset=utf-8');
+    showToast('SVG downloaded');
+  });
+}
+
 
 function initQuiz(){
   const area=document.getElementById('testArea'); const select=document.getElementById('testSection'); let questions=[]; let index=0; let answers=[];
@@ -428,4 +643,4 @@ function saBackup(){
 }
 
 const _domReady = document.addEventListener;
-document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}try{initApiTester()}catch(e){}try{initDocuments()}catch(e){}try{initMessages()}catch(e){}try{initCopyButtons()}catch(e){}try{initQuiz()}catch(e){}try{initBookmarks()}catch(e){}try{initActiveNav()}catch(e){}try{initDataModeler()}catch(e){}try{initTimer()}catch(e){}});
+document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}try{initApiTester()}catch(e){}try{initDocuments()}catch(e){}try{initMessages()}catch(e){}try{initCopyButtons()}catch(e){}try{initQuiz()}catch(e){}try{initDiagramTool()}catch(e){}try{initBookmarks()}catch(e){}try{initActiveNav()}catch(e){}try{initDataModeler()}catch(e){}try{initTimer()}catch(e){}});

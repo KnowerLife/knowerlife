@@ -1,4 +1,4 @@
-const CACHE_VERSION='knowerlife-v11.2.25';
+const CACHE_VERSION='knowerlife-v11.2.26';
 const STATIC_CACHE=`${CACHE_VERSION}-static`,PAGE_CACHE=`${CACHE_VERSION}-pages`,RUNTIME_CACHE=`${CACHE_VERSION}-runtime`;
 const scopeUrl=new URL(self.registration.scope);const fromScope=path=>new URL(path,scopeUrl).toString();
 const APP_SHELL=['','offline.html','assets/css/styles.css','assets/css/ecosystem-shell.css','assets/js/main.js','assets/js/ecosystem-shell.js','assets/js/tools-loader.js','assets/js/tools-core.js','assets/js/tools.js','assets/icons/favicon.svg','assets/icons/favicon-96.png','manifest.webmanifest','sa/index.html','sa/styles.css','sa/script.js','en/sa/index.html','en/sa/en-sa.js','creative/index.html','creative/assets/css/styles.css','creative/assets/js/app.js','creative/assets/js/music-core.js','en/creative/index.html','en/creative/app-en.js','creative/data/tracks.json','tools/index.html','en/tools/index.html','en/index.html'].map(fromScope);
