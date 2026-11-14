@@ -220,6 +220,18 @@ for (const path of required) {
   if (!existsSync(join(root, path))) fail(`Required file missing: ${path}`);
 }
 
+// 5b. Tools catalog count consistency.
+for (const page of ['tools/index.html', 'en/tools/index.html']) {
+  const p = join(root, page);
+  if (!existsSync(p)) continue;
+  const html = readFileSync(p, 'utf8');
+  const cardCount = (html.match(/data-tool-card=""/g) || []).length;
+  const numMatch = html.match(/"numberOfItems":(\d+)/);
+  const badgeMatch = html.match(/>(\d+)\s+(инструментов|tools)</i);
+  if (numMatch && Number(numMatch[1]) !== cardCount) fail(`${page}: JSON-LD numberOfItems (${numMatch[1]}) != tool cards (${cardCount})`);
+  if (badgeMatch && Number(badgeMatch[1]) !== cardCount) fail(`${page}: badge count (${badgeMatch[1]}) != tool cards (${cardCount})`);
+}
+
 // Report
 const summary = `Checked ${checked.js} JS, ${checked.json} JSON, ${checked.html} HTML files and ${checked.links} internal links.`;
 if (failures.length) {

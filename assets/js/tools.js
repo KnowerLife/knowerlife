@@ -14,6 +14,7 @@ import {
   encodeUrlComponent,
   explainCron,
   convertCase,
+  convertNumberBase,
   parseIsoDuration,
   formatIsoDuration,
   describeIsoDuration,
@@ -667,6 +668,23 @@ byId('case-example')?.addEventListener('click', () => {
   const input = byId('case-input');
   if (input) input.value = 'User profile ID';
   byId('case-convert')?.click();
+});
+
+
+byId('base-convert')?.addEventListener('click', () => {
+  runAction(() => {
+    const value = byId('base-input')?.value || '';
+    const fromBase = Number(byId('base-from')?.value || 10);
+    const toBase = Number(byId('base-to')?.value || 16);
+    const r = convertNumberBase(value, fromBase, toBase);
+    return [`${t('Результат', 'Result')} (base ${r.toBase}): ${r.result}`, `${t('Десятичное', 'Decimal')}: ${r.decimal}`, `${t('Из системы', 'From base')}: ${r.fromBase} → ${t('в систему', 'to base')}: ${r.toBase}`].join('\n');
+  }, 'base-output');
+});
+byId('base-example')?.addEventListener('click', () => {
+  const input = byId('base-input'); if (input) input.value = '255';
+  const from = byId('base-from'); if (from) from.value = '10';
+  const to = byId('base-to'); if (to) to.value = '16';
+  byId('base-convert')?.click();
 });
 
 

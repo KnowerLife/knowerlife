@@ -662,3 +662,32 @@ export function convertCase(input, mode = 'all') {
   }
   return variants;
 }
+
+
+export function convertNumberBase(value, fromBase = 10, toBase = 10) {
+  const raw = String(value ?? '').trim();
+  if (!raw) throw new Error('Value is required.');
+  const fb = Number(fromBase), tb = Number(toBase);
+  if (![2,8,10,16].includes(fb) || ![2,8,10,16].includes(tb)) throw new Error('Supported bases: 2, 8, 10, 16.');
+  const sign = raw.startsWith('-') ? -1 : 1;
+  const body = raw.replace(/^[-+]/, '').replace(/^0x/i, '').replace(/\s+/g, '');
+  if (!body) throw new Error('Value is required.');
+  const digits = '0123456789abcdef';
+  let n = 0n;
+  for (const ch of body.toLowerCase()) {
+    const d = BigInt(digits.indexOf(ch));
+    if (d < 0n || d >= BigInt(fb)) throw new Error(`Invalid digit "${ch}" for base ${fb}.`);
+    n = n * BigInt(fb) + d;
+  }
+  n *= BigInt(sign);
+  const neg = n < 0n;
+  let v = neg ? -n : n;
+  if (v === 0n) return { decimal: '0', result: '0', fromBase: fb, toBase: tb };
+  let out = '';
+  while (v > 0n) {
+    const rem = Number(v % BigInt(tb));
+    out = digits[rem] + out;
+    v /= BigInt(tb);
+  }
+  return { decimal: n.toString(), result: (neg ? '-' : '') + out, fromBase: fb, toBase: tb };
+}

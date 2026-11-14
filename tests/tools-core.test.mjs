@@ -13,6 +13,7 @@ import {
   formatIsoDuration,
   describeIsoDuration,
   convertCase,
+  convertNumberBase,
   jsonToCsv,
   makePassword,
   shiftText,
@@ -140,4 +141,13 @@ test('convertCase produces common variants', () => {
   assert.equal(result.kebab, 'user-profile-id');
   assert.equal(result.constant, 'USER_PROFILE_ID');
   assert.equal(convertCase('OrderItemDTO', 'snake'), 'order_item_dto');
+});
+
+
+test('convertNumberBase converts between common bases', () => {
+  assert.equal(convertNumberBase('255', 10, 16).result, 'ff');
+  assert.equal(convertNumberBase('ff', 16, 10).result, '255');
+  assert.equal(convertNumberBase('1010', 2, 10).result, '10');
+  assert.equal(convertNumberBase('-10', 10, 2).result, '-1010');
+  assert.throws(() => convertNumberBase('2', 2, 10), /Invalid digit/);
 });
