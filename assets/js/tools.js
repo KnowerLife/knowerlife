@@ -15,6 +15,7 @@ import {
   explainCron,
   formatJson,
   hashText,
+  inferJsonSchema,
   jsonToCsv,
   makePassword,
   runRegex,
@@ -634,6 +635,18 @@ byId('brief-example')?.addEventListener('click', () => {
   };
   Object.entries(values).forEach(([key, value]) => { byId(`brief-${key}`).value = value; });
   byId('brief-generate')?.click();
+});
+
+
+byId('schema-generate')?.addEventListener('click', () => {
+  runAction('schema-output', () => inferJsonSchema(byId('schema-input')?.value || ''));
+});
+byId('schema-example')?.addEventListener('click', () => {
+  const input = byId('schema-input');
+  if (input) input.value = isEnglish
+    ? '{\n  "id": 123,\n  "name": "Order",\n  "active": true,\n  "tags": ["api", "sa"],\n  "owner": {"id": 7, "email": "user@example.com"}\n}'
+    : '{\n  "id": 123,\n  "name": "Заказ",\n  "active": true,\n  "tags": ["api", "sa"],\n  "owner": {"id": 7, "email": "user@example.com"}\n}';
+  byId('schema-generate')?.click();
 });
 
 

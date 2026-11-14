@@ -556,3 +556,41 @@ export function explainCron(expression, locale = 'ru') {
     : `Запуск: минута ${describe(fields[0])}, час ${describe(fields[1])}, день месяца ${describe(fields[2])}, месяц ${describe(fields[3])}, день недели ${describe(fields[4])}.`;
   return { expression: parts.join(' '), summary, fields: fields.map((f)=>({ key: f.key, label: f.label, range: f.range, raw: f.parsed.raw, values: f.parsed.values, text: describe(f) })) };
 }
+
+
+function inferSchemaNode(value) {
+  if (value === null) return { type: 'null' };
+  if (Array.isArray(value)) {
+    const itemSchemas = value.map(inferSchemaNode);
+    let items;
+    if (!itemSchemas.length) items = {};
+    else if (itemSchemas.every((s) => JSON.stringify(s) === JSON.stringify(itemSchemas[0]))) items = itemSchemas[0];
+    else items = { anyOf: itemSchemas.filter((s, i, a) => a.findIndex((x) => JSON.stringify(x) === JSON.stringify(s)) === i) };
+    return { type: 'array', items };
+  }
+  const t = typeof value;
+  if (t === 'string') return { type: 'string' };
+  if (t === 'boolean') return { type: 'boolean' };
+  if (t === 'number') return Number.isInteger(value) ? { type: 'integer' } : { type: 'number' };
+  if (t === 'object') {
+    const properties = {};
+    const required = [];
+    for (const [k, v] of Object.entries(value)) {
+      properties[k] = inferSchemaNode(v);
+      required.push(k);
+    }
+    const schema = { type: 'object', properties };
+    if (required.length) schema.required = required;
+    return schema;
+  }
+  return {};
+}
+
+export function inferJsonSchema(input) {
+  const parsed = JSON.parse(String(input || ''));
+  const schema = {
+    $schema: 'https://json-schema.org/draft/2020-12/schema',
+    ...inferSchemaNode(parsed)
+  };
+  return JSON.stringify(schema, null, 2);
+}

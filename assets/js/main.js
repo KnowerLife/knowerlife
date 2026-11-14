@@ -300,13 +300,13 @@ if (typeof HTMLDialogElement !== 'undefined') {
   const toolsHref = [...document.querySelectorAll('.nav-links a')].find((item) => /tools|инструмент/i.test(item.textContent || ''))?.getAttribute('href') || `${langBase}tools/`;
   const toolItems = isEnglish ? [
     ['Secure password', 'password'], ['UUID v4', 'uuid'], ['SHA hash', 'hash'], ['JSON formatter', 'json'],
-    ['JSON diff', 'json-diff'], ['Text diff', 'text-diff'], ['Base64', 'base64'], ['Caesar cipher', 'caesar'], ['URL toolkit', 'url'],
+    ['JSON diff', 'json-diff'], ['Text diff', 'text-diff'], ['JSON Schema from sample', 'json-schema'], ['Base64', 'base64'], ['Caesar cipher', 'caesar'], ['URL toolkit', 'url'],
     ['JWT decoder', 'jwt'], ['Unix timestamp', 'timestamp'], ['Cron explainer', 'cron'], ['CSV ↔ JSON', 'csv'], ['Regex tester', 'regex'],
     ['Text and slug', 'text'], ['User Story + BDD', 'story'], ['API request → cURL', 'curl'],
     ['Mermaid sequence', 'sequence'], ['Project brief', 'brief']
   ] : [
     ['Безопасный пароль', 'password'], ['UUID v4', 'uuid'], ['SHA-хеш', 'hash'], ['JSON formatter', 'json'],
-    ['JSON diff', 'json-diff'], ['Text diff', 'text-diff'], ['Base64', 'base64'], ['Шифр Цезаря', 'caesar'], ['URL toolkit', 'url'],
+    ['JSON diff', 'json-diff'], ['Text diff', 'text-diff'], ['JSON Schema from sample', 'json-schema'], ['Base64', 'base64'], ['Шифр Цезаря', 'caesar'], ['URL toolkit', 'url'],
     ['JWT decoder', 'jwt'], ['Unix timestamp', 'timestamp'], ['Cron explainer', 'cron'], ['CSV ↔ JSON', 'csv'], ['Regex tester', 'regex'],
     ['Текст и slug', 'text'], ['User Story + BDD', 'story'], ['API request → cURL', 'curl'],
     ['Mermaid sequence', 'sequence'], ['Проектный бриф', 'brief']
@@ -328,7 +328,7 @@ if (typeof HTMLDialogElement !== 'undefined') {
     { title: isEnglish ? 'Full portfolio' : 'Полное портфолио', description: isEnglish ? 'All 21 projects' : 'Все 21 проекта', href: `${brandHref}#portfolio` },
     { title: isEnglish ? 'Process' : 'Процесс работы', description: isEnglish ? 'From discovery to delivery' : 'От discovery до сопровождения', href: `${brandHref}#process` },
     { title: isEnglish ? 'Project navigator' : 'Навигатор по задаче', description: isEnglish ? 'Find the right starting format' : 'Подобрать формат старта', href: `${brandHref}#navigator` },
-    { title: isEnglish ? 'Browser tools' : 'Инструменты', description: isEnglish ? '19 local utilities' : '19 локальных утилит', href: toolsHref },
+    { title: isEnglish ? 'Browser tools' : 'Инструменты', description: isEnglish ? '20 local utilities' : '20 локальных утилит', href: toolsHref },
     ...sections.map(([title, description, href]) => ({ title, description, href })),
     ...toolItems.map(([title, anchor]) => ({ title, description: isEnglish ? 'Local browser utility' : 'Локальный browser-инструмент', href: `${toolsHref}#${anchor}` })),
     { title: isEnglish ? 'Contact' : 'Контакты', description: isEnglish ? 'Discuss a challenge' : 'Обсудить задачу', href: `${brandHref}#contact` }

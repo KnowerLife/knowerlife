@@ -8,6 +8,7 @@ import {
   diffJson,
   diffText,
   explainCron,
+  inferJsonSchema,
   jsonToCsv,
   makePassword,
   shiftText,
@@ -99,4 +100,17 @@ test('explainCron parses common 5-field expressions', () => {
 
 test('explainCron validates field count', () => {
   assert.throws(() => explainCron('* * * *', 'en'), /5 fields/);
+});
+
+
+test('inferJsonSchema infers basic object and array schema', () => {
+  const schema = JSON.parse(inferJsonSchema('{"id":1,"name":"A","tags":["x"],"active":true,"meta":null}'));
+  assert.equal(schema.type, 'object');
+  assert.equal(schema.properties.id.type, 'integer');
+  assert.equal(schema.properties.name.type, 'string');
+  assert.equal(schema.properties.tags.type, 'array');
+  assert.equal(schema.properties.tags.items.type, 'string');
+  assert.equal(schema.properties.active.type, 'boolean');
+  assert.equal(schema.properties.meta.type, 'null');
+  assert.deepEqual(schema.required, ['id','name','tags','active','meta']);
 });
