@@ -190,6 +190,56 @@ function initMessages(){
   document.getElementById('copyEmailBtn')?.addEventListener('click',async()=>showToast(await copyText(document.getElementById('emailTemplateText')?.value||'')?'Copied':'Could not copy'));
 }
 
+
+
+const quizBank = {
+  requirements:[
+    {q:'Which is a non-functional requirement?',o:['Create an order','API response time','Edit profile'],a:1},
+    {q:'What makes a requirement testable?',o:['A long description','Acceptance criteria','A mockup link'],a:1}
+  ],
+  api:[
+    {q:'Which HTTP method is typically used to read a resource?',o:['GET','POST','DELETE'],a:0},
+    {q:'Which status code means the resource was not found?',o:['201','404','503'],a:1}
+  ],
+  db:[
+    {q:'What does atomicity of values in a table relate to?',o:['1NF','2NF','3NF'],a:0},
+    {q:'Which operator combines rows from multiple tables?',o:['JOIN','ORDER BY','TRUNCATE'],a:0}
+  ],
+  bpmn:[
+    {q:'Which BPMN element is used for branching?',o:['Task','Gateway','Pool'],a:1},
+    {q:'What typically separates participant responsibilities?',o:['Lane','Timer','Message'],a:0}
+  ],
+  security:[
+    {q:'What should be defined for authorization?',o:['Only a password','Roles and permissions','Only HTTPS'],a:1},
+    {q:'What helps analyze threats?',o:['STRIDE','CRUD','INVEST'],a:0}
+  ],
+  ddd:[
+    {q:'What defines the boundary where a model applies?',o:['Bounded Context','HTTP endpoint','Sprint Goal'],a:0},
+    {q:'What is Ubiquitous Language?',o:['A shared domain language','SQL language','UI language'],a:0}
+  ]
+};
+
+function initQuiz(){
+  const area=document.getElementById('testArea'); const select=document.getElementById('testSection'); let questions=[]; let index=0; let answers=[];
+  if(!area||!select) return;
+  const render=()=>{
+    if(!questions.length)return;
+    const q=questions[index]; area.replaceChildren();
+    const card=document.createElement('div'); card.className='test-card';
+    const meta=document.createElement('div'); meta.className='test-meta'; const progress=document.createElement('span'); progress.textContent=`Question ${index+1}/${questions.length}`; const topic=document.createElement('span'); topic.textContent=select?.selectedOptions?.[0]?.textContent||''; meta.append(progress,topic);
+    const title=document.createElement('h3'); title.textContent=q.q;
+    const options=document.createElement('div'); options.className='test-options';
+    q.o.forEach((text,i)=>{const label=document.createElement('label');label.className='checklist-item';const radio=document.createElement('input');radio.type='radio';radio.name='quizOption';radio.value=String(i);radio.checked=answers[index]===i;radio.addEventListener('change',()=>{answers[index]=i;});label.append(radio,document.createTextNode(text));options.append(label);});
+    const actions=document.createElement('div');actions.className='button-row';
+    const prev=document.createElement('button');prev.type='button';prev.className='btn btn--secondary btn--small';prev.textContent='← Back';prev.disabled=index===0;prev.addEventListener('click',()=>{index--;render();});
+    const next=document.createElement('button');next.type='button';next.className='btn btn--primary btn--small';next.textContent=index===questions.length-1?'Finish':'Next →';next.addEventListener('click',()=>{if(index<questions.length-1){index++;render();}else finish();});
+    actions.append(prev,next);card.append(meta,title,options,actions);area.append(card);
+  };
+  const finish=()=>{const correct=questions.reduce((sum,q,i)=>sum+(answers[i]===q.a?1:0),0);const percent=Math.round(correct/questions.length*100);area.replaceChildren();const result=document.createElement('div');result.className='decision-result';const label=document.createElement('span');label.textContent='Result';const score=document.createElement('strong');score.textContent=`${correct}/${questions.length} · ${percent}%`;const text=document.createElement('p');text.textContent=percent>=80?'Good result. You can move to the next topic.':'It may help to review the theory and try again.';const restart=document.createElement('button');restart.type='button';restart.className='btn btn--secondary btn--small';restart.textContent='Try again';restart.addEventListener('click',start);result.append(label,score,text,restart);area.append(result);};
+  const start=()=>{questions=[...(quizBank[select.value]||[])];index=0;answers=new Array(questions.length).fill(null);render();};
+  document.getElementById('startTestBtn')?.addEventListener('click',start);
+}
+
 function exportVisibleMd(){
   const btn=document.getElementById('exportVisibleMdBtn'); if(!btn) return;
   btn.addEventListener('click', async ()=>{
@@ -238,4 +288,4 @@ function saBackup(){
 }
 
 const _domReady = document.addEventListener;
-document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}try{initApiTester()}catch(e){}try{initDocuments()}catch(e){}try{initMessages()}catch(e){}try{initCopyButtons()}catch(e){}});
+document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}try{initApiTester()}catch(e){}try{initDocuments()}catch(e){}try{initMessages()}catch(e){}try{initCopyButtons()}catch(e){}try{initQuiz()}catch(e){}});
