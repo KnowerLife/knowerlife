@@ -510,6 +510,9 @@
     const templateSel = document.getElementById('diagramTemplate');
     if (!codeEl || !preview) return;
 
+    const STORAGE_CODE = 'sa_diagram_code_v1';
+    const STORAGE_TEMPLATE = 'sa_diagram_template_v1';
+
     const templates = {
       flowchart: `flowchart TD
     A([Старт: заявка получена]) --> B[Проверить данные]
@@ -519,6 +522,23 @@
     E --> F([Конец: успех])
     C -->|Нет| G[Вернуть ошибки валидации]
     G --> H([Конец: доработка])`,
+      swimlane: `flowchart LR
+    subgraph Customer[Клиент]
+      A([Старт]) --> B[Отправить заявку]
+      F[Получить результат]
+    end
+    subgraph Support[Поддержка]
+      C{Данные полные?}
+      D[Уточнить детали]
+      E[Передать в обработку]
+    end
+    subgraph System[Система]
+      G[Обработать заявку]
+      H([Завершить])
+    end
+    B --> C
+    C -->|Нет| D --> B
+    C -->|Да| E --> G --> H --> F`,
       sequence: `sequenceDiagram
     autonumber
     actor User as Пользователь
@@ -532,6 +552,25 @@
     DB-->>API: order_id
     API-->>Web: 201 Created
     Web-->>User: Показать номер заказа`,
+      sequence_alt: `sequenceDiagram
+    autonumber
+    actor User as Пользователь
+    participant Web as Web/App
+    participant API as API
+    participant Pay as Платёжный шлюз
+
+    User->>Web: Оплатить заказ
+    Web->>API: POST /payments
+    API->>Pay: Create payment
+    alt Успех
+      Pay-->>API: payment_confirmed
+      API-->>Web: 200 OK
+      Web-->>User: Оплата успешна
+    else Ошибка/таймаут
+      Pay-->>API: error/timeout
+      API-->>Web: 402/504 + retry info
+      Web-->>User: Повторить оплату
+    end`,
       class: `classDiagram
     class Order {
       +UUID id
@@ -590,6 +629,33 @@
       uuid product_id FK
       int qty
     }`,
+      component: `flowchart TB
+    user([Пользователь])
+    subgraph Client[Клиент]
+      web[Web SPA]
+      mobile[Mobile App]
+    end
+    subgraph Platform[Платформа]
+      gw[API Gateway]
+      svc[Order Service]
+      worker[Background Worker]
+    end
+    subgraph Data[Данные/интеграции]
+      db[(PostgreSQL)]
+      cache[(Redis)]
+      mq[[Message Broker]]
+      pay[Payment Provider]
+    end
+    user --> web
+    user --> mobile
+    web --> gw
+    mobile --> gw
+    gw --> svc
+    svc --> db
+    svc --> cache
+    svc --> mq
+    worker --> mq
+    worker --> pay`,
       journey: `journey
     title Путь пользователя: оформление заказа
     section Выбор
@@ -621,29 +687,46 @@
     api --> notify`
     };
 
-    if (!codeEl.value.trim()) codeEl.value = templates.flowchart;
+    const readStorage = (key) => { try { return localStorage.getItem(key) || ''; } catch { return ''; } };
+    const writeStorage = (key, value) => { try { localStorage.setItem(key, value); } catch {} };
+
+    const savedTpl = readStorage(STORAGE_TEMPLATE);
+    if (savedTpl && templates[savedTpl] && templateSel) templateSel.value = savedTpl;
+    const savedCode = readStorage(STORAGE_CODE);
+    if (savedCode && savedCode.trim()) codeEl.value = savedCode;
+    else if (!codeEl.value.trim()) codeEl.value = templates[templateSel?.value] || templates.flowchart;
 
     let mermaidReady = null;
-    const loadMermaid = () => {
-      if (window.mermaid) return Promise.resolve(window.mermaid);
+    const loadScript = (src) => new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('load failed: ' + src));
+      document.head.appendChild(script);
+    });
+    const loadMermaid = async () => {
+      if (window.mermaid) return window.mermaid;
       if (mermaidReady) return mermaidReady;
-      mermaidReady = new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
-        script.async = true;
-        script.onload = () => {
+      mermaidReady = (async () => {
+        const sources = ['../assets/vendor/mermaid.min.js', 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js'];
+        let lastErr = null;
+        for (const src of sources) {
           try {
-            window.mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default' });
-          } catch {}
-          resolve(window.mermaid);
-        };
-        script.onerror = () => reject(new Error('Не удалось загрузить Mermaid'));
-        document.head.appendChild(script);
-      });
-      return mermaidReady;
+            await loadScript(src);
+            if (window.mermaid) {
+              try { window.mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default' }); } catch {}
+              return window.mermaid;
+            }
+          } catch (e) { lastErr = e; }
+        }
+        throw lastErr || new Error('Не удалось загрузить Mermaid');
+      })();
+      try { return await mermaidReady; } catch (e) { mermaidReady = null; throw e; }
     };
 
     const setStatus = (msg) => { if (status) status.textContent = msg || ''; };
+    const persist = () => { writeStorage(STORAGE_CODE, codeEl.value || ''); writeStorage(STORAGE_TEMPLATE, templateSel?.value || 'flowchart'); };
 
     const renderDiagram = async () => {
       const code = (codeEl.value || '').trim();
@@ -655,20 +738,29 @@
         const id = 'mermaid-' + Date.now();
         const { svg } = await mermaid.render(id, code);
         preview.innerHTML = svg;
-        setStatus('Диаграмма обновлена.');
+        setStatus('Диаграмма обновлена. Код сохранён локально.');
       } catch (e) {
         preview.innerHTML = '';
         const pre = document.createElement('pre');
         pre.className = 'code-output';
-        pre.textContent = 'Ошибка рендера: ' + (e && e.message ? e.message : String(e));
+        pre.textContent = 'Ошибка рендера/загрузки: ' + (e && e.message ? e.message : String(e)) + '\n\nПроверьте синтаксис Mermaid или интернет/локальный бандл (assets/vendor/mermaid.min.js). Код можно скопировать и открыть в diagrams.net/PlantUML.';
         preview.appendChild(pre);
-        setStatus('Проверьте синтаксис Mermaid.');
+        setStatus('Не удалось отрисовать. Код сохранён локально.');
       }
+      persist();
     };
+
+    let saveTimer = null;
+    codeEl.addEventListener('input', () => {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(persist, 300);
+    });
+    templateSel?.addEventListener('change', persist);
 
     document.getElementById('insertDiagramTemplateBtn')?.addEventListener('click', () => {
       const key = templateSel ? templateSel.value : 'flowchart';
       codeEl.value = templates[key] || templates.flowchart;
+      persist();
       renderDiagram();
     });
 
@@ -686,7 +778,51 @@
       downloadText('diagram.svg', svgText, 'image/svg+xml;charset=utf-8');
       showToast('SVG скачан');
     });
+    document.getElementById('downloadDiagramPngBtn')?.addEventListener('click', () => {
+      const svgEl = preview.querySelector('svg');
+      if (!svgEl) { showToast('Сначала отрисуйте диаграмму'); return; }
+      try {
+        const serializer = new XMLSerializer();
+        let svgText = serializer.serializeToString(svgEl);
+        if (!svgText.match(/^<\?xml/)) svgText = '<?xml version="1.0" encoding="UTF-8"?>\n' + svgText;
+        const svgBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(svgBlob);
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            const scale = 2;
+            const w = Math.max(1, (svgEl.viewBox?.baseVal?.width || img.width || 800));
+            const h = Math.max(1, (svgEl.viewBox?.baseVal?.height || img.height || 600));
+            canvas.width = Math.ceil(w * scale);
+            canvas.height = Math.ceil(h * scale);
+            const ctx = canvas.getContext('2d');
+            const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#ffffff';
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.setTransform(scale, 0, 0, scale, 0, 0);
+            ctx.drawImage(img, 0, 0, w, h);
+            canvas.toBlob((blob) => {
+              if (!blob) { showToast('Не удалось создать PNG'); URL.revokeObjectURL(url); return; }
+              const a = document.createElement('a');
+              const pngUrl = URL.createObjectURL(blob);
+              a.href = pngUrl; a.download = 'diagram.png'; document.body.append(a); a.click(); a.remove();
+              URL.revokeObjectURL(pngUrl); URL.revokeObjectURL(url);
+              showToast('PNG скачан');
+            }, 'image/png');
+          } catch (err) {
+            URL.revokeObjectURL(url);
+            showToast('Не удалось экспортировать PNG');
+          }
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); showToast('Не удалось подготовить PNG'); };
+        img.src = url;
+      } catch {
+        showToast('Не удалось экспортировать PNG');
+      }
+    });
   }
+
 
   const docTemplates = {
     srs:'1. Введение\n1.1 Цель документа\n1.2 Область решения\n1.3 Термины\n\n2. Контекст\n2.1 Пользователи и роли\n2.2 Ограничения\n\n3. Функциональные требования\nFR-001 ...\n\n4. Нефункциональные требования\nNFR-001 ...\n\n5. Интеграции и данные\n\n6. Критерии приемки\n\n7. Открытые вопросы',

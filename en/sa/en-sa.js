@@ -263,6 +263,9 @@ function initDiagramTool() {
   const templateSel = document.getElementById('diagramTemplate');
   if (!codeEl || !preview) return;
 
+  const STORAGE_CODE = 'sa_diagram_code_v1';
+  const STORAGE_TEMPLATE = 'sa_diagram_template_v1';
+
   const templates = {
     flowchart: `flowchart TD
     A([Start: request received]) --> B[Validate data]
@@ -272,6 +275,23 @@ function initDiagramTool() {
     E --> F([End: success])
     C -->|No| G[Return validation errors]
     G --> H([End: rework])`,
+    swimlane: `flowchart LR
+    subgraph Customer[Customer]
+      A([Start]) --> B[Submit request]
+      F[Receive result]
+    end
+    subgraph Support[Support]
+      C{Data complete?}
+      D[Request details]
+      E[Pass to processing]
+    end
+    subgraph System[System]
+      G[Process request]
+      H([Finish])
+    end
+    B --> C
+    C -->|No| D --> B
+    C -->|Yes| E --> G --> H --> F`,
     sequence: `sequenceDiagram
     autonumber
     actor User
@@ -285,6 +305,25 @@ function initDiagramTool() {
     DB-->>API: order_id
     API-->>Web: 201 Created
     Web-->>User: Show order number`,
+    sequence_alt: `sequenceDiagram
+    autonumber
+    actor User
+    participant Web as Web/App
+    participant API
+    participant Pay as Payment provider
+
+    User->>Web: Pay for order
+    Web->>API: POST /payments
+    API->>Pay: Create payment
+    alt Success
+      Pay-->>API: payment_confirmed
+      API-->>Web: 200 OK
+      Web-->>User: Payment successful
+    else Error/timeout
+      Pay-->>API: error/timeout
+      API-->>Web: 402/504 + retry info
+      Web-->>User: Retry payment
+    end`,
     class: `classDiagram
     class Order {
       +UUID id
@@ -343,6 +382,33 @@ function initDiagramTool() {
       uuid product_id FK
       int qty
     }`,
+    component: `flowchart TB
+    user([User])
+    subgraph Client[Client]
+      web[Web SPA]
+      mobile[Mobile App]
+    end
+    subgraph Platform[Platform]
+      gw[API Gateway]
+      svc[Order Service]
+      worker[Background Worker]
+    end
+    subgraph Data[Data / integrations]
+      db[(PostgreSQL)]
+      cache[(Redis)]
+      mq[[Message Broker]]
+      pay[Payment Provider]
+    end
+    user --> web
+    user --> mobile
+    web --> gw
+    mobile --> gw
+    gw --> svc
+    svc --> db
+    svc --> cache
+    svc --> mq
+    worker --> mq
+    worker --> pay`,
     journey: `journey
     title User journey: placing an order
     section Browse
@@ -374,27 +440,46 @@ function initDiagramTool() {
     api --> notify`
   };
 
-  if (!codeEl.value.trim()) codeEl.value = templates.flowchart;
+  const readStorage = (key) => { try { return localStorage.getItem(key) || ''; } catch { return ''; } };
+  const writeStorage = (key, value) => { try { localStorage.setItem(key, value); } catch {} };
+
+  const savedTpl = readStorage(STORAGE_TEMPLATE);
+  if (savedTpl && templates[savedTpl] && templateSel) templateSel.value = savedTpl;
+  const savedCode = readStorage(STORAGE_CODE);
+  if (savedCode && savedCode.trim()) codeEl.value = savedCode;
+  else if (!codeEl.value.trim()) codeEl.value = templates[templateSel?.value] || templates.flowchart;
 
   let mermaidReady = null;
-  const loadMermaid = () => {
-    if (window.mermaid) return Promise.resolve(window.mermaid);
+  const loadScript = (src) => new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = src;
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('load failed: ' + src));
+    document.head.appendChild(script);
+  });
+  const loadMermaid = async () => {
+    if (window.mermaid) return window.mermaid;
     if (mermaidReady) return mermaidReady;
-    mermaidReady = new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
-      script.async = true;
-      script.onload = () => {
-        try { window.mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default' }); } catch {}
-        resolve(window.mermaid);
-      };
-      script.onerror = () => reject(new Error('Failed to load Mermaid'));
-      document.head.appendChild(script);
-    });
-    return mermaidReady;
+    mermaidReady = (async () => {
+      const sources = ['../../assets/vendor/mermaid.min.js', 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js'];
+      let lastErr = null;
+      for (const src of sources) {
+        try {
+          await loadScript(src);
+          if (window.mermaid) {
+            try { window.mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default' }); } catch {}
+            return window.mermaid;
+          }
+        } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('Failed to load Mermaid');
+    })();
+    try { return await mermaidReady; } catch (e) { mermaidReady = null; throw e; }
   };
 
   const setStatus = (msg) => { if (status) status.textContent = msg || ''; };
+  const persist = () => { writeStorage(STORAGE_CODE, codeEl.value || ''); writeStorage(STORAGE_TEMPLATE, templateSel?.value || 'flowchart'); };
 
   const renderDiagram = async () => {
     const code = (codeEl.value || '').trim();
@@ -406,22 +491,32 @@ function initDiagramTool() {
       const id = 'mermaid-' + Date.now();
       const { svg } = await mermaid.render(id, code);
       preview.innerHTML = svg;
-      setStatus('Diagram updated.');
+      setStatus('Diagram updated. Code saved locally.');
     } catch (e) {
       preview.innerHTML = '';
       const pre = document.createElement('pre');
       pre.className = 'code-output';
-      pre.textContent = 'Render error: ' + (e && e.message ? e.message : String(e));
+      pre.textContent = 'Render/load error: ' + (e && e.message ? e.message : String(e)) + '\n\nCheck Mermaid syntax or internet/local bundle (assets/vendor/mermaid.min.js). You can copy the code and open it in diagrams.net/PlantUML.';
       preview.appendChild(pre);
-      setStatus('Check Mermaid syntax.');
+      setStatus('Could not render. Code saved locally.');
     }
+    persist();
   };
+
+  let saveTimer = null;
+  codeEl.addEventListener('input', () => {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(persist, 300);
+  });
+  templateSel?.addEventListener('change', persist);
 
   document.getElementById('insertDiagramTemplateBtn')?.addEventListener('click', () => {
     const key = templateSel ? templateSel.value : 'flowchart';
     codeEl.value = templates[key] || templates.flowchart;
+    persist();
     renderDiagram();
   });
+
   document.getElementById('renderDiagramBtn')?.addEventListener('click', renderDiagram);
   document.getElementById('copyDiagramCodeBtn')?.addEventListener('click', async () => { await copyText(codeEl.value || ''); showToast('Diagram code copied'); });
   document.getElementById('downloadDiagramSvgBtn')?.addEventListener('click', () => {
@@ -433,7 +528,51 @@ function initDiagramTool() {
     downloadText('diagram.svg', svgText, 'image/svg+xml;charset=utf-8');
     showToast('SVG downloaded');
   });
+  document.getElementById('downloadDiagramPngBtn')?.addEventListener('click', () => {
+    const svgEl = preview.querySelector('svg');
+    if (!svgEl) { showToast('Render a diagram first'); return; }
+    try {
+      const serializer = new XMLSerializer();
+      let svgText = serializer.serializeToString(svgEl);
+      if (!svgText.match(/^<\?xml/)) svgText = '<?xml version="1.0" encoding="UTF-8"?>\n' + svgText;
+      const svgBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          const scale = 2;
+          const w = Math.max(1, (svgEl.viewBox?.baseVal?.width || img.width || 800));
+          const h = Math.max(1, (svgEl.viewBox?.baseVal?.height || img.height || 600));
+          canvas.width = Math.ceil(w * scale);
+          canvas.height = Math.ceil(h * scale);
+          const ctx = canvas.getContext('2d');
+          const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#ffffff';
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.setTransform(scale, 0, 0, scale, 0, 0);
+          ctx.drawImage(img, 0, 0, w, h);
+          canvas.toBlob((blob) => {
+            if (!blob) { showToast('Could not create PNG'); URL.revokeObjectURL(url); return; }
+            const a = document.createElement('a');
+            const pngUrl = URL.createObjectURL(blob);
+            a.href = pngUrl; a.download = 'diagram.png'; document.body.append(a); a.click(); a.remove();
+            URL.revokeObjectURL(pngUrl); URL.revokeObjectURL(url);
+            showToast('PNG downloaded');
+          }, 'image/png');
+        } catch (err) {
+          URL.revokeObjectURL(url);
+          showToast('Could not export PNG');
+        }
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); showToast('Could not prepare PNG'); };
+      img.src = url;
+    } catch {
+      showToast('Could not export PNG');
+    }
+  });
 }
+
 
 
 function initQuiz(){
