@@ -14,7 +14,8 @@
     lastSection: 'sa_last_section_v3',
     risks: 'sa_risks_v3',
     traceability: 'sa_traceability_v3',
-    decisions: 'sa_decisions_v3'
+    decisions: 'sa_decisions_v3',
+    courseProgress: 'sa_course_progress_v1'
   };
 
   function safeParse(value, fallback) {
@@ -989,6 +990,7 @@
     initBookmarks();
     initSectionUtilities();
     initGuideExport();
+    initCourseProgress();
     initTimer();
     initDecisionTree();
     initDataModeler();
@@ -1009,7 +1011,41 @@
     initGlossaryFilter();
     initBackToTop();
     initPwaInstall();
-    function initDataBackup() {
+  
+  function initCourseProgress() {
+    const boxes = $$('.course-progress-cb[data-course-module]');
+    const percent = $('#courseProgressPercent');
+    const fill = $('#courseProgressFill');
+    const text = $('#courseProgressText');
+    const reset = $('#resetCourseProgressBtn');
+    if (!boxes.length || !percent || !fill || !text) return;
+    const total = boxes.length;
+    const readProgress = () => {
+      const data = readJson(STORAGE.courseProgress, []);
+      return Array.isArray(data) ? data.map(String) : [];
+    };
+    const render = (save = false) => {
+      const done = boxes.filter(box => box.checked).map(box => String(box.dataset.courseModule));
+      if (save) writeJson(STORAGE.courseProgress, done);
+      const count = done.length;
+      const pct = total ? Math.round((count / total) * 100) : 0;
+      percent.textContent = `${pct}%`;
+      fill.style.width = `${pct}%`;
+      text.textContent = `Пройдено модулей: ${count} из ${total}. Отмечайте завершённые этапы — прогресс сохраняется локально.`;
+    };
+    const saved = new Set(readProgress());
+    boxes.forEach(box => { box.checked = saved.has(String(box.dataset.courseModule)); box.addEventListener('change', () => render(true)); });
+    reset?.addEventListener('click', () => {
+      boxes.forEach(box => { box.checked = false; });
+      writeJson(STORAGE.courseProgress, []);
+      render(false);
+      if (typeof showToast === 'function') showToast('Прогресс курса сброшен');
+    });
+    render(false);
+  }
+
+
+  function initDataBackup() {
       const exportBtn = $('#exportSaDataBtn');
       const importBtn = $('#importSaDataBtn');
       const clearBtn = $('#clearSaDataBtn');

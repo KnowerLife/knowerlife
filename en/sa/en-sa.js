@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded',()=>{theme();access();mobile();sear
 
 function showToast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.append(t)}t.textContent=msg;t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>{t.hidden=true},2200)}
 function readJson(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch{return f}}function writeJson(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
-const STORAGE={notes:'sa_notes_v2',requirements:'sa_requirements_v2'};
+const STORAGE={notes:'sa_notes_v2',requirements:'sa_requirements_v2',courseProgress:'sa_course_progress_v1'};
 
 const HTTP_STATUSES=[
   [200,'OK','Successful read or processing'],[201,'Created','Resource created'],[202,'Accepted','Request accepted for async processing'],[204,'No Content','Success without response body'],
@@ -522,6 +522,40 @@ function normalizeIdentifier(value, fallback = 'field') {
 }
 
 
+
+function initCourseProgress() {
+  const boxes = [...document.querySelectorAll('.course-progress-cb[data-course-module]')];
+  const percent = document.getElementById('courseProgressPercent');
+  const fill = document.getElementById('courseProgressFill');
+  const text = document.getElementById('courseProgressText');
+  const reset = document.getElementById('resetCourseProgressBtn');
+  if (!boxes.length || !percent || !fill || !text) return;
+  const total = boxes.length;
+  const readProgress = () => {
+    try { const v = JSON.parse(read('sa_course_progress_v1') || '[]'); return Array.isArray(v) ? v.map(String) : []; } catch { return []; }
+  };
+  const writeProgress = (arr) => { try { write('sa_course_progress_v1', JSON.stringify(arr)); } catch {} };
+  const render = (save = false) => {
+    const done = boxes.filter(box => box.checked).map(box => String(box.dataset.courseModule));
+    if (save) writeProgress(done);
+    const count = done.length;
+    const pct = total ? Math.round((count / total) * 100) : 0;
+    percent.textContent = `${pct}%`;
+    fill.style.width = `${pct}%`;
+    text.textContent = `Modules completed: ${count} of ${total}. Mark finished modules — progress is saved locally.`;
+  };
+  const saved = new Set(readProgress());
+  boxes.forEach(box => { box.checked = saved.has(String(box.dataset.courseModule)); box.addEventListener('change', () => render(true)); });
+  reset?.addEventListener('click', () => {
+    boxes.forEach(box => { box.checked = false; });
+    writeProgress([]);
+    render(false);
+    showToast('Course progress reset');
+  });
+  render(false);
+}
+
+
 function initDecisionTree() {
   const step1 = document.getElementById('tree-step1');
   const step2 = document.getElementById('tree-step2');
@@ -665,7 +699,7 @@ function exportVisibleMd(){
 }
 
 function saBackup(){
-  const STORAGE={bookmarks:'sa_bookmarks_v2',notes:'sa_notes_v2',competency:'sa_competency_v2',requirements:'sa_requirements_v2',security:'sa_security_v2',lastSection:'sa_last_section_v3',risks:'sa_risks_v3',traceability:'sa_traceability_v3',decisions:'sa_decisions_v3'};
+  const STORAGE={bookmarks:'sa_bookmarks_v2',notes:'sa_notes_v2',competency:'sa_competency_v2',requirements:'sa_requirements_v2',security:'sa_security_v2',lastSection:'sa_last_section_v3',risks:'sa_risks_v3',traceability:'sa_traceability_v3',decisions:'sa_decisions_v3',courseProgress:'sa_course_progress_v1'};
   const exportBtn=document.getElementById('exportSaDataBtn');
   const importBtn=document.getElementById('importSaDataBtn');
   const clearBtn=document.getElementById('clearSaDataBtn');
@@ -691,4 +725,4 @@ function saBackup(){
 }
 
 const _domReady = document.addEventListener;
-document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}try{initApiTester()}catch(e){}try{initDocuments()}catch(e){}try{initMessages()}catch(e){}try{initCopyButtons()}catch(e){}try{initQuiz()}catch(e){}try{initDiagramTool()}catch(e){}try{initBookmarks()}catch(e){}try{initActiveNav()}catch(e){}try{initDataModeler()}catch(e){}try{initDecisionTree()}catch(e){}try{initTimer()}catch(e){}});
+document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}try{initApiTester()}catch(e){}try{initDocuments()}catch(e){}try{initMessages()}catch(e){}try{initCopyButtons()}catch(e){}try{initQuiz()}catch(e){}try{initDiagramTool()}catch(e){}try{initCourseProgress()}catch(e){}try{initBookmarks()}catch(e){}try{initActiveNav()}catch(e){}try{initDataModeler()}catch(e){}try{initDecisionTree()}catch(e){}try{initTimer()}catch(e){}});
