@@ -521,6 +521,54 @@ function normalizeIdentifier(value, fallback = 'field') {
   return /^[0-9]/.test(safe) ? `_${safe}` : safe;
 }
 
+
+function initDecisionTree() {
+  const step1 = document.getElementById('tree-step1');
+  const step2 = document.getElementById('tree-step2');
+  const question = document.getElementById('step2-question');
+  const options = document.getElementById('step2-options');
+  const result = document.getElementById('tree-result');
+  const resultText = document.getElementById('result-text');
+  const resultDescription = document.getElementById('result-description');
+  if (!step1 || !step2 || !options) return;
+  const recommendations = {
+    scrum: ['Scrum', 'Fits when short iterations, a sprint goal and regular product feedback are useful.'],
+    kanban: ['Kanban', 'Fits continuous flow, support and work with frequently changing incoming priorities.'],
+    waterfall: ['Predictive / Waterfall', 'Fits when changes are costly, phases are tightly dependent, and requirements can be stabilized in advance.'],
+    hybrid: ['Hybrid', 'Combine controlled phases for mandatory checkpoints with iterative delivery inside phases.']
+  };
+  const showResult = (key) => {
+    const rec = recommendations[key] || recommendations.hybrid;
+    step2.hidden = true;
+    if (result) result.hidden = false;
+    if (resultText) resultText.textContent = rec[0];
+    if (resultDescription) resultDescription.textContent = rec[1];
+  };
+  document.querySelectorAll('[data-tree]').forEach(btn => btn.addEventListener('click', () => {
+    const mode = btn.dataset.tree;
+    step1.hidden = true;
+    step2.hidden = false;
+    options.replaceChildren();
+    if (mode === 'iterative') {
+      if (question) question.textContent = 'Does work arrive as a continuous flow without a natural sprint boundary?';
+      [['Yes', 'kanban'], ['No', 'scrum']].forEach(([label, key]) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'btn btn--secondary btn--small'; b.textContent = label;
+        b.addEventListener('click', () => showResult(key)); options.append(b);
+      });
+    } else {
+      if (question) question.textContent = 'Are there mandatory fixed phases or regulatory checkpoints?';
+      [['Yes', 'waterfall'], ['Partially', 'hybrid']].forEach(([label, key]) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'btn btn--secondary btn--small'; b.textContent = label;
+        b.addEventListener('click', () => showResult(key)); options.append(b);
+      });
+    }
+  }));
+  document.getElementById('resetTreeBtn')?.addEventListener('click', () => {
+    step1.hidden = false; step2.hidden = true; if (result) result.hidden = true;
+  });
+}
+
+
 function initDataModeler() {
   let entities = [];
   const container = document.getElementById('entitiesList');
@@ -643,4 +691,4 @@ function saBackup(){
 }
 
 const _domReady = document.addEventListener;
-document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}try{initApiTester()}catch(e){}try{initDocuments()}catch(e){}try{initMessages()}catch(e){}try{initCopyButtons()}catch(e){}try{initQuiz()}catch(e){}try{initDiagramTool()}catch(e){}try{initBookmarks()}catch(e){}try{initActiveNav()}catch(e){}try{initDataModeler()}catch(e){}try{initTimer()}catch(e){}});
+document.addEventListener('DOMContentLoaded',()=>{try{exportVisibleMd()}catch(e){}try{saBackup()}catch(e){}try{initHttpReference()}catch(e){}try{initConverter()}catch(e){}try{initNotes()}catch(e){}try{initPersistentChecklist(['chStakeholders','chUserStories','chAcceptance','chNonFunctional','chTrace'],STORAGE.requirements,'#reqChecklistProgress','#reqChecklistPercent','#resetReqChecklist')}catch(e){}try{initPersistentChecklist(['sec1','sec2','sec3','sec4','sec5','sec6'],STORAGE.security,'#secChecklistProgress','#secChecklistPercent','#resetSecChecklist')}catch(e){}try{initRiskMatrix()}catch(e){}try{initTraceabilityTool()}catch(e){}try{initDecisionLog()}catch(e){}try{initCompetency()}catch(e){}try{initGlossaryFilter()}catch(e){}try{initSectionUtilities()}catch(e){}try{initApiTester()}catch(e){}try{initDocuments()}catch(e){}try{initMessages()}catch(e){}try{initCopyButtons()}catch(e){}try{initQuiz()}catch(e){}try{initDiagramTool()}catch(e){}try{initBookmarks()}catch(e){}try{initActiveNav()}catch(e){}try{initDataModeler()}catch(e){}try{initDecisionTree()}catch(e){}try{initTimer()}catch(e){}});
